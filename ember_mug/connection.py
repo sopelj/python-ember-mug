@@ -1,3 +1,4 @@
+"""Objects and methods related to connection to the mug."""
 from __future__ import annotations
 
 import contextlib
@@ -68,6 +69,7 @@ class EmberMugConnection:
     """Context manager to handle updating via active connection."""
 
     def __init__(self, mug: EmberMug) -> None:
+        """Initialize connection manager."""
         self.mug = mug
         self.client = BleakClient(mug.device)
         self._queued_updates: set[str] = set()
@@ -161,11 +163,10 @@ class EmberMugConnection:
         value = await self.client.read_gatt_char(UUID_DSK)
         try:
             # TODO: Perhaps it isn't encoded in base64...
-            value = decode_byte_string(value)
+            return decode_byte_string(value)
         except ValueError:
             logger.warning("Unable to decode DSK. Falling back to encoded value.")
-            value = str(value)
-        return value
+            return str(value)
 
     async def get_temperature_unit(self) -> str:
         """Get mug temp unit."""

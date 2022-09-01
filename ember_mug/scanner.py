@@ -1,3 +1,4 @@
+"""Scanning tools for finding mugs."""
 from __future__ import annotations
 
 import asyncio
@@ -12,6 +13,7 @@ logger = logging.Logger(__name__)
 
 
 async def discover_mugs(wait: int = 5) -> list[BLEDevice]:
+    """Discover new mugs in pairing mode."""
     async with BleakScanner(service_uuids=[str(EMBER_SERVICE_UUID)]) as scanner:
         await asyncio.sleep(wait)
         return scanner.discovered_devices

@@ -2,7 +2,7 @@
 
 To use Python Ember Mug in a project
 
-```
+```python
 from ember_mug.scanner import find_mug, discover_mugs
 from ember_mug.mug import EmberMug
 

@@ -13,6 +13,7 @@ from .scanner import discover_mugs, find_mug
 
 
 async def find_device(args: Namespace) -> BLEDevice:
+    """Find a single device that has already been paired."""
     device = await find_mug()
     if not device:
         print('No mug was found.')
@@ -21,7 +22,8 @@ async def find_device(args: Namespace) -> BLEDevice:
     return device
 
 
-async def discover(args: Namespace) -> list[EmberMug]:
+async def discover(args: Namespace) -> list[BLEDevice]:
+    """Discover new devices in pairing mode."""
     mugs = await discover_mugs()
     if not mugs:
         print('No mugs were found. Be sure it is in pairing mode. Or use "find" if already paired.')
@@ -33,6 +35,7 @@ async def discover(args: Namespace) -> list[EmberMug]:
 
 
 async def fetch_info(args: Namespace) -> None:
+    """Fetch all information from a mug and end."""
     device = await find_device(args)
     mug = EmberMug(device)
     print('Connecting...')
@@ -43,6 +46,7 @@ async def fetch_info(args: Namespace) -> None:
 
 
 async def poll_mug(args: Namespace) -> None:
+    """Fetch all information and keep polling for changes."""
     device = await find_device(args)
     mug = EmberMug(device)
     print('Connecting...')
@@ -61,17 +65,21 @@ async def poll_mug(args: Namespace) -> None:
 
 
 def print_info(mug: EmberMug) -> None:
+    """Print all mug data."""
     print('Mug Data')
     for name, value in mug.formatted_data.items():
         print(f'{name}: {value}')
 
 
 def print_changes(changes: list[tuple[str, Any, Any]]) -> None:
+    """Print changes."""
     for attr, old_value, new_value in changes:
         print(f'{attr.replace("_", " ").title()} changed from {old_value} to {new_value}')
 
 
 class EmberMugCli:
+    """Very simple CLI Interface to interact with a mug."""
+
     _commands = {
         'find': find_device,
         'discover': discover,
@@ -80,6 +88,7 @@ class EmberMugCli:
     }
 
     def __init__(self) -> None:
+        """Create parsers."""
         self.parser = ArgumentParser(prog='ember-mug', description='Ember Mug CLI')
         subparsers = self.parser.add_subparsers(dest='command')
         subparsers.add_parser('find', description='Find the first paired mug')
@@ -87,6 +96,7 @@ class EmberMugCli:
         subparsers.add_parser('info', description='Fetch all info from mug')
         subparsers.add_parser('poll', description='Poll mug for information')
 
-    async def run(self):
+    async def run(self) -> None:
+        """Run the specified command based on subparser."""
         args = self.parser.parse_args()
         await self._commands[args.command](args)

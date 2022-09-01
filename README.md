@@ -55,8 +55,6 @@ async with mug.connection() as con:
     print(mug.formatted_data)
 ```
 
-
-
 ## Caveats
 
 - Since this api is not public, a lot of guesswork and reverse engineering is involved, so it's not perfect.

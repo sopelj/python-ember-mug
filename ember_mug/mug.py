@@ -69,6 +69,7 @@ class EmberMug:
 
     @property
     def liquid_level_display(self) -> str:
+        """Human readable liquid level."""
         return f'{(self.liquid_level / 30 * 100):.2f}%'
 
     def update_info(self, **kwargs: Any) -> list[tuple[str, Any, Any]]:
@@ -82,15 +83,12 @@ class EmberMug:
 
     @property
     def formatted_data(self) -> dict[str, Any]:
+        """Return human-readable names and values for all attributes for display."""
         return {
             label: display_value if (display_value := getattr(self, f'{attr}_display', None)) else getattr(self, attr)
             for attr, label in attr_labels
         }
 
     def connection(self) -> EmberMugConnection:
-        """
-        Return a connection to the Mug.
-
-        Meant to be used as a context manager.
-        """
+        """Return a connection to the Mug that's meant to be used as a context manager."""
         return EmberMugConnection(self)

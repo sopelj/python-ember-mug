@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+"""Module to run the cli interface."""
 import asyncio
 
 from .cli import EmberMugCli
