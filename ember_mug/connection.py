@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Any, Callable
 from bleak import BleakClient, BleakError
 
 from .consts import (
+    MUG_NAME_REGEX,
     PUSH_EVENT_BATTERY_IDS,
     PUSH_EVENT_ID_AUTH_INFO_NOT_FOUND,
     PUSH_EVENT_ID_BATTERY_VOLTAGE_STATE_CHANGED,
@@ -148,6 +149,8 @@ class EmberMugConnection:
 
     async def set_name(self, name: str) -> None:
         """Assign new name to mug."""
+        if MUG_NAME_REGEX.match(name) is None:
+            raise ValueError('Name cannot contain any special characters')
         await self.client.write_gatt_char(UUID_MUG_NAME, bytearray(name.encode("utf8")))
 
     async def get_udsk(self) -> str:

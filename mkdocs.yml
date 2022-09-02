@@ -12,7 +12,6 @@ nav:
 theme:
   name: material
   language: en
-  #logo: assets/logo.png
   palette:
     scheme: preference
     primary: indigo
@@ -50,7 +49,7 @@ plugins:
       lang: en
   - mkdocstrings:
       watch:
-        - python-ember-mug
+        - ember_mug
 extra:
   social:
     - icon: fontawesome/brands/twitter

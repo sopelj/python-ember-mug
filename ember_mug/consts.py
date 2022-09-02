@@ -1,11 +1,14 @@
 """Bluetooth UUIDs and other constants used for communicating with the mug."""
+from __future__ import annotations
+
+import re
 from uuid import UUID
 
 TEMP_CELSIUS = "C"
 TEMP_FAHRENHEIT = "F"
 
 # Bluetooth names of supported mugs
-EMBER_BLUETOOTH_NAMES = ["Ember Ceramic Mug"]
+EMBER_BLUETOOTH_NAMES: tuple[str, ...] = ("Ember Ceramic Mug",)
 
 # Name of mug in byte string (Read/Write)
 UUID_MUG_NAME = UUID("fc540001-236c-4c94-8fa9-944a3e5353fa")
@@ -107,5 +110,5 @@ UUID_VOLUME = UUID("fc540009-236c-4c94-8fa9-944a3e5353fa")
 UUID_ACCELERATION = UUID("fc54000b-236c-4c94-8fa9-944a3e5353fa")
 
 # Validation
-MUG_NAME_REGEX = r"[A-Za-z0-9,.\[\]#()!\"\';:|\-_+<>%= ]{1,16}"
-MAC_ADDRESS_REGEX = r"^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$"
+MUG_NAME_REGEX = re.compile(r"[A-Za-z0-9,.\[\]#()!\"\';:|\-_+<>%= ]{1,16}")
+MAC_ADDRESS_REGEX = re.compile(r"^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$")
