@@ -17,7 +17,7 @@ jobs:
   # This workflow contains a single job called "release"
   release:
     name: Create Release
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -50,6 +50,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install poetry
+          poetry install -E doc -E dev -E test
 
       - name: build documentation
         run: |
