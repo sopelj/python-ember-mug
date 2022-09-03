@@ -65,6 +65,7 @@ jobs:
 
       - name: Build wheels and source tarball
         run: >-
+          poetry install -E build --only main
           poetry build
 
       - name: show temporary files
