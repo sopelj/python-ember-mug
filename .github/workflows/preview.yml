@@ -13,7 +13,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  publish_dev_build:
+  pre_build_test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -28,10 +28,9 @@ jobs:
       - name: test with tox
         run:
           poetry run tox
-
       - name: Build wheels and source tarball
         run: |
-            poetry install -E build --only main
+            poetry install -E build --no-dev
             poetry version $(poetry version --short)-dev.$GITHUB_RUN_NUMBER
             poetry version --short
             poetry build
