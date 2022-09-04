@@ -4,7 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import NamedTuple
 
-from .utils import bytes_to_little_int
+from .utils import bytes_to_little_int, decode_byte_string
 
 
 class Colour(NamedTuple):
@@ -88,7 +88,7 @@ class MugMeta:
     def from_bytes(cls, data: bytes) -> MugMeta:
         """Initialize from raw bytes."""
         return cls(
-            mug_id=str(data[:6]),
+            mug_id=decode_byte_string(data[:6]),
             serial_number=data[7:].decode("utf8"),
         )
 

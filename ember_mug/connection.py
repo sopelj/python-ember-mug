@@ -158,7 +158,7 @@ class EmberMugConnection:
 
     async def get_udsk(self) -> str:
         """Get mug udsk from gatt."""
-        return str(await self.client.read_gatt_char(UUID_UDSK))
+        return decode_byte_string(await self.client.read_gatt_char(UUID_UDSK))
 
     async def set_udsk(self, udsk: str) -> None:
         """Attempt to write udsk."""
