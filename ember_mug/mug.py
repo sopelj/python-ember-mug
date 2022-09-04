@@ -89,6 +89,6 @@ class EmberMug:
             for attr, label in attr_labels
         }
 
-    def connection(self) -> EmberMugConnection:
+    def connection(self, **kwargs: Any) -> EmberMugConnection:
         """Return a connection to the Mug that's meant to be used as a context manager."""
-        return EmberMugConnection(self)
+        return EmberMugConnection(self, **kwargs)

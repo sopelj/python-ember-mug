@@ -2,19 +2,29 @@
 from __future__ import annotations
 
 import asyncio
+import platform
+import re
 import sys
-from argparse import ArgumentParser, Namespace
+from argparse import ArgumentParser, ArgumentTypeError, Namespace
 from typing import Any
 
 from bleak.backends.device import BLEDevice
 
+from .consts import MAC_ADDRESS_REGEX
 from .mug import EmberMug
 from .scanner import discover_mugs, find_mug
 
 
+def validate_mac(value: str) -> str:
+    """Check if specified MAC Address is valid."""
+    if not isinstance(value, str) or not re.match(MAC_ADDRESS_REGEX, value):
+        raise ArgumentTypeError("Invalid MAC Address")
+    return value.lower()
+
+
 async def find_device(args: Namespace) -> BLEDevice:
     """Find a single device that has already been paired."""
-    device = await find_mug()
+    device = await find_mug(mac=args.mac, adapter=args.adapter)
     if not device:
         print('No mug was found.')
         sys.exit(1)
@@ -24,7 +34,7 @@ async def find_device(args: Namespace) -> BLEDevice:
 
 async def discover(args: Namespace) -> list[BLEDevice]:
     """Discover new devices in pairing mode."""
-    mugs = await discover_mugs()
+    mugs = await discover_mugs(mac=args.mac)
     if not mugs:
         print('No mugs were found. Be sure it is in pairing mode. Or use "find" if already paired.')
         sys.exit(1)
@@ -39,7 +49,7 @@ async def fetch_info(args: Namespace) -> None:
     device = await find_device(args)
     mug = EmberMug(device)
     print('Connecting...')
-    async with mug.connection() as con:
+    async with mug.connection(adapter=args.adapter) as con:
         print('Connected.\nFetching Info')
         await con.update_all()
     print_info(mug)
@@ -50,7 +60,7 @@ async def poll_mug(args: Namespace) -> None:
     device = await find_device(args)
     mug = EmberMug(device)
     print('Connecting...')
-    async with mug.connection() as con:
+    async with mug.connection(adapter=args.adapter) as con:
         print('Connected.\nFetching Info')
         await con.update_all()
         print_info(mug)
@@ -89,14 +99,34 @@ class EmberMugCli:
 
     def __init__(self) -> None:
         """Create parsers."""
-        self.parser = ArgumentParser(prog='ember-mug', description='Ember Mug CLI')
-        subparsers = self.parser.add_subparsers(dest='command')
-        subparsers.add_parser('find', description='Find the first paired mug')
-        subparsers.add_parser('discover', description='Discover Mugs in pairing mode')
-        subparsers.add_parser('info', description='Fetch all info from mug')
-        subparsers.add_parser('poll', description='Poll mug for information')
+        self.parser = ArgumentParser(prog='ember-mug', description='CLI to interact with an Ember Mug')
+        shared_parser = ArgumentParser(add_help=False)
+        shared_parser.add_argument(
+            '-m',
+            '--mac',
+            action='store',
+            type=validate_mac,
+            help='Only look for this specific address',
+        )
+        if platform.system() == 'Linux':
+            # Only works on Linux with BlueZ so don't add for others.
+            shared_parser.add_argument(
+                '-a',
+                '--adapter',
+                action='store',
+                help='Use this Bluetooth adapter instead of the default one (for Bluez)',
+            )
+        subparsers = self.parser.add_subparsers(dest='command', required=True)
+        subparsers.add_parser('find', description='Find the first paired mug', parents=[shared_parser])
+        subparsers.add_parser('discover', description='Discover Mugs in pairing mode', parents=[shared_parser])
+        subparsers.add_parser('info', description='Fetch all info from mug', parents=[shared_parser])
+        subparsers.add_parser('poll', description='Poll mug for information', parents=[shared_parser])
 
     async def run(self) -> None:
         """Run the specified command based on subparser."""
         args = self.parser.parse_args()
+        if not args.command:
+            print('Please specify a command.\n')
+            self.parser.print_help()
+            sys.exit(1)
         await self._commands[args.command](args)

@@ -69,10 +69,13 @@ _update_attrs = (
 class EmberMugConnection:
     """Context manager to handle updating via active connection."""
 
-    def __init__(self, mug: EmberMug) -> None:
+    def __init__(self, mug: EmberMug, adapter: str = None) -> None:
         """Initialize connection manager."""
         self.mug = mug
-        self.client = BleakClient(mug.device)
+        if adapter and BleakClient.__name__ != 'BleakClientBlueZDBus':
+            raise ValueError('The adapter option is only valid for the Linux BlueZ Backend.')
+        client_kwargs = {'adapter': adapter} if adapter else {}
+        self.client = BleakClient(mug.device, **client_kwargs)
         self._queued_updates: set[str] = set()
         self._latest_event_id: int | None = None
 
