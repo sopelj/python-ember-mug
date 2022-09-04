@@ -1,17 +1,26 @@
 # Changelog
 
-## 0.1.2 (2022-09-03)
+## [Unreleased]
 
-* Add adapter param to EmberMugConnection and scanners (for BlueZ only)
-* Add mac params to discover and find methods
-* Improve CLI interface and gracefully handle no options provided
-* Also decode udsk and mug id. Even if the values aren't super useful.
+## [0.1.2] - 2022-09-03
 
-## 0.1.1 (2022-09-03)
+### Added
+-`adapter` param to `EmberMugConnection` and scanners (for BlueZ only)
+- `mac` params to discover and find methods
+- Decode "udsk" and "mug id" (Even if the values aren't super useful)
 
-* Bump version because of issues with name conflicts
-* Fix GitHub Actions issues with Poetry
+### Fixed
+- Improve CLI interface and gracefully handle no options provided
 
-## 0.1.0 (2022-08-26)
+## [0.1.1] - 2022-09-03
 
-* First release on PyPI test.
+### Changed
+- Bump version because of issues with name conflicts
+
+### Fixed
+- Fix GitHub Actions issues with Poetry
+
+## [0.1.0] - 2022-08-26
+
+### Added
+- First release on PyPI test.
