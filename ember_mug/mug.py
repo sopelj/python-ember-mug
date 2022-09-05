@@ -4,12 +4,11 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from bleak import BleakClient
 from bleak.backends.device import BLEDevice
 
 from .connection import EmberMugConnection
-from .consts import LIQUID_STATE_LABELS
 from .data import BatteryInfo, Colour, MugFirmwareInfo, MugMeta
+from .formatting import format_led_colour, format_liquid_level, format_liquid_state, format_temp
 
 logger = logging.Logger(__name__)
 
@@ -29,6 +28,7 @@ attr_labels = (
     ('date_time_zone', 'Date Time + Time Zone'),
     ('battery_voltage', 'Voltage'),
 )
+extra_attrs = ('dsk', 'udsk', 'battery_voltage', 'date_time_zone')
 
 
 class EmberMug:
@@ -50,27 +50,43 @@ class EmberMug:
     date_time_zone: str = ""
     battery_voltage: str = ""
 
-    def __init__(self, ble_device: BLEDevice, use_metric: bool = True) -> None:
+    def __init__(self, ble_device: BLEDevice, use_metric: bool = True, include_extra: bool = False) -> None:
         """Set default values in for mug attributes."""
-        self.client: BleakClient | None = None
         self.device = ble_device
         self.use_metric = use_metric
         self.model = ble_device.name
+        self.include_extra = include_extra
+
+    def meta_display(self) -> str:
+        """Return Meta infor based on preference."""
+        if self.meta and not self.include_extra:
+            return f'Serial Number: {self.meta.serial_number}'
+        return str(self.meta)
 
     @property
     def led_colour_display(self) -> str:
         """Return colour as hex value."""
-        return self.led_colour.as_hex()
+        return format_led_colour(self.led_colour)
 
     @property
     def liquid_state_display(self) -> str:
-        """Return human-readable liquid state."""
-        return LIQUID_STATE_LABELS[self.liquid_state]
+        """Human-readable liquid state."""
+        return format_liquid_state(self.liquid_state)
 
     @property
     def liquid_level_display(self) -> str:
-        """Human readable liquid level."""
-        return f'{(self.liquid_level / 30 * 100):.2f}%'
+        """Human-readable liquid level."""
+        return format_liquid_level(self.liquid_level)
+
+    @property
+    def current_temp_display(self) -> str:
+        """Human-readable current temp with unit."""
+        return format_temp(self.current_temp, self.use_metric)
+
+    @property
+    def target_temp_display(self) -> str:
+        """Human-readable target temp with unit."""
+        return format_temp(self.current_temp, self.use_metric)
 
     def update_info(self, **kwargs: Any) -> list[tuple[str, Any, Any]]:
         """Update attributes of the mug if they haven't changed."""
@@ -87,6 +103,7 @@ class EmberMug:
         return {
             label: display_value if (display_value := getattr(self, f'{attr}_display', None)) else getattr(self, attr)
             for attr, label in attr_labels
+            if self.include_extra or attr not in extra_attrs
         }
 
     def connection(self, **kwargs: Any) -> EmberMugConnection:

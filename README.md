@@ -29,14 +29,6 @@ but could be useful separately and has a simple CLI interface too.
 
 ## Usage
 
-### CLI
-Put your mug in pairing mode (hold button five seconds or until blue)
-
-```bash
-python -m ember_mug discover  # Finds the mug in pairing mode for the first time
-python -m ember_mug poll  # fetches info and keeps listening for notifications
-```
-
 ### Python
 
 ```python
@@ -54,6 +46,27 @@ async with mug.connection() as con:
     await con.update_all()
     print(mug.formatted_data)
 ```
+
+### CLI
+
+It can also be invoked as a module from command line as `python -m ember_mug --help`.
+There are four options with different subsections. You can see them by specifying them before help. eg `python -m ember_mug poll --help`
+
+```bash
+python -m ember_mug discover  # Finds the mug in pairing mode for the first time
+python -m ember_mug poll  # fetches info and keeps listening for notifications
+```
+
+Basic options:
+
+| Command    | Use                                                                            |
+|------------|--------------------------------------------------------------------------------|
+| `discover` | Find/List all detected unpaired mugs in pairing mode                           |
+| `find`     | Find *one* already paired mugs                                                 |
+| `info`     | Connect to *one* mug and print its current state                               |
+| `poll`     | Connect to *one* mug and print its current state and keep watching for changes |
+
+![CLI Example](./docs/images/cli-example.png)
 
 ## Caveats
 

@@ -13,7 +13,6 @@ classifiers=[
     'License :: OSI Approved :: MIT License',
     'Natural Language :: English',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
 ]
@@ -23,8 +22,9 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.8,<4.0"
-bleak = "^0.15.1"
+python = ">=3.9,<4.0"
+bleak = ">=0.16.0"
+bleak-retry-connector = ">=1.11.0"
 
 [tool.poetry.group.dev.dependencies]
 black  = { version = "^22.6.0" }
@@ -72,7 +72,7 @@ doc = [
 [tool.black]
 line-length = 120
 skip-string-normalization = true
-target-version = ['py38', 'py39', 'py310']
+target-version = ['py39', 'py310']
 include = '\.pyi?$'
 exclude = '''
 /(

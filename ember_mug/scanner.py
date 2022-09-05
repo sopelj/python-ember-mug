@@ -8,14 +8,14 @@ from typing import Any
 from bleak import BleakScanner
 from bleak.backends.device import BLEDevice
 
-from .consts import EMBER_BLUETOOTH_NAMES, EMBER_SERVICE_UUID
+from .consts import EMBER_BLUETOOTH_NAMES, EMBER_SERVICE_UUID, USES_BLUEZ
 
 logger = logging.Logger(__name__)
 
 
 def build_scanner_kwargs(adapter: str = None) -> dict[str, Any]:
     """Add Adapter to kwargs for scanner if specified and using BlueZ."""
-    if adapter and BleakScanner.__name__ != 'BleakScannerBlueZDBus':
+    if adapter and not USES_BLUEZ:
         raise ValueError('The adapter option is only valid for the Linux BlueZ Backend.')
     return {'adapter': adapter} if adapter else {}
 

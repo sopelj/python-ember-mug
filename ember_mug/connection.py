@@ -1,6 +1,7 @@
 """Objects and methods related to connection to the mug."""
 from __future__ import annotations
 
+import asyncio
 import contextlib
 import logging
 from datetime import datetime
@@ -8,6 +9,7 @@ from functools import partial
 from typing import TYPE_CHECKING, Any, Callable
 
 from bleak import BleakClient, BleakError
+from bleak_retry_connector import establish_connection
 
 from .consts import (
     MUG_NAME_REGEX,
@@ -22,6 +24,7 @@ from .consts import (
     PUSH_EVENT_ID_TARGET_TEMPERATURE_CHANGED,
     TEMP_CELSIUS,
     TEMP_FAHRENHEIT,
+    USES_BLUEZ,
     UUID_BATTERY,
     UUID_CONTROL_REGISTER_DATA,
     UUID_DRINK_TEMPERATURE,
@@ -69,20 +72,34 @@ _update_attrs = (
 class EmberMugConnection:
     """Context manager to handle updating via active connection."""
 
-    def __init__(self, mug: EmberMug, adapter: str = None) -> None:
+    def __init__(self, mug: EmberMug, adapter: str = None, **kwargs: Any) -> None:
         """Initialize connection manager."""
         self.mug = mug
-        if adapter and BleakClient.__name__ != 'BleakClientBlueZDBus':
-            raise ValueError('The adapter option is only valid for the Linux BlueZ Backend.')
-        client_kwargs = {'adapter': adapter} if adapter else {}
-        self.client = BleakClient(mug.device, **client_kwargs)
+        self.client: BleakClient = None  # type: ignore
+
         self._queued_updates: set[str] = set()
         self._latest_event_id: int | None = None
 
+        self._client_kwargs = {**kwargs}
+        if adapter:
+            if USES_BLUEZ is False:
+                raise ValueError('The adapter option is only valid for the Linux BlueZ Backend.')
+            self._client_kwargs['adapter'] = adapter
+
     async def connect(self) -> None:
         """Connect to mug."""
-        if not self.client.is_connected:
-            await self.client.connect()
+        if self.client is None or self.client.is_connected is False:
+            try:
+                self.client = await establish_connection(
+                    BleakClient,
+                    self.mug.device,
+                    f'{self.mug.name} ({self.mug.device.address})',
+                    **self._client_kwargs,
+                )
+            except (asyncio.TimeoutError, BleakError) as error:
+                logger.error(f"{self.mug.device}: Failed to connect to the lock: {error}")
+                raise error
+            # Attempt to pair for good measure and perform an initial update
             with contextlib.suppress(BleakError):
                 await self.client.pair()
             await self.update_initial()

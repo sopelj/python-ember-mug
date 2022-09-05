@@ -1,7 +1,9 @@
 """Bluetooth UUIDs and other constants used for communicating with the mug."""
 from __future__ import annotations
 
+import platform
 import re
+from os import environ
 from uuid import UUID
 
 TEMP_CELSIUS = "C"
@@ -112,3 +114,6 @@ UUID_ACCELERATION = UUID("fc54000b-236c-4c94-8fa9-944a3e5353fa")
 # Validation
 MUG_NAME_REGEX = re.compile(r"[A-Za-z0-9,.\[\]#()!\"\';:|\-_+<>%= ]{1,16}")
 MAC_ADDRESS_REGEX = re.compile(r"^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$")
+
+# Modes
+USES_BLUEZ = not environ.get("P4A_BOOTSTRAP") and platform.system() == "Linux"

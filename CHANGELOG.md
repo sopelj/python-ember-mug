@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+## [0.2.0]
+
+### Added
+* bleak-retry-connector to help connect and maintain connection to mug
+* Add option to show/hide less useful mug info
+* Formatting for polled changes in CLI
+* Add more tests
+
+### Removed
+* Support for python 3.8 - In order to use bleak-retry-connector
+
 ## [0.1.2] - 2022-09-03
 
 ### Added

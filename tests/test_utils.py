@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-"""Tests for `ember_mug` package."""
+"""Tests for `ember_mug.utils`."""
 
 from ember_mug.utils import (
     bytes_to_big_int,

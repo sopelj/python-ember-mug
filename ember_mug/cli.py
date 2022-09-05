@@ -6,13 +6,20 @@ import platform
 import re
 import sys
 from argparse import ArgumentParser, ArgumentTypeError, Namespace
-from typing import Any
+from typing import Any, Callable
 
 from bleak.backends.device import BLEDevice
 
 from .consts import MAC_ADDRESS_REGEX
+from .formatting import format_led_colour, format_liquid_level, format_liquid_state
 from .mug import EmberMug
 from .scanner import discover_mugs, find_mug
+
+formatters: dict[str, Callable] = {
+    'led_colour': format_led_colour,
+    'liquid_level': format_liquid_level,
+    'liquid_state': format_liquid_state,
+}
 
 
 def validate_mac(value: str) -> str:
@@ -47,7 +54,7 @@ async def discover(args: Namespace) -> list[BLEDevice]:
 async def fetch_info(args: Namespace) -> None:
     """Fetch all information from a mug and end."""
     device = await find_device(args)
-    mug = EmberMug(device)
+    mug = EmberMug(device, use_metric=not args.use_imperial, include_extra=args.extra)
     print('Connecting...')
     async with mug.connection(adapter=args.adapter) as con:
         print('Connected.\nFetching Info')
@@ -84,6 +91,8 @@ def print_info(mug: EmberMug) -> None:
 def print_changes(changes: list[tuple[str, Any, Any]]) -> None:
     """Print changes."""
     for attr, old_value, new_value in changes:
+        if formatter := formatters.get(attr):
+            old_value, new_value = formatter(old_value), formatter(new_value)
         print(f'{attr.replace("_", " ").title()} changed from {old_value} to {new_value}')
 
 
@@ -119,8 +128,11 @@ class EmberMugCli:
         subparsers = self.parser.add_subparsers(dest='command', required=True)
         subparsers.add_parser('find', description='Find the first paired mug', parents=[shared_parser])
         subparsers.add_parser('discover', description='Discover Mugs in pairing mode', parents=[shared_parser])
-        subparsers.add_parser('info', description='Fetch all info from mug', parents=[shared_parser])
-        subparsers.add_parser('poll', description='Poll mug for information', parents=[shared_parser])
+        info_parsers = ArgumentParser(add_help=False)
+        info_parsers.add_argument('-e', '--extra', help='Show extra info', action='store_true')
+        info_parsers.add_argument('--imperial', help='Use Imperial units', action='store_true')
+        subparsers.add_parser('info', description='Fetch all info from mug', parents=[shared_parser, info_parsers])
+        subparsers.add_parser('poll', description='Poll mug for information', parents=[shared_parser, info_parsers])
 
     async def run(self) -> None:
         """Run the specified command based on subparser."""
