@@ -64,7 +64,7 @@ jobs:
           publish_dir: ./site
 
       - name: Build wheels and source tarball
-        run: >-
+        run: |
           poetry install -E build --no-dev
           poetry build
 
