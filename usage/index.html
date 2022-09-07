@@ -277,6 +277,32 @@
     Usage
   </a>
   
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-python-project" class="md-nav__link">
+    In Python Project
+  </a>
+  
+    <nav class="md-nav" aria-label="In Python Project">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-cli-interface" class="md-nav__link">
+    Using CLI interface
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -346,6 +372,32 @@
     Usage
   </a>
   
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-python-project" class="md-nav__link">
+    In Python Project
+  </a>
+  
+    <nav class="md-nav" aria-label="In Python Project">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-cli-interface" class="md-nav__link">
+    Using CLI interface
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -369,6 +421,7 @@
   <h1>Usage</h1>
 
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<h3 id="in-python-project">In Python Project<a class="headerlink" href="#in-python-project" title="Permanent link">&para;</a></h3>
 <p>To use Python Ember Mug in a project</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">ember_mug.scanner</span> <span class="kn">import</span> <span class="n">find_mug</span><span class="p">,</span> <span class="n">discover_mugs</span>
 <span class="kn">from</span> <span class="nn">ember_mug.mug</span> <span class="kn">import</span> <span class="n">EmberMug</span>
@@ -384,6 +437,37 @@
     <span class="k">await</span> <span class="n">con</span><span class="o">.</span><span class="n">update_all</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">mug</span><span class="o">.</span><span class="n">formatted_data</span><span class="p">)</span>
 </code></pre></div>
+<h4 id="using-cli-interface">Using CLI interface<a class="headerlink" href="#using-cli-interface" title="Permanent link">&para;</a></h4>
+<p>It can also be invoked as a module from command line as <code>python -m ember_mug --help</code>.
+There are four options with different subsections. You can see them by specifying them before help. eg <code>python -m ember_mug poll --help</code></p>
+<p>Basic options:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>discover</code></td>
+<td>Find/List all detected unpaired mugs in pairing mode</td>
+</tr>
+<tr>
+<td><code>find</code></td>
+<td>Find <em>one</em> already paired mugs</td>
+</tr>
+<tr>
+<td><code>info</code></td>
+<td>Connect to <em>one</em> mug and print its current state</td>
+</tr>
+<tr>
+<td><code>poll</code></td>
+<td>Connect to <em>one</em> mug and print its current state and keep watching for changes</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="CLI Example" src="../images/cli-example.png" /></p>
 
 
 

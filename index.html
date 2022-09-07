@@ -273,15 +273,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cli" class="md-nav__link">
-    CLI
+  <a href="#python" class="md-nav__link">
+    Python
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#python" class="md-nav__link">
-    Python
+  <a href="#cli" class="md-nav__link">
+    CLI
   </a>
   
 </li>
@@ -433,15 +433,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cli" class="md-nav__link">
-    CLI
+  <a href="#python" class="md-nav__link">
+    Python
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#python" class="md-nav__link">
-    Python
+  <a href="#cli" class="md-nav__link">
+    CLI
   </a>
   
 </li>
@@ -516,11 +516,6 @@ but could be useful separately and has a simple CLI interface too.</p>
 <li>Polling for changes</li>
 </ul>
 <h3 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h3>
-<h4 id="cli">CLI<a class="headerlink" href="#cli" title="Permanent link">&para;</a></h4>
-<p>Put your mug in pairing mode (hold button five seconds or until blue)</p>
-<div class="highlight"><pre><span></span><code>python -m ember_mug discover  <span class="c1"># Finds the mug in pairing mode for the first time</span>
-python -m ember_mug poll  <span class="c1"># fetches info and keeps listening for notifications</span>
-</code></pre></div>
 <h4 id="python">Python<a class="headerlink" href="#python" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">ember_mug.scanner</span> <span class="kn">import</span> <span class="n">find_mug</span><span class="p">,</span> <span class="n">discover_mugs</span>
 <span class="kn">from</span> <span class="nn">ember_mug.mug</span> <span class="kn">import</span> <span class="n">EmberMug</span>
@@ -536,6 +531,40 @@ python -m ember_mug poll  <span class="c1"># fetches info and keeps listening fo
     <span class="k">await</span> <span class="n">con</span><span class="o">.</span><span class="n">update_all</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">mug</span><span class="o">.</span><span class="n">formatted_data</span><span class="p">)</span>
 </code></pre></div>
+<h4 id="cli">CLI<a class="headerlink" href="#cli" title="Permanent link">&para;</a></h4>
+<p>It can also be invoked as a module from command line as <code>python -m ember_mug --help</code>.
+There are four options with different subsections. You can see them by specifying them before help. eg <code>python -m ember_mug poll --help</code></p>
+<div class="highlight"><pre><span></span><code>python -m ember_mug discover  <span class="c1"># Finds the mug in pairing mode for the first time</span>
+python -m ember_mug poll  <span class="c1"># fetches info and keeps listening for notifications</span>
+</code></pre></div>
+<p>Basic options:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>discover</code></td>
+<td>Find/List all detected unpaired mugs in pairing mode</td>
+</tr>
+<tr>
+<td><code>find</code></td>
+<td>Find <em>one</em> already paired mugs</td>
+</tr>
+<tr>
+<td><code>info</code></td>
+<td>Connect to <em>one</em> mug and print its current state</td>
+</tr>
+<tr>
+<td><code>poll</code></td>
+<td>Connect to <em>one</em> mug and print its current state and keep watching for changes</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="CLI Example" src="images/cli-example.png" /></p>
 <h3 id="caveats">Caveats<a class="headerlink" href="#caveats" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Since this api is not public, a lot of guesswork and reverse engineering is involved, so it's not perfect.</li>
