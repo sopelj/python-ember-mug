@@ -65,7 +65,7 @@ async def fetch_info(args: Namespace) -> None:
 async def poll_mug(args: Namespace) -> None:
     """Fetch all information and keep polling for changes."""
     device = await find_device(args)
-    mug = EmberMug(device)
+    mug = EmberMug(device, use_metric=not args.use_imperial, include_extra=args.extra)
     print('Connecting...')
     async with mug.connection(adapter=args.adapter) as con:
         print('Connected.\nFetching Info')

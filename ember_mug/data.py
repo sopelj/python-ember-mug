@@ -81,8 +81,8 @@ class MugFirmwareInfo:
 class MugMeta:
     """Meta data for mug."""
 
-    serial_number: str
     mug_id: str
+    serial_number: str
 
     @classmethod
     def from_bytes(cls, data: bytes) -> MugMeta:

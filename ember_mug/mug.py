@@ -57,6 +57,7 @@ class EmberMug:
         self.model = ble_device.name
         self.include_extra = include_extra
 
+    @property
     def meta_display(self) -> str:
         """Return Meta infor based on preference."""
         if self.meta and not self.include_extra:
@@ -86,7 +87,7 @@ class EmberMug:
     @property
     def target_temp_display(self) -> str:
         """Human-readable target temp with unit."""
-        return format_temp(self.current_temp, self.use_metric)
+        return format_temp(self.target_temp, self.use_metric)
 
     def update_info(self, **kwargs: Any) -> list[tuple[str, Any, Any]]:
         """Update attributes of the mug if they haven't changed."""

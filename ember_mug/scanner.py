@@ -3,10 +3,11 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from typing import Any
+from typing import Any, Callable
 
 from bleak import BleakScanner
 from bleak.backends.device import BLEDevice
+from bleak.backends.scanner import AdvertisementData
 
 from .consts import EMBER_BLUETOOTH_NAMES, EMBER_SERVICE_UUID, USES_BLUEZ
 
@@ -31,13 +32,22 @@ async def discover_mugs(mac: str = None, adapter: str = None, wait: int = 5) -> 
         return scanner.discovered_devices
 
 
+def build_find_filter(mac: str = None) -> Callable:
+    """Create a filter for finding the mug by name and or mac address."""
+    known_names = [n.lower() for n in EMBER_BLUETOOTH_NAMES]
+
+    def mug_filter(device: BLEDevice, advertisement: AdvertisementData) -> bool:
+        """Filter by mac if specified else just check the name."""
+        if mac is not None and device.address.lower() != mac:
+            return False
+        return device.name.lower() in known_names
+
+    return mug_filter
+
+
 async def find_mug(mac: str = None, adapter: str = None) -> BLEDevice | None:
     """Find a mug."""
-    known_names = [n.lower() for n in EMBER_BLUETOOTH_NAMES]
     if mac is not None:
         mac = mac.lower()
     scanner_kwargs = build_scanner_kwargs(adapter)
-    return await BleakScanner.find_device_by_filter(
-        lambda d, ad: d.name and d.name.lower() in known_names and mac is None or d.address.lower() == mac,
-        **scanner_kwargs,
-    )
+    return await BleakScanner.find_device_by_filter(build_find_filter(mac), **scanner_kwargs)

@@ -27,7 +27,7 @@ from .consts import (
     USES_BLUEZ,
     UUID_BATTERY,
     UUID_CONTROL_REGISTER_DATA,
-    UUID_DRINK_TEMPERATURE,
+    UUID_CURRENT_TEMPERATURE,
     UUID_DSK,
     UUID_LED,
     UUID_LIQUID_LEVEL,
@@ -145,11 +145,11 @@ class EmberMugConnection:
     async def set_target_temp(self, target_temp: float) -> None:
         """Set new target temp for mug."""
         target = bytearray(int(target_temp / 0.01).to_bytes(2, "little"))
-        await self.client.write_gatt_char(UUID_TARGET_TEMPERATURE, target, True)
+        await self.client.write_gatt_char(UUID_TARGET_TEMPERATURE, target)
 
     async def get_current_temp(self) -> float:
         """Get current temp from mug gatt."""
-        temp_bytes = await self.client.read_gatt_char(UUID_DRINK_TEMPERATURE)
+        temp_bytes = await self.client.read_gatt_char(UUID_CURRENT_TEMPERATURE)
         return temp_from_bytes(temp_bytes, self.mug.use_metric)
 
     async def get_liquid_level(self) -> int:
@@ -199,7 +199,7 @@ class EmberMugConnection:
     async def set_temp_unit(self, unit: str) -> None:
         """Set mug unit."""
         unit_bytes = bytearray([1 if unit == TEMP_FAHRENHEIT else 0])
-        await self.client.write_gatt_char(UUID_TEMPERATURE_UNIT, unit_bytes, True)
+        await self.client.write_gatt_char(UUID_TEMPERATURE_UNIT, unit_bytes)
 
     async def ensure_correct_unit(self) -> None:
         """Set mug unit if it's not what we want."""

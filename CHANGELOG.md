@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Added
+* Tests for data, scanner, mug
+* CLI flag for imperial units
+
+### Fixed
+* meta_display was not property
+* target_temp returned current_temp
+* extra flag was not applied to polling
+
 ## [0.2.0]
 
 ### Added

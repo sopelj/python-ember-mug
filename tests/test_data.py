@@ -21,9 +21,11 @@ def test_mug_firmware_info():
     assert firmware.version == 355
     assert firmware.hardware == 128
     assert firmware.bootloader == 18
+    assert str(firmware) == 'Version: 355, Hardware: 128, Bootloader: 18'
 
 
 def test_mug_meta():
     meta = MugMeta.from_bytes(b'Yw====-ABCDEFGHIJ')
     assert meta.mug_id == 'c'
     assert meta.serial_number == 'ABCDEFGHIJ'
+    assert str(meta) == 'Mug ID: c, Serial Number: ABCDEFGHIJ'
