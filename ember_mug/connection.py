@@ -106,7 +106,7 @@ class EmberMugConnection:
 
     async def disconnect(self) -> None:
         """Disconnect from mug and stop listening to notifications."""
-        if self.client.is_connected:
+        if self.client and self.client.is_connected:
             with contextlib.suppress(BleakError):
                 await self.client.stop_notify(UUID_PUSH_EVENT)
             await self.client.disconnect()

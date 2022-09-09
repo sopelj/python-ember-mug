@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [0.2.2]
+
+### Fixed
+* Only try to disconnect if client is present
+
 ## [0.2.1]
 
 ### Added
