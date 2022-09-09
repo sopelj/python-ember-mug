@@ -3,35 +3,24 @@ from __future__ import annotations
 
 import asyncio
 import platform
-import re
 import sys
-from argparse import ArgumentParser, ArgumentTypeError, Namespace
-from typing import Any, Callable
+from argparse import ArgumentParser, Namespace
 
+from bleak import BleakError
 from bleak.backends.device import BLEDevice
 
-from .consts import MAC_ADDRESS_REGEX
-from .formatting import format_led_colour, format_liquid_level, format_liquid_state
-from .mug import EmberMug
-from .scanner import discover_mugs, find_mug
-
-formatters: dict[str, Callable] = {
-    'led_colour': format_led_colour,
-    'liquid_level': format_liquid_level,
-    'liquid_state': format_liquid_state,
-}
-
-
-def validate_mac(value: str) -> str:
-    """Check if specified MAC Address is valid."""
-    if not isinstance(value, str) or not re.match(MAC_ADDRESS_REGEX, value):
-        raise ArgumentTypeError("Invalid MAC Address")
-    return value.lower()
+from ..mug import EmberMug
+from ..scanner import discover_mugs, find_mug
+from .helpers import print_changes, print_info, validate_mac
 
 
 async def find_device(args: Namespace) -> BLEDevice:
     """Find a single device that has already been paired."""
-    device = await find_mug(mac=args.mac, adapter=args.adapter)
+    try:
+        device = await find_mug(mac=args.mac, adapter=args.adapter)
+    except BleakError as e:
+        print(f'An error occurred trying to find a mug: {e}')
+        sys.exit(1)
     if not device:
         print('No mug was found.')
         sys.exit(1)
@@ -41,7 +30,11 @@ async def find_device(args: Namespace) -> BLEDevice:
 
 async def discover(args: Namespace) -> list[BLEDevice]:
     """Discover new devices in pairing mode."""
-    mugs = await discover_mugs(mac=args.mac)
+    try:
+        mugs = await discover_mugs(mac=args.mac)
+    except BleakError as e:
+        print(f'An error occurred trying to discover mugs: {e}')
+        sys.exit(1)
     if not mugs:
         print('No mugs were found. Be sure it is in pairing mode. Or use "find" if already paired.')
         sys.exit(1)
@@ -54,7 +47,7 @@ async def discover(args: Namespace) -> list[BLEDevice]:
 async def fetch_info(args: Namespace) -> None:
     """Fetch all information from a mug and end."""
     device = await find_device(args)
-    mug = EmberMug(device, use_metric=not args.use_imperial, include_extra=args.extra)
+    mug = EmberMug(device, use_metric=not args.imperial, include_extra=args.extra)
     print('Connecting...')
     async with mug.connection(adapter=args.adapter) as con:
         print('Connected.\nFetching Info')
@@ -65,7 +58,7 @@ async def fetch_info(args: Namespace) -> None:
 async def poll_mug(args: Namespace) -> None:
     """Fetch all information and keep polling for changes."""
     device = await find_device(args)
-    mug = EmberMug(device, use_metric=not args.use_imperial, include_extra=args.extra)
+    mug = EmberMug(device, use_metric=not args.imperial, include_extra=args.extra)
     print('Connecting...')
     async with mug.connection(adapter=args.adapter) as con:
         print('Connected.\nFetching Info')
@@ -76,24 +69,9 @@ async def poll_mug(args: Namespace) -> None:
         while True:
             for _ in range(60):
                 await asyncio.sleep(1)
-                print_changes(await con.update_queued_attributes())
+                print_changes(await con.update_queued_attributes(), con.mug.use_metric)
             # Every minute do a full update
-            print_changes(await con.update_all())
-
-
-def print_info(mug: EmberMug) -> None:
-    """Print all mug data."""
-    print('Mug Data')
-    for name, value in mug.formatted_data.items():
-        print(f'{name}: {value}')
-
-
-def print_changes(changes: list[tuple[str, Any, Any]]) -> None:
-    """Print changes."""
-    for attr, old_value, new_value in changes:
-        if formatter := formatters.get(attr):
-            old_value, new_value = formatter(old_value), formatter(new_value)
-        print(f'{attr.replace("_", " ").title()} changed from {old_value} to {new_value}')
+            print_changes(await con.update_all(), con.mug.use_metric)
 
 
 class EmberMugCli:

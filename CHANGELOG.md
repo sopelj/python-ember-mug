@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## [0.2.3]
+
+### Added
+* Format information as table in CLI
+* Print message with error instead of stack trace in cli if bleak error occurs in find/discover
+
+### Fixed
+* Incorrect name for imperial CLI flag
+
 ## [0.2.2]
 
 ### Fixed
