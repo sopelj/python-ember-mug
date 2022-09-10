@@ -1,5 +1,4 @@
 """Tests for `ember_mug.connection`."""
-from datetime import datetime
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
@@ -240,8 +239,9 @@ async def test_get_mug_battery_voltage(mug_connection):
 
 @pytest.mark.asyncio
 async def test_get_mug_date_time_zone(mug_connection):
-    mug_connection.client.read_gatt_char.return_value = b'c\x10.@'
-    assert (await mug_connection.get_date_time_zone()) == datetime(2022, 9, 1, 0, 0)
+    mug_connection.client.read_gatt_char.return_value = b'c\x0f\xf6\x00'
+    date_time = await mug_connection.get_date_time_zone()
+    assert date_time.timestamp() == 1661990400.0
     mug_connection.client.read_gatt_char.assert_called_once_with(UUID_TIME_DATE_AND_ZONE)
 
 

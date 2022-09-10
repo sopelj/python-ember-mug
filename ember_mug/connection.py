@@ -4,7 +4,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from functools import partial
 from typing import TYPE_CHECKING, Any, Callable
 
@@ -217,7 +217,7 @@ class EmberMugConnection:
         date_time_zone_bytes = await self.client.read_gatt_char(UUID_TIME_DATE_AND_ZONE)
         time = bytes_to_big_int(date_time_zone_bytes[:4])
         # offset = bytes_to_big_int(date_time_zone_bytes[4:])
-        return datetime.fromtimestamp(time) if time > 0 else None
+        return datetime.fromtimestamp(time, timezone.utc) if time > 0 else None
 
     async def get_firmware(self) -> MugFirmwareInfo:
         """Get firmware info."""
