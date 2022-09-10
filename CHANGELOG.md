@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [0.2.4]
+
+### Added
+* Lots of tests
+
+### Fixed
+* Typo in metric in print_changes
+* Fix Name validation rules
+* set_temperature_unit method name
+
 ## [0.2.3]
 
 ### Added

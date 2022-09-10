@@ -5,13 +5,16 @@ import asyncio
 import platform
 import sys
 from argparse import ArgumentParser, Namespace
+from typing import TYPE_CHECKING
 
 from bleak import BleakError
-from bleak.backends.device import BLEDevice
 
 from ..mug import EmberMug
 from ..scanner import discover_mugs, find_mug
 from .helpers import print_changes, print_info, validate_mac
+
+if TYPE_CHECKING:
+    from bleak.backends.device import BLEDevice
 
 
 async def find_device(args: Namespace) -> BLEDevice:

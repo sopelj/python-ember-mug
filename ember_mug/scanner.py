@@ -3,13 +3,16 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any, Callable
 
 from bleak import BleakScanner
-from bleak.backends.device import BLEDevice
-from bleak.backends.scanner import AdvertisementData
 
 from .consts import EMBER_BLUETOOTH_NAMES, EMBER_SERVICE_UUID, USES_BLUEZ
+
+if TYPE_CHECKING:
+    from bleak.backends.device import BLEDevice
+    from bleak.backends.scanner import AdvertisementData
+
 
 logger = logging.Logger(__name__)
 

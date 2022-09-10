@@ -49,7 +49,7 @@ if TYPE_CHECKING:
 
 logger = logging.Logger(__name__)
 
-_initial_attrs = (
+INITIAL_ATTRS = (
     "meta",
     "name",
     "udsk",
@@ -57,7 +57,7 @@ _initial_attrs = (
     "date_time_zone",
     "firmware",
 )
-_update_attrs = (
+UPDATE_ATTRS = (
     "led_colour",
     "current_temp",
     "target_temp",
@@ -88,7 +88,7 @@ class EmberMugConnection:
 
     async def connect(self) -> None:
         """Connect to mug."""
-        if self.client is None or self.client.is_connected is False:
+        if getattr(self.client, 'is_connected', False) is False:
             try:
                 self.client = await establish_connection(
                     BleakClient,
@@ -106,7 +106,7 @@ class EmberMugConnection:
 
     async def disconnect(self) -> None:
         """Disconnect from mug and stop listening to notifications."""
-        if self.client and self.client.is_connected:
+        if getattr(self.client, 'is_connected', False) is True:
             with contextlib.suppress(BleakError):
                 await self.client.stop_notify(UUID_PUSH_EVENT)
             await self.client.disconnect()
@@ -196,7 +196,7 @@ class EmberMugConnection:
         unit_bytes = await self.client.read_gatt_char(UUID_TEMPERATURE_UNIT)
         return TEMP_CELSIUS if bytes_to_little_int(unit_bytes) == 0 else TEMP_FAHRENHEIT
 
-    async def set_temp_unit(self, unit: str) -> None:
+    async def set_temperature_unit(self, unit: str) -> None:
         """Set mug unit."""
         unit_bytes = bytearray([1 if unit == TEMP_FAHRENHEIT else 0])
         await self.client.write_gatt_char(UUID_TEMPERATURE_UNIT, unit_bytes)
@@ -205,7 +205,7 @@ class EmberMugConnection:
         """Set mug unit if it's not what we want."""
         desired = TEMP_CELSIUS if self.mug.use_metric else TEMP_FAHRENHEIT
         if self.mug.temperature_unit != desired:
-            await self.set_temp_unit(desired)
+            await self.set_temperature_unit(desired)
 
     async def get_battery_voltage(self) -> int:
         """Get voltage and charge time."""
@@ -225,11 +225,11 @@ class EmberMugConnection:
 
     async def update_initial(self) -> list[tuple[str, Any, Any]]:
         """Update attributes that don't normally change and don't need to be regularly updated."""
-        return await self._update_multiple(_initial_attrs)
+        return await self._update_multiple(INITIAL_ATTRS)
 
     async def update_all(self) -> list[tuple[str, Any, Any]]:
         """Update all standard attributes."""
-        return await self._update_multiple(_update_attrs)
+        return await self._update_multiple(UPDATE_ATTRS)
 
     async def _update_multiple(self, attrs: tuple[str, ...]) -> list[tuple[str, Any, Any]]:
         """Helper to update a list of attributes from the mug."""

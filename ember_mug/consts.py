@@ -112,7 +112,7 @@ UUID_VOLUME = UUID("fc540009-236c-4c94-8fa9-944a3e5353fa")
 UUID_ACCELERATION = UUID("fc54000b-236c-4c94-8fa9-944a3e5353fa")
 
 # Validation
-MUG_NAME_REGEX = re.compile(r"[A-Za-z0-9,.\[\]#()!\"\';:|\-_+<>%= ]{1,16}")
+MUG_NAME_REGEX = re.compile(r"^[A-Za-z0-9,.\[\]#()!\"\';:|\-_+<>%= ]{1,16}$")
 MAC_ADDRESS_REGEX = re.compile(r"^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$")
 
 # Modes

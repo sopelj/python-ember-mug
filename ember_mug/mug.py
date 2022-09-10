@@ -2,13 +2,15 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
-
-from bleak.backends.device import BLEDevice
+from typing import TYPE_CHECKING, Any
 
 from .connection import EmberMugConnection
 from .data import BatteryInfo, Colour, MugFirmwareInfo, MugMeta
 from .formatting import format_led_colour, format_liquid_level, format_liquid_state, format_temp
+
+if TYPE_CHECKING:
+    from bleak.backends.device import BLEDevice
+
 
 logger = logging.Logger(__name__)
 

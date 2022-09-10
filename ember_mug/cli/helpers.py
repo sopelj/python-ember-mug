@@ -5,11 +5,13 @@ import re
 from argparse import ArgumentTypeError
 from collections import defaultdict
 from functools import partial
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any, Callable
 
 from ..consts import MAC_ADDRESS_REGEX
 from ..formatting import format_led_colour, format_liquid_level, format_liquid_state, format_temp
-from ..mug import EmberMug
+
+if TYPE_CHECKING:
+    from ..mug import EmberMug
 
 base_formatters: dict[str, Callable] = {
     'led_colour': format_led_colour,
@@ -59,8 +61,8 @@ def print_info(mug: EmberMug) -> None:
 def print_changes(changes: list[tuple[str, Any, Any]], metric: bool = True) -> None:
     """Print changes."""
     formatters: dict[str, Callable] = {
-        'current_temp': partial(format_temp, matric=metric),
-        'target_temp': partial(format_temp, matric=metric),
+        'current_temp': partial(format_temp, metric=metric),
+        'target_temp': partial(format_temp, metric=metric),
         **base_formatters,
     }
     for attr, old_value, new_value in changes:
