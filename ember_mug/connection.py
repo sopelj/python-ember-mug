@@ -100,7 +100,7 @@ class EmberMugConnection:
                 logger.error(f"{self.mug.device}: Failed to connect to the lock: {error}")
                 raise error
             # Attempt to pair for good measure and perform an initial update
-            with contextlib.suppress(BleakError):
+            with contextlib.suppress(BleakError, EOFError):
                 await self.client.pair()
             await self.update_initial()
 

@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [0.2.5]
+
+### Fixed
+* Catch EOFError during pair, which is not caught in bleak/dbus-next currently
+
 ## [0.2.4]
 
 ### Added
