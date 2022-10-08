@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "python-ember-mug"
-version = "0.2.5"
+version = "0.3.0"
 homepage = "https://github.com/sopelj/python-ember-mug"
 description = "Python Library for Ember Mugs."
 authors = ["Jesse Sopel <jesse.sopel@gmail.com>"]
@@ -23,8 +23,8 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
-bleak = ">=0.16.0"
-bleak-retry-connector = ">=1.11.0"
+bleak-retry-connector = ">=1.17.1"
+bleak = ">=0.17.0"
 
 [tool.poetry.group.dev.dependencies]
 black  = { version = "^22.6.0" }
@@ -110,8 +110,9 @@ use_parentheses = true
 ensure_newline_before_comments = true
 line_length = 120
 skip_gitignore = true
-# you can skip files as below
-#skip_glob = docs/conf.py
+
+[tool.poetry.scripts]
+ember-mug = "ember_mug.cli:run_cli"
 
 [build-system]
 requires = ["setuptools", "poetry-core>=1.0.0"]

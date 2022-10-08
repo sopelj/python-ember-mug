@@ -1,11 +1,5 @@
 """Module to run the cli interface."""
-import asyncio
-
-from .cli import EmberMugCli
+from .cli import run_cli
 
 if __name__ == '__main__':
-    cli = EmberMugCli()
-    try:
-        asyncio.run(cli.run())
-    except KeyboardInterrupt:
-        print('Exiting.')
+    run_cli()

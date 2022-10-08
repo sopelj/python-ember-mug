@@ -49,12 +49,12 @@ async with mug.connection() as con:
 
 ### CLI
 
-It can also be invoked as a module from command line as `python -m ember_mug --help`.
-There are four options with different subsections. You can see them by specifying them before help. eg `python -m ember_mug poll --help`
+It can also be run via command line either directly with `ember-mug --help` or as a module with `python -m ember_mug --help`
+There are four options with different subsections. You can see them by specifying them before help. eg `ember-mug poll --help`
 
 ```bash
-python -m ember_mug discover  # Finds the mug in pairing mode for the first time
-python -m ember_mug poll  # fetches info and keeps listening for notifications
+ember-mug discover  # Finds the mug in pairing mode for the first time
+ember-mug poll  # fetches info and keeps listening for notifications
 ```
 
 Basic options:

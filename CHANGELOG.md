@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Added
+* Also packaged as CLI command to be used directly
+
+### Changed
+* Update bleak-retry-connector to 1.17.1
+* Update bleak to 0.17.0
+
 ## [0.2.5]
 
 ### Fixed
