@@ -1,13 +1,17 @@
 # Changelog
 
-## [Unreleased]
+## [0.3.0]
 
 ### Added
 * Also packaged as CLI command to be used directly
+* Add register_callback
+* Fire callbacks in notifications and all updates
+* Add set_device and pass to establish_connection
 
 ### Changed
 * Update bleak-retry-connector to 1.17.1
 * Update bleak to 0.17.0
+* Renamed connect to ensure_connection
 
 ## [0.2.5]
 
