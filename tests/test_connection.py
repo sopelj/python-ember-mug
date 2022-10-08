@@ -316,7 +316,7 @@ def test_mug_notify_callback(mug_connection):
     mug_connection.register_callback(callback)
     mug_connection._notify_callback(1, b'\x09')
     assert mug_connection._latest_event_id == 9
-    callback.assert_called_once()
+    callback.assert_not_called()
     assert mug_connection._queued_updates == {
         "battery",
         "target_temp",
@@ -325,3 +325,5 @@ def test_mug_notify_callback(mug_connection):
         "liquid_state",
         "battery_voltage",
     }
+    mug_connection._notify_callback(1, b'\x02')
+    callback.assert_called_once()
