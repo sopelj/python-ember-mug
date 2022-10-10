@@ -215,7 +215,13 @@ class EmberMugConnection:
 
     async def get_udsk(self) -> str:
         """Get mug udsk from gatt."""
-        return decode_byte_string(await self._client.read_gatt_char(UUID_UDSK))
+        encoded_udsk = await self._client.read_gatt_char(UUID_UDSK)
+        try:
+            # TODO: Perhaps it isn't encoded in base64...
+            return decode_byte_string(encoded_udsk)
+        except ValueError:
+            logger.warning("Unable to decode UDSK. Falling back to encoded value.")
+            return str(encoded_udsk)
 
     async def set_udsk(self, udsk: str) -> None:
         """Attempt to write udsk."""
@@ -291,7 +297,7 @@ class EmberMugConnection:
             self._fire_callbacks()
         return changes
 
-    def _notify_callback(self, characteristic: BleakGATTCharacteristic, data: bytearray):
+    def _notify_callback(self, characteristic: int | BleakGATTCharacteristic, data: bytearray):
         """Push events from the mug to indicate changes."""
         event_id = data[0]
         if self._latest_event_id == event_id:

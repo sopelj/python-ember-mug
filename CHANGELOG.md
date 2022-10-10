@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.1]
+
+### Fix
+* Catch error decoding UDSK and log warning to avoid error setting up
+
 ## [0.3.0]
 
 ### Added
