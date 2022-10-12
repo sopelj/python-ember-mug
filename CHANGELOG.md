@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.2]
+
+### Fix
+* Try to fix, but also always catch encoding errors
+
 ## [0.3.1]
 
 ### Fix
