@@ -215,13 +215,7 @@ class EmberMugConnection:
 
     async def get_udsk(self) -> str:
         """Get mug udsk from gatt."""
-        encoded_udsk = await self._client.read_gatt_char(UUID_UDSK)
-        try:
-            # TODO: Perhaps it isn't encoded in base64...
-            return decode_byte_string(encoded_udsk)
-        except ValueError:
-            logger.warning("Unable to decode UDSK. Falling back to encoded value.")
-            return str(encoded_udsk)
+        return decode_byte_string(await self._client.read_gatt_char(UUID_UDSK))
 
     async def set_udsk(self, udsk: str) -> None:
         """Attempt to write udsk."""
@@ -230,13 +224,7 @@ class EmberMugConnection:
 
     async def get_dsk(self) -> str:
         """Get mug dsk from gatt."""
-        value = await self._client.read_gatt_char(UUID_DSK)
-        try:
-            # TODO: Perhaps it isn't encoded in base64...
-            return decode_byte_string(value)
-        except ValueError:
-            logger.warning("Unable to decode DSK. Falling back to encoded value.")
-            return str(value)
+        return decode_byte_string(await self._client.read_gatt_char(UUID_DSK))
 
     async def get_temperature_unit(self) -> str:
         """Get mug temp unit."""

@@ -86,7 +86,7 @@ async def test_disconnect(mug_connection):
 async def test_get_mug_meta(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'Yw====-ABCDEFGHIJ'
     meta = await mug_connection.get_meta()
-    assert meta.mug_id == 'c'
+    assert meta.mug_id == 'WXc9PT09'
     assert meta.serial_number == 'ABCDEFGHIJ'
     mug_connection._client.read_gatt_char.assert_called_once_with(UUID_MUG_ID)
 
@@ -181,8 +181,8 @@ async def test_set_mug_name(mug_connection):
 
 @pytest.mark.asyncio
 async def test_get_mug_udsk(mug_connection):
-    mug_connection._client.read_gatt_char.return_value = b'dGVzdCBzdHJpbmc='
-    assert (await mug_connection.get_udsk()) == 'test string'
+    mug_connection._client.read_gatt_char.return_value = b'abcd12345'
+    assert (await mug_connection.get_udsk()) == 'YWJjZDEyMzQ1'
     mug_connection._client.read_gatt_char.assert_called_once_with(UUID_UDSK)
 
 
@@ -192,17 +192,17 @@ async def test_set_mug_udsk(mug_connection):
     mug_connection.ensure_connection = AsyncMock()
     # Sadly this is the expected behavior for now
     with pytest.raises(BleakError):
-        await mug_connection.set_udsk('test string')
+        await mug_connection.set_udsk('abcd12345')
     mug_connection.ensure_connection.assert_called_once()
-    mug_connection._client.write_gatt_char.assert_called_once_with(UUID_UDSK, bytearray(b'dGVzdCBzdHJpbmc='))
+    mug_connection._client.write_gatt_char.assert_called_once_with(UUID_UDSK, bytearray(b'YWJjZDEyMzQ1'))
 
 
 @pytest.mark.asyncio
 async def test_get_mug_dsk(mug_connection):
-    mug_connection._client.read_gatt_char.return_value = b'dGVzdCBzdHJpbmc='
-    assert (await mug_connection.get_dsk()) == 'test string'
+    mug_connection._client.read_gatt_char.return_value = b'abcd12345'
+    assert (await mug_connection.get_dsk()) == 'YWJjZDEyMzQ1'
     mug_connection._client.read_gatt_char.return_value = b'something else'
-    assert (await mug_connection.get_dsk()) == "b'something else'"
+    assert (await mug_connection.get_dsk()) == "c29tZXRoaW5nIGVsc2U="
     mug_connection._client.read_gatt_char.assert_called_with(UUID_DSK)
 
 

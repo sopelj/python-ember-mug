@@ -26,6 +26,6 @@ def test_mug_firmware_info():
 
 def test_mug_meta():
     meta = MugMeta.from_bytes(b'Yw====-ABCDEFGHIJ')
-    assert meta.mug_id == 'c'
+    assert meta.mug_id == 'WXc9PT09'
     assert meta.serial_number == 'ABCDEFGHIJ'
-    assert str(meta) == 'Mug ID: c, Serial Number: ABCDEFGHIJ'
+    assert str(meta) == 'Mug ID: WXc9PT09, Serial Number: ABCDEFGHIJ'

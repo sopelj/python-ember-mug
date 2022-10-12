@@ -2,12 +2,22 @@
 from __future__ import annotations
 
 import base64
+import contextlib
+import logging
 import re
+
+logger = logging.getLogger(__name__)
 
 
 def decode_byte_string(data: bytes | bytearray) -> str:
     """Convert bytes to text as Ember expects."""
-    return base64.decodebytes(data + b"===").decode("utf-8")
+    if not data:
+        return ''
+    with contextlib.suppress(ValueError):
+        b64_as_str = base64.encodebytes(data).decode("utf-8")
+        return re.sub("[\r\n]", "", b64_as_str)
+    logger.warning(f'Failed to decode bytes "{data!r}". Forcing to string.')
+    return str(data)
 
 
 def encode_byte_string(data: str) -> bytes:

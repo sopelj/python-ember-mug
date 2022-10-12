@@ -89,7 +89,7 @@ class MugMeta:
         """Initialize from raw bytes."""
         return cls(
             mug_id=decode_byte_string(data[:6]),
-            serial_number=data[7:].decode("utf8"),
+            serial_number=data[7:].decode("utf-8"),
         )
 
     def __str__(self) -> str:
