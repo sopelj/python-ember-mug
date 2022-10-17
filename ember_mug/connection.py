@@ -119,6 +119,7 @@ class EmberMugConnection:
             # Attempt to pair for good measure and perform an initial update
             with contextlib.suppress(BleakError, EOFError):
                 await self._client.pair()
+            await self._client.get_services()
             await self.update_initial()
             await self.subscribe()
 
