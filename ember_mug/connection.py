@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, Any, Callable
 from bleak import BleakClient, BleakError
 from bleak.backends.characteristic import BleakGATTCharacteristic
 from bleak.backends.device import BLEDevice
-from bleak_retry_connector import establish_connection
+from bleak_retry_connector import establish_connection, retry_bluetooth_connection_error
 
 from .consts import (
     MUG_NAME_REGEX,
@@ -50,6 +50,8 @@ if TYPE_CHECKING:
     from .mug import EmberMug
 
 logger = logging.Logger(__name__)
+
+DEFAULT_ATTEMPTS = 3
 
 INITIAL_ATTRS = (
     "meta",
@@ -95,14 +97,15 @@ class EmberMugConnection:
         """Set the ble device."""
         self._device = ble_device
 
+    @retry_bluetooth_connection_error(DEFAULT_ATTEMPTS)  # type: ignore
     async def ensure_connection(self) -> None:
         """Connect to mug."""
-        if self._client and self._client.is_connected is True:
+        if self._client is not None and self._client.is_connected is True:
             return
 
         async with self._connect_lock:
             # Also check after lock is acquired
-            if self._client and self._client.is_connected is True:
+            if self._client is not None and self._client.is_connected is True:
                 return
             try:
                 self._client = await establish_connection(
@@ -260,12 +263,16 @@ class EmberMugConnection:
         """Get firmware info."""
         return MugFirmwareInfo.from_bytes(await self._client.read_gatt_char(UUID_OTA))
 
+    @retry_bluetooth_connection_error(DEFAULT_ATTEMPTS)  # type: ignore
     async def update_initial(self) -> list[tuple[str, Any, Any]]:
         """Update attributes that don't normally change and don't need to be regularly updated."""
+        await self.ensure_connection()
         return await self._update_multiple(INITIAL_ATTRS)
 
+    @retry_bluetooth_connection_error(DEFAULT_ATTEMPTS)  # type: ignore
     async def update_all(self) -> list[tuple[str, Any, Any]]:
         """Update all standard attributes."""
+        await self.ensure_connection()
         return await self._update_multiple(UPDATE_ATTRS)
 
     async def _update_multiple(self, attrs: tuple[str, ...]) -> list[tuple[str, Any, Any]]:

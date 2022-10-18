@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.4]
+
+### Added
+* Use retry_bluetooth_connection_error on update methods
+
 ## [0.3.3]
 
 ### Fix

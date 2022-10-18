@@ -268,15 +268,19 @@ async def test_read_firmware(mug_connection):
 @pytest.mark.asyncio
 async def test_mug_update_initial(mug_connection):
     mug_connection._update_multiple = AsyncMock(return_value={})
+    mug_connection.ensure_connection = AsyncMock()
     assert (await mug_connection.update_initial()) == {}
     mug_connection._update_multiple.assert_called_once_with(INITIAL_ATTRS)
+    mug_connection.ensure_connection.assert_called_once()
 
 
 @pytest.mark.asyncio
 async def test_mug_update_all(mug_connection):
     mug_connection._update_multiple = AsyncMock(return_value={})
+    mug_connection.ensure_connection = AsyncMock()
     assert (await mug_connection.update_all()) == {}
     mug_connection._update_multiple.assert_called_once_with(UPDATE_ATTRS)
+    mug_connection.ensure_connection.assert_called_once()
 
 
 @pytest.mark.asyncio
