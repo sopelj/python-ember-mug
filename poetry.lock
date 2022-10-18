@@ -1162,7 +1162,7 @@ test = []
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<4.0"
-content-hash = "715936eaadeb359f71f59522401a5e05aed409016be80d286318db8977ba4e69"
+content-hash = "1fe0d3faa995c805ce4116a512a614258258919238cf179d89e4148b18820ae4"
 
 [metadata.files]
 async-timeout = [

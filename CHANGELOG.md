@@ -1,5 +1,11 @@
 # Changelog
 
+[Unreleased]
+
+### Changed
+* Update bleak-retry-connector to 2.3.0
+* Update bleak to 0.19.0
+
 ## [0.3.5]
 
 ### Fix
