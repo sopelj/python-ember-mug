@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, Any, Callable
 from bleak import BleakClient, BleakError
 from bleak.backends.characteristic import BleakGATTCharacteristic
 from bleak.backends.device import BLEDevice
-from bleak_retry_connector import establish_connection, retry_bluetooth_connection_error
+from bleak_retry_connector import establish_connection
 
 from .consts import (
     MUG_NAME_REGEX,
@@ -45,6 +45,32 @@ from .consts import (
 )
 from .data import BatteryInfo, Colour, MugFirmwareInfo, MugMeta
 from .utils import bytes_to_big_int, bytes_to_little_int, decode_byte_string, encode_byte_string, temp_from_bytes
+
+try:
+    from bleak_retry_connector import retry_bluetooth_connection_error
+except ImportError:
+
+    def retry_bluetooth_connection_error(attempts: int = 2):  # type: ignore
+        """Basic implementation of the decorator added in bleak-retry-connector 2.3.0.
+
+        TODO: Remove in 0.4.0 once the dev build of home assistant 2022.11
+        """
+
+        def _retry_bluetooth_connection_error(func: Callable):
+            async def _async_bluetooth_connection_error_retry(*args: Any, **kwargs: Any) -> Any:
+                for attempt in range(attempts):
+                    try:
+                        return await func(*args, **kwargs)
+                    except BleakError:
+                        if attempt == attempts - 1:
+                            raise
+                        logger.debug(f'Bleak error calling {func}:, retrying...', exc_info=True)
+                        await asyncio.sleep(0.25)
+
+            return _async_bluetooth_connection_error_retry
+
+        return _retry_bluetooth_connection_error
+
 
 if TYPE_CHECKING:
     from .mug import EmberMug

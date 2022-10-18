@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.5]
+
+### Fix
+* Add fallback method for retry_bluetooth_connection_error to not break on patch.
+
 ## [0.3.4]
 
 ### Added
