@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.6]
+
+### Fix
+* Remove retry_bluetooth_connection_error...
+
 ## [0.3.5]
 
 ### Fix

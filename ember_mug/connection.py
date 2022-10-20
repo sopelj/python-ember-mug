@@ -46,32 +46,6 @@ from .consts import (
 from .data import BatteryInfo, Colour, MugFirmwareInfo, MugMeta
 from .utils import bytes_to_big_int, bytes_to_little_int, decode_byte_string, encode_byte_string, temp_from_bytes
 
-try:
-    from bleak_retry_connector import retry_bluetooth_connection_error
-except ImportError:
-
-    def retry_bluetooth_connection_error(attempts: int = 2):  # type: ignore
-        """Basic implementation of the decorator added in bleak-retry-connector 2.3.0.
-
-        TODO: Remove in 0.4.0 once the dev build of home assistant 2022.11
-        """
-
-        def _retry_bluetooth_connection_error(func: Callable):
-            async def _async_bluetooth_connection_error_retry(*args: Any, **kwargs: Any) -> Any:
-                for attempt in range(attempts):
-                    try:
-                        return await func(*args, **kwargs)
-                    except BleakError:
-                        if attempt == attempts - 1:
-                            raise
-                        logger.debug(f'Bleak error calling {func}:, retrying...', exc_info=True)
-                        await asyncio.sleep(0.25)
-
-            return _async_bluetooth_connection_error_retry
-
-        return _retry_bluetooth_connection_error
-
-
 if TYPE_CHECKING:
     from .mug import EmberMug
 
@@ -123,7 +97,6 @@ class EmberMugConnection:
         """Set the ble device."""
         self._device = ble_device
 
-    @retry_bluetooth_connection_error(DEFAULT_ATTEMPTS)  # type: ignore
     async def ensure_connection(self) -> None:
         """Connect to mug."""
         if self._client is not None and self._client.is_connected is True:
@@ -289,13 +262,11 @@ class EmberMugConnection:
         """Get firmware info."""
         return MugFirmwareInfo.from_bytes(await self._client.read_gatt_char(UUID_OTA))
 
-    @retry_bluetooth_connection_error(DEFAULT_ATTEMPTS)  # type: ignore
     async def update_initial(self) -> list[tuple[str, Any, Any]]:
         """Update attributes that don't normally change and don't need to be regularly updated."""
         await self.ensure_connection()
         return await self._update_multiple(INITIAL_ATTRS)
 
-    @retry_bluetooth_connection_error(DEFAULT_ATTEMPTS)  # type: ignore
     async def update_all(self) -> list[tuple[str, Any, Any]]:
         """Update all standard attributes."""
         await self.ensure_connection()
