@@ -264,12 +264,10 @@ class EmberMugConnection:
 
     async def update_initial(self) -> list[tuple[str, Any, Any]]:
         """Update attributes that don't normally change and don't need to be regularly updated."""
-        await self.ensure_connection()
         return await self._update_multiple(INITIAL_ATTRS)
 
     async def update_all(self) -> list[tuple[str, Any, Any]]:
         """Update all standard attributes."""
-        await self.ensure_connection()
         return await self._update_multiple(UPDATE_ATTRS)
 
     async def _update_multiple(self, attrs: tuple[str, ...]) -> list[tuple[str, Any, Any]]:

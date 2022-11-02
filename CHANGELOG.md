@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.7]
+
+### Fix
+* Remove ensure_connection in update_initial and update_multiple because it causes timeouts and loops
+
+## Changes
+* Update docs to document procedure for writing attributes
+
 ## [0.3.6]
 
 ### Fix

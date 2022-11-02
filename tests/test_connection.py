@@ -110,11 +110,8 @@ async def test_get_mug_led_colour(mug_connection):
 
 @pytest.mark.asyncio
 async def test_set_mug_led_colour(mug_connection):
-    mug_connection._client.write_gatt_char.side_effect = BleakError
     mug_connection.ensure_connection = AsyncMock()
-    # Sadly this is the expected behavior for now
-    with pytest.raises(BleakError):
-        await mug_connection.set_led_colour(Colour(244, 0, 161))
+    await mug_connection.set_led_colour(Colour(244, 0, 161))
     mug_connection.ensure_connection.assert_called_once()
     mug_connection._client.write_gatt_char.assert_called_once_with(UUID_LED, bytearray(b'\xf4\x00\xa1\xff'))
 
@@ -128,11 +125,8 @@ async def test_get_mug_target_temp(mug_connection):
 
 @pytest.mark.asyncio
 async def test_set_mug_target_temp(mug_connection):
-    mug_connection._client.write_gatt_char.side_effect = BleakError
     mug_connection.ensure_connection = AsyncMock()
-    # Sadly this is the expected behavior for now
-    with pytest.raises(BleakError):
-        await mug_connection.set_target_temp(55.81)
+    await mug_connection.set_target_temp(55.81)
     mug_connection.ensure_connection.assert_called_once()
     mug_connection._client.write_gatt_char.assert_called_once_with(UUID_TARGET_TEMPERATURE, bytearray(b'\xcd\x15'))
 
@@ -167,14 +161,11 @@ async def test_get_mug_name(mug_connection):
 
 @pytest.mark.asyncio
 async def test_set_mug_name(mug_connection):
-    mug_connection._client.write_gatt_char.side_effect = BleakError
     mug_connection.ensure_connection = AsyncMock()
-    # Sadly this is the expected behavior for now
     with pytest.raises(ValueError):
         await mug_connection.set_name('Hé!')
 
-    with pytest.raises(BleakError):
-        await mug_connection.set_name('Mug name')
+    await mug_connection.set_name('Mug name')
     mug_connection.ensure_connection.assert_called()
     mug_connection._client.write_gatt_char.assert_called_once_with(UUID_MUG_NAME, bytearray(b'Mug name'))
 
@@ -188,11 +179,8 @@ async def test_get_mug_udsk(mug_connection):
 
 @pytest.mark.asyncio
 async def test_set_mug_udsk(mug_connection):
-    mug_connection._client.write_gatt_char.side_effect = BleakError
     mug_connection.ensure_connection = AsyncMock()
-    # Sadly this is the expected behavior for now
-    with pytest.raises(BleakError):
-        await mug_connection.set_udsk('abcd12345')
+    await mug_connection.set_udsk('abcd12345')
     mug_connection.ensure_connection.assert_called_once()
     mug_connection._client.write_gatt_char.assert_called_once_with(UUID_UDSK, bytearray(b'YWJjZDEyMzQ1'))
 
@@ -219,11 +207,8 @@ async def test_get_mug_temperature_unit(mug_connection):
 
 @pytest.mark.asyncio
 async def test_set_mug_temperature_unit(mug_connection):
-    mug_connection._client.write_gatt_char.side_effect = BleakError
     mug_connection.ensure_connection = AsyncMock()
-    # Sadly this is the expected behavior for now
-    with pytest.raises(BleakError):
-        await mug_connection.set_temperature_unit(TEMP_CELSIUS)
+    await mug_connection.set_temperature_unit(TEMP_CELSIUS)
     mug_connection.ensure_connection.assert_called_once()
     mug_connection._client.write_gatt_char.assert_called_once_with(UUID_TEMPERATURE_UNIT, bytearray(b'\x00'))
 
@@ -271,7 +256,6 @@ async def test_mug_update_initial(mug_connection):
     mug_connection.ensure_connection = AsyncMock()
     assert (await mug_connection.update_initial()) == {}
     mug_connection._update_multiple.assert_called_once_with(INITIAL_ATTRS)
-    mug_connection.ensure_connection.assert_called_once()
 
 
 @pytest.mark.asyncio
@@ -280,7 +264,6 @@ async def test_mug_update_all(mug_connection):
     mug_connection.ensure_connection = AsyncMock()
     assert (await mug_connection.update_all()) == {}
     mug_connection._update_multiple.assert_called_once_with(UPDATE_ATTRS)
-    mug_connection.ensure_connection.assert_called_once()
 
 
 @pytest.mark.asyncio

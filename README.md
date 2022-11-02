@@ -25,7 +25,10 @@ but could be useful separately and has a simple CLI interface too.
 * Finding mugs
 * Connecting to Mugs
 * Reading Information (Colour, temp, liquid level, etc.)
+* Writing (Desired temp, colour, temperature unit)*
 * Polling for changes
+
+*** Writing only works if the mug has been set up in the app previously
 
 ## Usage
 
@@ -66,15 +69,19 @@ Basic options:
 | `info`     | Connect to *one* mug and print its current state                               |
 | `poll`     | Connect to *one* mug and print its current state and keep watching for changes |
 
+
 ![CLI Example](./docs/images/cli-example.png)
 
 ## Caveats
 
 - Since this api is not public, a lot of guesswork and reverse engineering is involved, so it's not perfect.
-- Only works with one mug at a time
-- These mugs do not broadcast data unless paired. So you can only have one device connected to it. You need to reset them to change to another device and make sure the previous device doesn't try to reconnect.
-- Reading data from the mug seems to work pretty well, but I have been unable to write to it so far... I always get NotPermitted errors.
+- If the mug has not been set up in the app since it was reset, writing is not allowed. I don't know what they set in the app, but it changes something, and it doesn't work without it.
+- Once that mug has been set up in the app, you should ideally forget the device or at least turn off bluetooth whilst using it here, or you will probably get disconnected often
 - I haven't figured out some attributes like udsk, dsk, location,
+
+## Todo
+- Add cli interface for setting values
+- Test with other devices. Please let me know if you have tried it with others.
 
 ## Credits
 
