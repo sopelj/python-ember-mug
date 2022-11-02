@@ -301,6 +301,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#todo" class="md-nav__link">
+    Todo
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#credits" class="md-nav__link">
     Credits
   </a>
@@ -461,6 +468,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#todo" class="md-nav__link">
+    Todo
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#credits" class="md-nav__link">
     Credits
   </a>
@@ -517,8 +531,10 @@ but could be useful separately and has a simple CLI interface too.</p>
 <li>Finding mugs</li>
 <li>Connecting to Mugs</li>
 <li>Reading Information (Colour, temp, liquid level, etc.)</li>
+<li>Writing (Desired temp, colour, temperature unit)*</li>
 <li>Polling for changes</li>
 </ul>
+<p>*** Writing only works if the mug has been set up in the app previously</p>
 <h3 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h3>
 <h4 id="python">Python<a class="headerlink" href="#python" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">ember_mug.scanner</span> <span class="kn">import</span> <span class="n">find_mug</span><span class="p">,</span> <span class="n">discover_mugs</span>
@@ -572,10 +588,14 @@ ember-mug poll  <span class="c1"># fetches info and keeps listening for notifica
 <h3 id="caveats">Caveats<a class="headerlink" href="#caveats" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Since this api is not public, a lot of guesswork and reverse engineering is involved, so it's not perfect.</li>
-<li>Only works with one mug at a time</li>
-<li>These mugs do not broadcast data unless paired. So you can only have one device connected to it. You need to reset them to change to another device and make sure the previous device doesn't try to reconnect.</li>
-<li>Reading data from the mug seems to work pretty well, but I have been unable to write to it so far... I always get NotPermitted errors.</li>
+<li>If the mug has not been set up in the app since it was reset, writing is not allowed. I don't know what they set in the app, but it changes something, and it doesn't work without it.</li>
+<li>Once that mug has been set up in the app, you should ideally forget the device or at least turn off bluetooth whilst using it here, or you will probably get disconnected often</li>
 <li>I haven't figured out some attributes like udsk, dsk, location,</li>
+</ul>
+<h3 id="todo">Todo<a class="headerlink" href="#todo" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add cli interface for setting values</li>
+<li>Test with other devices. Please let me know if you have tried it with others.</li>
 </ul>
 <h3 id="credits">Credits<a class="headerlink" href="#credits" title="Permanent link">&para;</a></h3>
 <p>This package was created with <a href="https://github.com/audreyr/cookiecutter">Cookiecutter</a> and the <a href="https://github.com/waynerv/cookiecutter-pypackage">waynerv/cookiecutter-pypackage</a> project template.</p>
