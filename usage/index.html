@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://sopelj.github.io/python-ember-mug/usage/">
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.1, mkdocs-material-8.5.6">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.8">
     
     
       
@@ -22,7 +22,7 @@
       <link rel="stylesheet" href="../assets/stylesheets/main.20d9efc8.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.815d1a91.min.css">
         
           
           
@@ -443,9 +443,11 @@
 </code></pre></div>
 <h4 id="using-cli-interface">Using CLI interface<a class="headerlink" href="#using-cli-interface" title="Permanent link">&para;</a></h4>
 <p>It can also be run via command line either directly with <code>ember-mug --help</code> or as a module with <code>python -m ember_mug --help</code>
-There are four options with different subsections. You can see them by specifying them before help. eg <code>ember-mug poll --help</code></p>
+There are five options with different subsections. You can see them by specifying them before help. eg <code>ember-mug poll --help</code></p>
 <p><div class="highlight"><pre><span></span><code>ember-mug discover  <span class="c1"># Finds the mug in pairing mode for the first time</span>
 ember-mug poll  <span class="c1"># fetches info and keeps listening for notifications</span>
+ember-mug get name target-temp  <span class="c1"># Prints name and target temp of mug</span>
+ember-mug <span class="nb">set</span> --name <span class="s2">&quot;My mug&quot;</span> --target-temp <span class="m">56</span>.8  <span class="c1"># Sets the name and target temp to specified values</span>
 </code></pre></div>
 Basic options:</p>
 <table>
@@ -471,6 +473,14 @@ Basic options:</p>
 <tr>
 <td><code>poll</code></td>
 <td>Connect to <em>one</em> mug and print its current state and keep watching for changes</td>
+</tr>
+<tr>
+<td><code>get</code></td>
+<td>Get the value(s) of one or more attribute(s) by name</td>
+</tr>
+<tr>
+<td><code>set</code></td>
+<td>Set one or more values on the mug</td>
 </tr>
 </tbody>
 </table>
@@ -576,10 +586,10 @@ Basic options:</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.indexes", "navigation.instant", "navigation.tabs.sticky"], "search": "../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.indexes", "navigation.instant", "navigation.tabs.sticky"], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.078830c0.min.js"></script>
+      <script src="../assets/javascripts/bundle.d6c3db9e.min.js"></script>
       
     
   </body>
