@@ -14,22 +14,22 @@ if TYPE_CHECKING:
 
 logger = logging.Logger(__name__)
 
-attr_labels = (
-    ('name', 'Mug Name'),
-    ('meta', 'Meta'),
-    ('battery', 'Battery'),
-    ('firmware', 'Firmware'),
-    ('led_colour', 'LED Colour'),
-    ('liquid_state', 'Liquid State'),
-    ('liquid_level', 'Liquid Level'),
-    ('current_temp', 'Current Temp'),
-    ('target_temp', 'Target Temp'),
-    ('metric', 'Metric'),
-    ('dsk', 'DSK'),
-    ('udsk', 'UDSK'),
-    ('date_time_zone', 'Date Time + Time Zone'),
-    ('battery_voltage', 'Voltage'),
-)
+attr_labels = {
+    'name': 'Mug Name',
+    'meta': 'Meta',
+    'battery': 'Battery',
+    'firmware': 'Firmware',
+    'led_colour': 'LED Colour',
+    'liquid_state': 'Liquid State',
+    'liquid_level': 'Liquid Level',
+    'current_temp': 'Current Temp',
+    'target_temp': 'Target Temp',
+    'metric': 'Metric',
+    'dsk': 'DSK',
+    'udsk': 'UDSK',
+    'date_time_zone': 'Date Time + Time Zone',
+    'battery_voltage': 'Voltage',
+}
 extra_attrs = ('dsk', 'udsk', 'battery_voltage', 'date_time_zone')
 
 
@@ -100,12 +100,18 @@ class EmberMug:
                 changes.append((attr, old_value, new_value))
         return changes
 
+    def get_formatted_attr(self, attr: str) -> str | None:
+        """Get the display value of a given attribute."""
+        if display_value := getattr(self, f'{attr}_display', None):
+            return display_value
+        return getattr(self, attr)
+
     @property
     def formatted_data(self) -> dict[str, Any]:
         """Return human-readable names and values for all attributes for display."""
         return {
-            label: display_value if (display_value := getattr(self, f'{attr}_display', None)) else getattr(self, attr)
-            for attr, label in attr_labels
+            label: self.get_formatted_attr(attr)
+            for attr, label in attr_labels.items()
             if self.include_extra or attr not in extra_attrs
         }
 

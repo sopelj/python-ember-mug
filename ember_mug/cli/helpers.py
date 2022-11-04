@@ -41,7 +41,7 @@ def print_table(data: list[tuple[str, ...]]) -> None:
     if not data:
         return
     rows = [build_sub_rows(r) for r in data]
-    num_columns = max(len(r) for r in rows)
+    num_columns = max(len(sr) for r in rows for sr in r.values())
     column_sizes = [max(len(sr[i]) for r in rows for sr in r.values()) + 2 for i in range(num_columns)]
     vertical = f'+{"+".join("-" * i for i in column_sizes)}+'
     print(vertical)

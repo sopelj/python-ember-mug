@@ -58,16 +58,20 @@ There are four options with different subsections. You can see them by specifyin
 ```bash
 ember-mug discover  # Finds the mug in pairing mode for the first time
 ember-mug poll  # fetches info and keeps listening for notifications
+ember-mug get name target-temp  # Prints name and target temp of mug
+ember-mug set --name "My mug" --target-temp 56.8  # Sets the name and target temp to specified values
 ```
 
 Basic options:
 
-| Command    | Use                                                                            |
-|------------|--------------------------------------------------------------------------------|
-| `discover` | Find/List all detected unpaired mugs in pairing mode                           |
-| `find`     | Find *one* already paired mugs                                                 |
-| `info`     | Connect to *one* mug and print its current state                               |
-| `poll`     | Connect to *one* mug and print its current state and keep watching for changes |
+| Command     | Use                                                                            |
+|-------------|--------------------------------------------------------------------------------|
+| `discover`  | Find/List all detected unpaired mugs in pairing mode                           |
+| `find`      | Find *one* already paired mugs                                                 |
+| `info`      | Connect to *one* mug and print its current state                               |
+| `poll`      | Connect to *one* mug and print its current state and keep watching for changes |
+| `get`       | Get the value(s) of one or more attribute(s) by name                           |
+| `set`       | Set one or more values on the mug                                              |
 
 
 ![CLI Example](./docs/images/cli-example.png)

@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0]
+
+### Changed
+* Improve documentation for setting values
+
+### Added
+* cli option to get specific attributes by name
+* cli option to set attributes
+* cli option to limit output
+
+### Fixed
+* Column number calculation
+
 ## [0.3.7]
 
 ### Fix
