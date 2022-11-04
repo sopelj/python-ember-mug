@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.4.1]
+
+### Fixed
+* Format Colour as hex when printed (for CLI)
+
 ## [0.4.0]
 
 ### Changed

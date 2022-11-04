@@ -28,6 +28,10 @@ class Colour(NamedTuple):
         """Initialize from raw bytes."""
         return cls(*data[:3])
 
+    def __str__(self) -> str:
+        """For more useful cli output, format as hex."""
+        return self.as_hex()
+
 
 @dataclass
 class BatteryInfo:
