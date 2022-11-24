@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.4.2]
+
+### Changed
+* Also catch NotImplementedError when trying to pair. (Affects Home Assistant ESPHome proxies)
+
 ## [0.4.1]
 
 ### Fixed

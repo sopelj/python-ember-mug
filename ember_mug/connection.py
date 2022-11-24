@@ -119,8 +119,16 @@ class EmberMugConnection:
                 logger.error(f"{self.mug.device}: Failed to connect to the lock: {error}")
                 raise error
             # Attempt to pair for good measure and perform an initial update
-            with contextlib.suppress(BleakError, EOFError):
+            try:
                 await self._client.pair()
+            except (BleakError, EOFError):
+                pass
+            except NotImplementedError:
+                # workaround for Home Assistant ESPHome Proxy backend which does not allow pairing.
+                logger.warning(
+                    'Pairing not implemented. '
+                    'If your mug is still in pairing mode (blinking blue) tap the button on the bottom to exit.'
+                )
             await self.update_initial()
             await self.subscribe()
 
