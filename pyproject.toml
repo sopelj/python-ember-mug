@@ -33,7 +33,7 @@ isort  = { version = "^5.8.0" }
 flake8  = { version = "^5.0" }
 flake8-docstrings = { version = "^1.6.0" }
 mypy = { version = "^0.971" }
-pytest  = { version = "^7.1.2" }
+pytest  = { version = "^7.2.0" }
 pytest-cov  = { version = "^3.0.0" }
 pytest-asyncio =  { version = "^0.19.0" }
 tox  = { version = "^3.20.1" }
