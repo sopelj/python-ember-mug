@@ -55,13 +55,13 @@ DEFAULT_ATTEMPTS = 3
 
 INITIAL_ATTRS = (
     "meta",
-    "name",
     "udsk",
     "dsk",
     "date_time_zone",
     "firmware",
 )
 UPDATE_ATTRS = (
+    "name",
     "led_colour",
     "current_temp",
     "target_temp",
@@ -146,6 +146,7 @@ class EmberMugConnection:
 
     def _fire_callbacks(self) -> None:
         """Fire the callbacks."""
+        logger.debug("Firing callbacks: %s", self._callbacks)
         for callback in self._callbacks:
             callback(self.mug)
 
@@ -154,8 +155,10 @@ class EmberMugConnection:
 
         def unregister_callback() -> None:
             self._callbacks.remove(callback)
+            logger.debug("Unregistered callback: %s", callback)
 
         self._callbacks.append(callback)
+        logger.debug("Registered callback: %s", callback)
         return unregister_callback
 
     async def __aenter__(self) -> EmberMugConnection:
@@ -279,13 +282,16 @@ class EmberMugConnection:
 
     async def _update_multiple(self, attrs: tuple[str, ...]) -> list[Change]:
         """Helper to update a list of attributes from the mug."""
+        logger.debug('Updating the following attributes: %s', attrs)
         changes = self.mug.update_info(**{attr: await getattr(self, f"get_{attr}")() for attr in attrs})
         if changes:
             self._fire_callbacks()
+        logger.debug('Attributes updated: %s', changes)
         return changes
 
     async def update_queued_attributes(self) -> list[Change]:
         """Update all attributes in queue."""
+        logger.debug('Updating queued attributes: %s', self._queued_updates)
         if not self._queued_updates:
             return []
         queued_updates = set(self._queued_updates)
@@ -298,9 +304,9 @@ class EmberMugConnection:
     def _notify_callback(self, characteristic: int | BleakGATTCharacteristic, data: bytearray) -> None:
         """Push events from the mug to indicate changes."""
         event_id = data[0]
+        logger.debug("Push event received from Mug (%s) with data: %s", event_id, data)
         if self._latest_event_id == event_id:
             return  # Skip to avoid unnecessary calls
-        logger.info("Push event received from Mug (%s)", event_id)
         self._latest_event_id = event_id
 
         # Check known IDs

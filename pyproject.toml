@@ -22,8 +22,12 @@ packages = [
     { include = "tests", format = "sdist" },
 ]
 
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/sopelj/python-ember-mug/issues"
+"Changelog" = "https://github.com/sopelj/python-ember-mug/blob/main/CHANGELOG.md"
+
 [tool.poetry.dependencies]
-python = ">=3.9,<4.0"
+python = ">=3.9,<3.12"
 bleak-retry-connector = ">=2.13.0"
 bleak = ">=0.19.2"
 
