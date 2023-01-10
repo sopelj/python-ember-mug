@@ -15,6 +15,7 @@ classifiers=[
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
 ]
 packages = [
     { include = "ember_mug" },
@@ -23,8 +24,8 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
-bleak-retry-connector = ">=1.17.1"
-bleak = ">=0.17.0"
+bleak-retry-connector = ">=2.13.0"
+bleak = ">=0.19.2"
 
 [tool.poetry.group.dev.dependencies]
 black  = { version = "^22.6.0" }

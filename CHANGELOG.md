@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+
+## Added
+* Add tests for Python 3.11
+
+## Changed
+* Update bleak and bleak-retry-connector to get retry decorator and match home assistant 2022.12
+
 ## [0.4.2]
 
 ### Changed
