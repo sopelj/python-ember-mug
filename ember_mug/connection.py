@@ -43,7 +43,7 @@ from .consts import (
     UUID_TIME_DATE_AND_ZONE,
     UUID_UDSK,
 )
-from .data import BatteryInfo, Colour, MugFirmwareInfo, MugMeta
+from .data import BatteryInfo, Change, Colour, MugFirmwareInfo, MugMeta
 from .utils import bytes_to_big_int, bytes_to_little_int, decode_byte_string, encode_byte_string, temp_from_bytes
 
 if TYPE_CHECKING:
@@ -76,13 +76,13 @@ UPDATE_ATTRS = (
 class EmberMugConnection:
     """Context manager to handle updating via active connection."""
 
-    def __init__(self, mug: EmberMug, adapter: str = None, **kwargs: Any) -> None:
+    def __init__(self, mug: EmberMug, adapter: str | None = None, **kwargs: Any) -> None:
         """Initialize connection manager."""
         self.mug = mug
         self._device: BLEDevice = mug.device
         self._connect_lock: Lock = Lock()
         self._callbacks: list[Callable[[EmberMug], None]] = []
-        self._client: BleakClient = None  # type: ignore
+        self._client: BleakClient = None  # type: ignore[assignment]
 
         self._queued_updates: set[str] = set()
         self._latest_event_id: int | None = None
@@ -116,7 +116,7 @@ class EmberMugConnection:
                     **self._client_kwargs,
                 )
             except (asyncio.TimeoutError, BleakError) as error:
-                logger.error(f"{self.mug.device}: Failed to connect to the lock: {error}")
+                logger.error("%s: Failed to connect to the lock: %s", self.mug.device, error)
                 raise error
             # Attempt to pair for good measure and perform an initial update
             try:
@@ -269,22 +269,22 @@ class EmberMugConnection:
         """Get firmware info."""
         return MugFirmwareInfo.from_bytes(await self._client.read_gatt_char(UUID_OTA))
 
-    async def update_initial(self) -> list[tuple[str, Any, Any]]:
+    async def update_initial(self) -> list[Change]:
         """Update attributes that don't normally change and don't need to be regularly updated."""
         return await self._update_multiple(INITIAL_ATTRS)
 
-    async def update_all(self) -> list[tuple[str, Any, Any]]:
+    async def update_all(self) -> list[Change]:
         """Update all standard attributes."""
         return await self._update_multiple(UPDATE_ATTRS)
 
-    async def _update_multiple(self, attrs: tuple[str, ...]) -> list[tuple[str, Any, Any]]:
+    async def _update_multiple(self, attrs: tuple[str, ...]) -> list[Change]:
         """Helper to update a list of attributes from the mug."""
         changes = self.mug.update_info(**{attr: await getattr(self, f"get_{attr}")() for attr in attrs})
         if changes:
             self._fire_callbacks()
         return changes
 
-    async def update_queued_attributes(self) -> list[tuple[str, Any, Any]]:
+    async def update_queued_attributes(self) -> list[Change]:
         """Update all attributes in queue."""
         if not self._queued_updates:
             return []
@@ -295,12 +295,12 @@ class EmberMugConnection:
             self._fire_callbacks()
         return changes
 
-    def _notify_callback(self, characteristic: int | BleakGATTCharacteristic, data: bytearray):
+    def _notify_callback(self, characteristic: int | BleakGATTCharacteristic, data: bytearray) -> None:
         """Push events from the mug to indicate changes."""
         event_id = data[0]
         if self._latest_event_id == event_id:
             return  # Skip to avoid unnecessary calls
-        logger.info(f"Push event received from Mug ({event_id})")
+        logger.info("Push event received from Mug (%s)", event_id)
         self._latest_event_id = event_id
 
         # Check known IDs
@@ -334,4 +334,4 @@ class EmberMugConnection:
             logger.info("Try to subscribe to Push Events")
             await self._client.start_notify(UUID_PUSH_EVENT, self._notify_callback)
         except Exception as e:
-            logger.warning(f"Failed to subscribe to state attr {e}")
+            logger.warning("Failed to subscribe to state attr: %s", e)

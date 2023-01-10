@@ -16,7 +16,7 @@ def decode_byte_string(data: bytes | bytearray) -> str:
     with contextlib.suppress(ValueError):
         b64_as_str = base64.encodebytes(data).decode("utf-8")
         return re.sub("[\r\n]", "", b64_as_str)
-    logger.warning(f'Failed to decode bytes "{data!r}". Forcing to string.')
+    logger.warning('Failed to decode bytes "%s". Forcing to string.', data)
     return str(data)
 
 
@@ -36,7 +36,7 @@ def bytes_to_big_int(data: bytearray | bytes) -> int:
 
 
 def temp_from_bytes(temp_bytes: bytearray, metric: bool = True) -> float:
-    """Get temperature from bytearray and convert to fahrenheit if needed."""
+    """Get temperature from bytearray and convert to Fahrenheit if needed."""
     temp = float(bytes_to_little_int(temp_bytes)) * 0.01
     if metric is False:
         # Convert to fahrenheit

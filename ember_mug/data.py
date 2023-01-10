@@ -2,9 +2,17 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import NamedTuple
+from typing import Any, NamedTuple
 
 from .utils import bytes_to_little_int, decode_byte_string
+
+
+class Change(NamedTuple):
+    """Helper for storing changes to attributes."""
+
+    attr: str
+    old_value: Any
+    new_value: Any
 
 
 class Colour(NamedTuple):

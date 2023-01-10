@@ -81,10 +81,15 @@ Basic options:
 - Since this api is not public, a lot of guesswork and reverse engineering is involved, so it's not perfect.
 - If the mug has not been set up in the app since it was reset, writing is not allowed. I don't know what they set in the app, but it changes something, and it doesn't work without it.
 - Once that mug has been set up in the app, you should ideally forget the device or at least turn off bluetooth whilst using it here, or you will probably get disconnected often
-- I haven't figured out some attributes like udsk, dsk, location,
+- I haven't figured out some attributes like udsk, dsk, location and timezone.
+
+## Troubleshooting
+
+### 'Operation failed with ATT error: 0x0e' or another connection error
+This seems to be caused by the bluetooth adaptor being in some sort of passive mode. I have not yet figured out how to wake it programmatically so sadly, you need to manually open `bluetoothctl` to do so.
+Please ensure the mug is in pairing mode (ie the light is flashing blue) and run the `bluetoothctl` command. You don,t need to type anything. run it and wait until the mug connects.
 
 ## Todo
-- Add cli interface for setting values
 - Test with other devices. Please let me know if you have tried it with others.
 
 ## Credits

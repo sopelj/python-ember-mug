@@ -17,14 +17,14 @@ if TYPE_CHECKING:
 logger = logging.Logger(__name__)
 
 
-def build_scanner_kwargs(adapter: str = None) -> dict[str, Any]:
+def build_scanner_kwargs(adapter: str | None = None) -> dict[str, Any]:
     """Add Adapter to kwargs for scanner if specified and using BlueZ."""
     if adapter and not USES_BLUEZ:
         raise ValueError('The adapter option is only valid for the Linux BlueZ Backend.')
     return {'adapter': adapter} if adapter else {}
 
 
-async def discover_mugs(mac: str = None, adapter: str = None, wait: int = 5) -> list[BLEDevice]:
+async def discover_mugs(mac: str | None = None, adapter: str | None = None, wait: int = 5) -> list[BLEDevice]:
     """Discover new mugs in pairing mode."""
     scanner_kwargs = build_scanner_kwargs(adapter)
     async with BleakScanner(service_uuids=[str(EMBER_SERVICE_UUID)], **scanner_kwargs) as scanner:
@@ -35,7 +35,7 @@ async def discover_mugs(mac: str = None, adapter: str = None, wait: int = 5) -> 
         return scanner.discovered_devices
 
 
-def build_find_filter(mac: str = None) -> Callable:
+def build_find_filter(mac: str | None = None) -> Callable:
     """Create a filter for finding the mug by name and or mac address."""
     known_names = [n.lower() for n in EMBER_BLUETOOTH_NAMES]
 
@@ -48,7 +48,7 @@ def build_find_filter(mac: str = None) -> Callable:
     return mug_filter
 
 
-async def find_mug(mac: str = None, adapter: str = None) -> BLEDevice | None:
+async def find_mug(mac: str | None = None, adapter: str | None = None) -> BLEDevice | None:
     """Find a mug."""
     if mac is not None:
         mac = mac.lower()

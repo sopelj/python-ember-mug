@@ -5,7 +5,7 @@ import logging
 from typing import TYPE_CHECKING, Any
 
 from .connection import EmberMugConnection
-from .data import BatteryInfo, Colour, MugFirmwareInfo, MugMeta
+from .data import BatteryInfo, Change, Colour, MugFirmwareInfo, MugMeta
 from .formatting import format_led_colour, format_liquid_level, format_liquid_state, format_temp
 
 if TYPE_CHECKING:
@@ -91,13 +91,13 @@ class EmberMug:
         """Human-readable target temp with unit."""
         return format_temp(self.target_temp, self.use_metric)
 
-    def update_info(self, **kwargs: Any) -> list[tuple[str, Any, Any]]:
+    def update_info(self, **kwargs: Any) -> list[Change]:
         """Update attributes of the mug if they haven't changed."""
-        changes = []
+        changes: list[Change] = []
         for attr, new_value in kwargs.items():
             if (old_value := getattr(self, attr)) != new_value:
                 setattr(self, attr, new_value)
-                changes.append((attr, old_value, new_value))
+                changes.append(Change(attr, old_value, new_value))
         return changes
 
     def get_formatted_attr(self, attr: str) -> str | None:
