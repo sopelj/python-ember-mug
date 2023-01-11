@@ -4,6 +4,7 @@ from textwrap import dedent
 import pytest
 
 from ember_mug.cli.helpers import build_sub_rows, print_changes, validate_mac
+from ember_mug.data import Change
 
 
 def test_validate_mac():
@@ -26,8 +27,8 @@ def test_build_sub_rows():
 def test_print_changes(capsys):
     print_changes(
         [
-            ('current_temp', 55.1, 25),
-            ('target_temp', 50, 25),
+            Change('current_temp', 55.1, 25),
+            Change('target_temp', 50, 25),
         ],
         True,
     )

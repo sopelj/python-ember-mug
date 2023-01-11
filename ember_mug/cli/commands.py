@@ -62,7 +62,7 @@ async def discover(args: Namespace) -> list[BLEDevice]:
         if args.raw:
             print(mug.address)
         else:
-            print('Found mug: ', mug)
+            print('Found mug:', mug)
     return mugs
 
 
