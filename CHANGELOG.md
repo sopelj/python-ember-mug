@@ -3,10 +3,16 @@
 ## [Unreleased]
 
 ## Added
+* More tests for cli interface
 * Add tests for Python 3.11
 
+## Removed
+* Automatic tests on macOS and Windows. They should still work though.
+
 ## Changed
-* Update bleak and bleak-retry-connector to get retry decorator and match home assistant 2022.12
+* Update bleak and bleak-retry-connector to get retry decorator and match home assistant 2023.1
+* Update documentation
+* Updated linting and CI tools
 
 ## [0.4.2]
 

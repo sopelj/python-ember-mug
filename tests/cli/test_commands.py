@@ -32,8 +32,8 @@ async def test_get_mug(patched_find_device, patched_ember_mug, capsys) -> None:
 async def test_find_device(patched_find_mug, capsys) -> None:
     patched_find_mug.return_value = MUG_DEVICE
     args = Namespace(mac=MUG_ADDRESS, adapter=None, raw=False)
-    mug = await find_device(args)
-    assert isinstance(mug, EmberMug)
+    device = await find_device(args)
+    assert device == MUG_DEVICE
     patched_find_mug.assert_called_once_with(mac=MUG_ADDRESS, adapter=None)
     captured = capsys.readouterr()
     assert captured.out == f"Found mug: {MUG_DEVICE}\n"
