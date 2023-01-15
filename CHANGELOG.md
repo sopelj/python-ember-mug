@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.5.1]
 
 ### Added
 * as_dict() for dumping Mug info
