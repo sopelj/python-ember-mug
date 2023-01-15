@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.2]
+
+### Fixed
+* New version because of commit and CI issues. Same as 0.5.1.
+
 ## [0.5.1]
 
 ### Added
