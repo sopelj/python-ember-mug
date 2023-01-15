@@ -46,7 +46,7 @@ def test_print_changes(capsys) -> None:
 
 
 def test_print_table(ember_mug: EmberMug, capsys) -> None:
-    assert print_table([]) is None
+    print_table([])
     captured = capsys.readouterr()
     assert captured.out == ''
 

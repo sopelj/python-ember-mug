@@ -67,7 +67,7 @@ async def test_connect(mug_update_initial, mock_establish_connection, mug_connec
 async def test_connect_error(
     mock_establish_connection: Mock, mock_logger: Mock, mug_connection: EmberMugConnection
 ) -> None:
-    mug_connection._client = None
+    mug_connection._client = None  # type: ignore[assignment]
     mock_establish_connection.side_effect = BleakError
     with pytest.raises(BleakError):
         await mug_connection.ensure_connection()
@@ -86,8 +86,8 @@ async def test_pairing_exceptions(
     mock_client = AsyncMock()
     mock_client.pair.side_effect = NotImplementedError
     mock_establish_connection.return_value = mock_client
-    mug_connection.update_initial = AsyncMock()
-    mug_connection.subscribe = AsyncMock()
+    mug_connection.update_initial = AsyncMock()  # type: ignore[assignment]
+    mug_connection.subscribe = AsyncMock()  # type: ignore[assignment]
     await mug_connection.ensure_connection()
     mock_logger.warning.assert_called_with(
         'Pairing not implemented. '
