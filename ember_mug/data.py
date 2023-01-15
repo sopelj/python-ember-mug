@@ -15,6 +15,7 @@ class Change(NamedTuple):
     new_value: Any
 
     def __str__(self) -> str:
+        """Use str to format Change message."""
         return f'{self.attr.replace("_", " ").title()} changed from "{self.old_value}" to "{self.new_value}"'
 
 
