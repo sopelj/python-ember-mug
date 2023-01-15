@@ -1,7 +1,7 @@
 """Tests for `ember_mug.mug`."""
 from bleak.backends.device import BLEDevice
 
-from ember_mug.data import BatteryInfo, Colour, MugFirmwareInfo, MugMeta
+from ember_mug.data import BatteryInfo, Change, Colour, MugFirmwareInfo, MugMeta
 from ember_mug.mug import EmberMug, EmberMugConnection
 
 
@@ -21,7 +21,6 @@ def test_mug_formatting():
         liquid_level=5,
         current_temp=25,
         target_temp=55,
-        metric=True,
         dsk='dsk',
         udsk='udsk',
         date_time_zone=None,
@@ -45,7 +44,7 @@ def test_mug_formatting():
         'Liquid Level': "16.67%",
         'Current Temp': "25.00°C",
         'Target Temp': "55.00°C",
-        'Metric': True,
+        'Use Metric': True,
     }
     assert mug.formatted_data == {
         **basic_info,
@@ -58,3 +57,43 @@ def test_mug_formatting():
     mug.include_extra = False
     assert mug.formatted_data == basic_info
     assert isinstance(mug.connection(), EmberMugConnection)
+
+
+def test_update_info(ember_mug: EmberMug) -> None:
+    ember_mug.current_temp = 55
+    ember_mug.target_temp = 55
+    ember_mug.led_colour = Colour(255, 0, 0)
+    changes = ember_mug.update_info(
+        current_temp=55,
+        target_temp=68,
+        led_colour=Colour(0, 255, 0),
+    )
+    assert changes == [
+        Change('target_temp', 55, 68),
+        Change('led_colour', Colour(255, 0, 0), Colour(0, 255, 0)),
+    ]
+
+
+def test_mug_dict(ember_mug: EmberMug) -> None:
+    ember_mug.update_info(meta=MugMeta('test_id', 'serial number'))
+    assert ember_mug.as_dict() == {
+        'battery': None,
+        'battery_voltage': '',
+        'current_temp': 0.0,
+        'current_temp_display': '0.00°C',
+        'date_time_zone': '',
+        'dsk': '',
+        'firmware': None,
+        'led_colour': Colour(red=255, green=255, blue=255),
+        'led_colour_display': '#ffffff',
+        'liquid_level': 0,
+        'liquid_level_display': '0.00%',
+        'liquid_state': 0,
+        'liquid_state_display': 'Unknown',
+        'meta': {'mug_id': 'test_id', 'serial_number': 'serial number'},
+        'name': '',
+        'target_temp': 0.0,
+        'target_temp_display': '0.00°C',
+        'temperature_unit': 'C',
+        'udsk': '',
+    }

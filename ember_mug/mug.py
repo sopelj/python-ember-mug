@@ -2,7 +2,8 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any
+from dataclasses import asdict, dataclass, is_dataclass
+from typing import TYPE_CHECKING, Any, Literal
 
 from .connection import EmberMugConnection
 from .data import BatteryInfo, Change, Colour, MugFirmwareInfo, MugMeta
@@ -24,7 +25,7 @@ attr_labels = {
     'liquid_level': 'Liquid Level',
     'current_temp': 'Current Temp',
     'target_temp': 'Target Temp',
-    'metric': 'Metric',
+    'use_metric': 'Use Metric',
     'dsk': 'DSK',
     'udsk': 'UDSK',
     'date_time_zone': 'Date Time + Time Zone',
@@ -33,6 +34,7 @@ attr_labels = {
 extra_attrs = ('dsk', 'udsk', 'battery_voltage', 'date_time_zone')
 
 
+@dataclass
 class EmberMug:
     """Class to connect and communicate with the mug via Bluetooth."""
 
@@ -45,8 +47,7 @@ class EmberMug:
     liquid_state: int = 0
     current_temp: float = 0.0
     target_temp: float = 0.0
-    metric: bool = True
-    temperature_unit: str = ""
+    temperature_unit: Literal["C", "F"] = "C"
     dsk: str = ""
     udsk: str = ""
     date_time_zone: str = ""
@@ -114,6 +115,17 @@ class EmberMug:
             for attr, label in attr_labels.items()
             if self.include_extra or attr not in extra_attrs
         }
+
+    def as_dict(self) -> dict[str, Any]:
+        """Dump all attributes as dict for info/debugging."""
+        data = {k: asdict(v) if is_dataclass(v) else v for k, v in asdict(self).items()}
+        data.update(
+            {
+                f'{attr}_display': getattr(self, f'{attr}_display')
+                for attr in ('led_colour', 'liquid_state', 'liquid_level', 'current_temp', 'target_temp')
+            }
+        )
+        return data
 
     def connection(self, **kwargs: Any) -> EmberMugConnection:
         """Return a connection to the Mug that's meant to be used as a context manager."""

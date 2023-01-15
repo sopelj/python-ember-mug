@@ -3,6 +3,7 @@ from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 from bleak import BleakError
+from bleak.backends.device import BLEDevice
 
 from ember_mug.connection import INITIAL_ATTRS, UPDATE_ATTRS, EmberMugConnection
 from ember_mug.consts import (
@@ -60,13 +61,38 @@ async def test_connect(mug_update_initial, mock_establish_connection, mug_connec
     mug_connection.disconnect.assert_called()
 
 
+@patch('ember_mug.connection.logger')
 @patch('ember_mug.connection.establish_connection')
 @pytest.mark.asyncio
-async def test_connect_error(mock_establish_connection, mug_connection):
+async def test_connect_error(
+    mock_establish_connection: Mock, mock_logger: Mock, mug_connection: EmberMugConnection
+) -> None:
     mug_connection._client = None
     mock_establish_connection.side_effect = BleakError
     with pytest.raises(BleakError):
         await mug_connection.ensure_connection()
+    msg, device, exception = mock_logger.error.mock_calls[0].args
+    assert msg == "%s: Failed to connect to the mug: %s"
+    assert device == mug_connection._device
+    assert isinstance(exception, BleakError)
+
+
+@patch('ember_mug.connection.logger')
+@patch('ember_mug.connection.establish_connection')
+@pytest.mark.asyncio
+async def test_pairing_exceptions(
+    mock_establish_connection: Mock, mock_logger: Mock, mug_connection: EmberMugConnection
+) -> None:
+    mock_client = AsyncMock()
+    mock_client.pair.side_effect = NotImplementedError
+    mock_establish_connection.return_value = mock_client
+    mug_connection.update_initial = AsyncMock()
+    mug_connection.subscribe = AsyncMock()
+    await mug_connection.ensure_connection()
+    mock_logger.warning.assert_called_with(
+        'Pairing not implemented. '
+        'If your mug is still in pairing mode (blinking blue) tap the button on the bottom to exit.'
+    )
 
 
 @pytest.mark.asyncio
@@ -80,6 +106,16 @@ async def test_disconnect(mug_connection):
     mug_connection._client.is_connected = True
     await mug_connection.disconnect()
     mug_connection._client.disconnect.assert_called()
+
+
+def test_set_device(mug_connection: EmberMugConnection) -> None:
+    new_device = BLEDevice(
+        address='BA:36:a5:be:88:cb',
+        name='Ember Ceramic Mug',
+    )
+    assert mug_connection.mug.device.address != new_device.address
+    mug_connection.set_device(new_device)
+    assert mug_connection.mug.device.address == new_device.address
 
 
 @pytest.mark.asyncio
@@ -314,3 +350,6 @@ def test_mug_notify_callback(mug_connection):
     }
     mug_connection._notify_callback(1, b'\x02')
     callback.assert_called_once()
+
+
+# 116, 118->exit, 132-136, 153, 165-166, 296->298, 309->311, 324->332, 343->exit, 351-352

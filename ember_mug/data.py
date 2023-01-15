@@ -14,6 +14,9 @@ class Change(NamedTuple):
     old_value: Any
     new_value: Any
 
+    def __str__(self) -> str:
+        return f'{self.attr.replace("_", " ").title()} changed from "{self.old_value}" to "{self.new_value}"'
+
 
 class Colour(NamedTuple):
     """Simple helper for colour formatting."""

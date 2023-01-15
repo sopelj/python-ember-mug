@@ -1,6 +1,12 @@
 """Tests for `ember_mug.data`."""
 
-from ember_mug.data import BatteryInfo, Colour, MugFirmwareInfo, MugMeta
+from ember_mug.data import BatteryInfo, Change, Colour, MugFirmwareInfo, MugMeta
+
+
+def test_change():
+    change = Change('mug_name', 'EMBER', 'Test Mug')
+    expected = 'Mug Name changed from "EMBER" to "Test Mug"'
+    assert str(change) == expected
 
 
 def test_battery_info():
@@ -14,6 +20,7 @@ def test_colour():
     colour = Colour.from_bytes(b'\xf4\x00\xa1\xff')
     assert colour.as_bytearray() == b'\xf4\x00\xa1'
     assert colour.as_hex() == '#f400a1'
+    assert str(colour) == '#f400a1'
 
 
 def test_mug_firmware_info():

@@ -1,15 +1,28 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+* as_dict() for dumping Mug info
+* More tests
+
+### Changed
+* Allow unit with or without degree and handle Enum for Home Assistant in set_temperature_unit()
+* Remove `metric` attribute, it was supposed to be `use_metric`
+
+### Fixed
+* Fixed `_device` attribute which would not be updated on callback
+
 ## [0.5.0]
 
-## Added
+### Added
 * More tests for cli interface
 * Add tests for Python 3.11
 
-## Removed
+### Removed
 * Automatic tests on macOS and Windows. They should still work though.
 
-## Changed
+### Changed
 * Update bleak and bleak-retry-connector to get retry decorator and match home assistant 2023.1
 * Update documentation
 * Updated linting and CI tools

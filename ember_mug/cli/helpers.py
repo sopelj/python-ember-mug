@@ -69,4 +69,4 @@ def print_changes(changes: list[Change], metric: bool = True) -> None:
     for attr, old_value, new_value in changes:
         if formatter := formatters.get(attr):
             old_value, new_value = formatter(old_value), formatter(new_value)
-        print(f'{attr.replace("_", " ").title()} changed from {old_value} to {new_value}')
+        print(Change(attr, old_value, new_value))

@@ -6,7 +6,8 @@ import contextlib
 import logging
 from asyncio import Lock
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any, Callable
+from enum import Enum
+from typing import TYPE_CHECKING, Any, Callable, Literal
 
 from bleak import BleakClient, BleakError
 from bleak.backends.characteristic import BleakGATTCharacteristic
@@ -79,7 +80,6 @@ class EmberMugConnection:
     def __init__(self, mug: EmberMug, adapter: str | None = None, **kwargs: Any) -> None:
         """Initialize connection manager."""
         self.mug = mug
-        self._device: BLEDevice = mug.device
         self._connect_lock: Lock = Lock()
         self._callbacks: list[Callable[[EmberMug], None]] = []
         self._client: BleakClient = None  # type: ignore[assignment]
@@ -92,6 +92,14 @@ class EmberMugConnection:
             if USES_BLUEZ is False:
                 raise ValueError('The adapter option is only valid for the Linux BlueZ Backend.')
             self._client_kwargs['adapter'] = adapter
+
+    @property
+    def _device(self) -> BLEDevice:
+        return self.mug.device
+
+    @_device.setter
+    def _device(self, device: BLEDevice) -> None:
+        self.mug.device = device
 
     def set_device(self, ble_device: BLEDevice) -> None:
         """Set the ble device."""
@@ -109,14 +117,14 @@ class EmberMugConnection:
             try:
                 self._client = await establish_connection(
                     client_class=BleakClient,
-                    device=self.mug.device,
-                    name=f'{self.mug.name} ({self.mug.device.address})',
+                    device=self._device,
+                    name=f'{self.mug.name} ({self._device.address})',
                     disconnected_callback=self._disconnect_callback,  # type: ignore
                     ble_device_callback=lambda: self._device,
                     **self._client_kwargs,
                 )
             except (asyncio.TimeoutError, BleakError) as error:
-                logger.error("%s: Failed to connect to the lock: %s", self.mug.device, error)
+                logger.error("%s: Failed to connect to the mug: %s", self._device, error)
                 raise error
             # Attempt to pair for good measure and perform an initial update
             try:
@@ -239,20 +247,21 @@ class EmberMugConnection:
         """Get mug dsk from gatt."""
         return decode_byte_string(await self._client.read_gatt_char(UUID_DSK))
 
-    async def get_temperature_unit(self) -> str:
+    async def get_temperature_unit(self) -> Literal["C", "F"]:
         """Get mug temp unit."""
         unit_bytes = await self._client.read_gatt_char(UUID_TEMPERATURE_UNIT)
         return TEMP_CELSIUS if bytes_to_little_int(unit_bytes) == 0 else TEMP_FAHRENHEIT
 
-    async def set_temperature_unit(self, unit: str) -> None:
+    async def set_temperature_unit(self, unit: Literal["C", "F", "°C", "°F"] | Enum) -> None:
         """Set mug unit."""
         await self.ensure_connection()
-        unit_bytes = bytearray([1 if unit == TEMP_FAHRENHEIT else 0])
+        text_unit = unit.value if isinstance(unit, Enum) else unit
+        unit_bytes = bytearray([1 if text_unit.strip('°') == TEMP_FAHRENHEIT else 0])
         await self._client.write_gatt_char(UUID_TEMPERATURE_UNIT, unit_bytes)
 
     async def ensure_correct_unit(self) -> None:
         """Set mug unit if it's not what we want."""
-        desired = TEMP_CELSIUS if self.mug.use_metric else TEMP_FAHRENHEIT
+        desired: Literal["C", "F"] = TEMP_CELSIUS if self.mug.use_metric else TEMP_FAHRENHEIT
         if self.mug.temperature_unit != desired:
             await self.set_temperature_unit(desired)
 

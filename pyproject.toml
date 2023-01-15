@@ -90,7 +90,7 @@ asyncio_mode = 'auto'
 [tool.black]
 line-length = 120
 skip-string-normalization = true
-target-version = ['py39', 'py310']
+target-version = ['py39', 'py310', 'py311']
 include = '\.pyi?$'
 exclude = '''
 /(

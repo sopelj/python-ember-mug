@@ -25,6 +25,7 @@ def test_temp_from_bytes():
 
 def test_decode_byte_string():
     assert decode_byte_string(b'abcd12345') == 'YWJjZDEyMzQ1'
+    assert decode_byte_string(b'') == ''
 
 
 def test_encode_byte_string():

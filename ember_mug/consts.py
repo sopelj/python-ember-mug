@@ -4,10 +4,11 @@ from __future__ import annotations
 import platform
 import re
 from os import environ
+from typing import Literal
 from uuid import UUID
 
-TEMP_CELSIUS = "C"
-TEMP_FAHRENHEIT = "F"
+TEMP_CELSIUS: Literal["C"] = "C"
+TEMP_FAHRENHEIT: Literal["F"] = "F"
 
 # Bluetooth names of supported mugs
 EMBER_BLUETOOTH_NAMES: tuple[str, ...] = ("Ember Ceramic Mug",)
