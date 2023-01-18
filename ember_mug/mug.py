@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from bleak.backends.device import BLEDevice
 
 
-logger = logging.Logger(__name__)
+logger = logging.getLogger(__name__)
 
 attr_labels = {
     'name': 'Mug Name',

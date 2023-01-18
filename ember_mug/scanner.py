@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from bleak.backends.scanner import AdvertisementData
 
 
-logger = logging.Logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def build_scanner_kwargs(adapter: str | None = None) -> dict[str, Any]:

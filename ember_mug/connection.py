@@ -50,7 +50,7 @@ from .utils import bytes_to_big_int, bytes_to_little_int, decode_byte_string, en
 if TYPE_CHECKING:
     from .mug import EmberMug
 
-logger = logging.Logger(__name__)
+logger = logging.getLogger(__name__)
 
 DEFAULT_ATTEMPTS = 3
 
