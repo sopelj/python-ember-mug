@@ -7,6 +7,7 @@ import logging
 from asyncio import Lock
 from datetime import datetime, timezone
 from enum import Enum
+from time import time
 from typing import TYPE_CHECKING, Any, Callable, Literal
 
 from bleak import BleakClient, BleakError
@@ -85,7 +86,7 @@ class EmberMugConnection:
         self._client: BleakClient = None  # type: ignore[assignment]
 
         self._queued_updates: set[str] = set()
-        self._latest_event_id: int | None = None
+        self._latest_events: dict[int, float] = {}
 
         self._client_kwargs = {**kwargs}
         if adapter:
@@ -313,10 +314,12 @@ class EmberMugConnection:
     def _notify_callback(self, characteristic: int | BleakGATTCharacteristic, data: bytearray) -> None:
         """Push events from the mug to indicate changes."""
         event_id = data[0]
-        logger.debug("Push event received from Mug (%s) with data: %s", event_id, data)
-        if self._latest_event_id == event_id:
-            return  # Skip to avoid unnecessary calls
-        self._latest_event_id = event_id
+        now = time()
+        if (last_time := self._latest_events.get(event_id)) and now - last_time < 5:
+            return
+        self._latest_events[event_id] = now
+
+        logger.debug("Push event received from Mug (%s) with data: %s", event_id)
 
         # Check known IDs
         if event_id in PUSH_EVENT_BATTERY_IDS:

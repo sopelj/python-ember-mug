@@ -324,21 +324,21 @@ async def test_mug_update_queued_attributes(mug_connection):
 def test_mug_notify_callback(mug_connection):
     mug_connection._notify_callback(1, b'\x02')
     mug_connection._notify_callback(1, b'\x02')
-    assert mug_connection._latest_event_id == 2
+    assert 2 in mug_connection._latest_events
     mug_connection._notify_callback(1, b'\x04')
-    assert mug_connection._latest_event_id == 4
+    assert 4 in mug_connection._latest_events
     mug_connection._notify_callback(1, b'\x05')
-    assert mug_connection._latest_event_id == 5
+    assert 5 in mug_connection._latest_events
     mug_connection._notify_callback(1, b'\x06')
-    assert mug_connection._latest_event_id == 6
+    assert 6 in mug_connection._latest_events
     mug_connection._notify_callback(1, b'\x07')
-    assert mug_connection._latest_event_id == 7
+    assert 7 in mug_connection._latest_events
     mug_connection._notify_callback(1, b'\x08')
-    assert mug_connection._latest_event_id == 8
+    assert 8 in mug_connection._latest_events
     callback = Mock()
     mug_connection.register_callback(callback)
     mug_connection._notify_callback(1, b'\x09')
-    assert mug_connection._latest_event_id == 9
+    assert 9 in mug_connection._latest_events
     callback.assert_not_called()
     assert mug_connection._queued_updates == {
         "battery",
@@ -348,8 +348,12 @@ def test_mug_notify_callback(mug_connection):
         "liquid_state",
         "battery_voltage",
     }
+    mug_connection._latest_events = {}
     mug_connection._notify_callback(1, b'\x02')
     callback.assert_called_once()
+    callback.reset_mock()
+    mug_connection._notify_callback(1, b'\x02')
+    callback.assert_not_called()
 
 
 # 116, 118->exit, 132-136, 153, 165-166, 296->298, 309->311, 324->332, 343->exit, 351-352
