@@ -80,7 +80,7 @@ class MugCharacteristic(IntEnum):
 
 
 class LiquidState(IntEnum):
-    """Constants for liquid state codes"""
+    """Constants for liquid state codes."""
 
     UNKNOWN = 0
     EMPTY = 1
