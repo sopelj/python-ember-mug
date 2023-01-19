@@ -9,15 +9,15 @@ from typing import TYPE_CHECKING, Callable
 
 from ..consts import MAC_ADDRESS_REGEX
 from ..data import Change
-from ..formatting import format_led_colour, format_liquid_level, format_liquid_state, format_temp
+from ..formatting import format_led_colour, format_liquid_level, format_temp
 
 if TYPE_CHECKING:
     from ..mug import EmberMug
 
+
 base_formatters: dict[str, Callable] = {
     'led_colour': format_led_colour,
     'liquid_level': format_liquid_level,
-    'liquid_state': format_liquid_state,
 }
 
 

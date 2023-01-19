@@ -1,7 +1,6 @@
 """Tests for `ember_mug.formatting`."""
-
 from ember_mug.data import Colour
-from ember_mug.formatting import format_led_colour, format_liquid_level, format_liquid_state, format_temp
+from ember_mug.formatting import format_led_colour, format_liquid_level, format_temp
 
 
 def test_format_led_colour():
@@ -11,17 +10,6 @@ def test_format_led_colour():
 def test_format_liquid_level():
     assert format_liquid_level(5) == "16.67%"
     assert format_liquid_level(6) == "20.00%"
-
-
-def test_format_liquid_state():
-    assert format_liquid_state(0) == "Unknown"
-    assert format_liquid_state(1) == "Empty"
-    assert format_liquid_state(2) == "Filling"
-    assert format_liquid_state(3) == "Cold (No control)"
-    assert format_liquid_state(4) == "Cooling"
-    assert format_liquid_state(5) == "Heating"
-    assert format_liquid_state(6) == "Perfect"
-    assert format_liquid_state(7) == "Warm (No control)"
 
 
 def test_format_temp():

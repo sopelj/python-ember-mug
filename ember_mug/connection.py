@@ -8,6 +8,7 @@ from asyncio import Lock
 from datetime import datetime, timezone
 from enum import Enum
 from time import time
+from types import TracebackType
 from typing import TYPE_CHECKING, Any, Callable, Literal
 
 from bleak import BleakClient, BleakError
@@ -18,38 +19,18 @@ from bleak_retry_connector import establish_connection
 from .consts import (
     MUG_NAME_REGEX,
     PUSH_EVENT_BATTERY_IDS,
-    PUSH_EVENT_ID_AUTH_INFO_NOT_FOUND,
-    PUSH_EVENT_ID_BATTERY_VOLTAGE_STATE_CHANGED,
-    PUSH_EVENT_ID_CHARGER_CONNECTED,
-    PUSH_EVENT_ID_CHARGER_DISCONNECTED,
-    PUSH_EVENT_ID_DRINK_TEMPERATURE_CHANGED,
-    PUSH_EVENT_ID_LIQUID_LEVEL_CHANGED,
-    PUSH_EVENT_ID_LIQUID_STATE_CHANGED,
-    PUSH_EVENT_ID_TARGET_TEMPERATURE_CHANGED,
-    TEMP_CELSIUS,
-    TEMP_FAHRENHEIT,
     USES_BLUEZ,
-    UUID_BATTERY,
-    UUID_CONTROL_REGISTER_DATA,
-    UUID_CURRENT_TEMPERATURE,
-    UUID_DSK,
-    UUID_LED,
-    UUID_LIQUID_LEVEL,
-    UUID_LIQUID_STATE,
-    UUID_MUG_ID,
-    UUID_MUG_NAME,
-    UUID_OTA,
-    UUID_PUSH_EVENT,
-    UUID_TARGET_TEMPERATURE,
-    UUID_TEMPERATURE_UNIT,
-    UUID_TIME_DATE_AND_ZONE,
-    UUID_UDSK,
+    LiquidState,
+    MugCharacteristic,
+    PushEvent,
+    TemperatureUnit,
 )
 from .data import BatteryInfo, Change, Colour, MugFirmwareInfo, MugMeta
 from .utils import bytes_to_big_int, bytes_to_little_int, decode_byte_string, encode_byte_string, temp_from_bytes
 
 if TYPE_CHECKING:
     from .mug import EmberMug
+
 
 logger = logging.getLogger(__name__)
 
@@ -141,12 +122,26 @@ class EmberMugConnection:
             await self.update_initial()
             await self.subscribe()
 
+    async def _read(self, characteristic: MugCharacteristic) -> bytearray:
+        """Helper to read characteristic from Mug."""
+        data = await self._client.read_gatt_char(characteristic.uuid)
+        logger.debug("Read attribute '%s' with value '%s'", characteristic, data)
+        return data
+
+    async def _write(self, characteristic: MugCharacteristic, data: bytearray) -> None:
+        """Helper to write characteristic to Mug."""
+        try:
+            await self._client.write_gatt_char(characteristic.uuid, data)
+            logger.debug("Wrote %s to attribute '%s'", characteristic, data)
+        except BleakError as e:
+            logger.error("Failed to write '%s' to attribute '%s': %s", data, characteristic, e)
+            raise
+
     async def disconnect(self) -> None:
         """Disconnect from mug and stop listening to notifications."""
         if self._client and self._client.is_connected is True:
             async with self._connect_lock:
-                with contextlib.suppress(BleakError):
-                    await self._client.stop_notify(UUID_PUSH_EVENT)
+                await self.unsubscribe()
                 await self._client.disconnect()
 
     def _disconnect_callback(self, client: BleakClient) -> None:
@@ -175,57 +170,60 @@ class EmberMugConnection:
         await self.ensure_connection()
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+    async def __aexit__(
+        self, exc_type: type[BaseException], exc_val: BaseException, exc_tb: TracebackType | None
+    ) -> None:
         """Cleanup on exit."""
         await self.disconnect()
 
     async def get_meta(self) -> MugMeta:
         """Fetch Meta info from the mug (Serial number and ID)."""
-        return MugMeta.from_bytes(await self._client.read_gatt_char(UUID_MUG_ID))
+        return MugMeta.from_bytes(await self._read(MugCharacteristic.MUG_ID))
 
     async def get_battery(self) -> BatteryInfo:
         """Get Battery percent from mug gatt."""
-        return BatteryInfo.from_bytes(await self._client.read_gatt_char(UUID_BATTERY))
+        return BatteryInfo.from_bytes(await self._read(MugCharacteristic.BATTERY))
 
     async def get_led_colour(self) -> Colour:
         """Get RGBA colours from mug gatt."""
-        return Colour.from_bytes(await self._client.read_gatt_char(UUID_LED))
+        return Colour.from_bytes(await self._read(MugCharacteristic.LED))
 
     async def set_led_colour(self, colour: Colour) -> None:
         """Set new target temp for mug."""
         await self.ensure_connection()
         colour = Colour(*colour[:3], 255)  # It always expects 255 for alpha
-        await self._client.write_gatt_char(UUID_LED, colour.as_bytearray())
+        await self._write(MugCharacteristic.LED, colour.as_bytearray())
 
     async def get_target_temp(self) -> float:
         """Get target temp form mug gatt."""
-        temp_bytes = await self._client.read_gatt_char(UUID_TARGET_TEMPERATURE)
+        temp_bytes = await self._read(MugCharacteristic.TARGET_TEMPERATURE)
         return temp_from_bytes(temp_bytes, self.mug.use_metric)
 
     async def set_target_temp(self, target_temp: float) -> None:
         """Set new target temp for mug."""
         await self.ensure_connection()
         target = bytearray(int(target_temp / 0.01).to_bytes(2, "little"))
-        await self._client.write_gatt_char(UUID_TARGET_TEMPERATURE, target)
+        await self._write(MugCharacteristic.TARGET_TEMPERATURE, target)
 
     async def get_current_temp(self) -> float:
         """Get current temp from mug gatt."""
-        temp_bytes = await self._client.read_gatt_char(UUID_CURRENT_TEMPERATURE)
+        temp_bytes = await self._read(MugCharacteristic.CURRENT_TEMPERATURE)
         return temp_from_bytes(temp_bytes, self.mug.use_metric)
 
     async def get_liquid_level(self) -> int:
         """Get liquid level from mug gatt."""
-        liquid_level_bytes = await self._client.read_gatt_char(UUID_LIQUID_LEVEL)
+        liquid_level_bytes = await self._read(MugCharacteristic.LIQUID_LEVEL)
         return bytes_to_little_int(liquid_level_bytes)
 
-    async def get_liquid_state(self) -> int:
+    async def get_liquid_state(self) -> LiquidState:
         """Get liquid state from mug gatt."""
-        liquid_state_bytes = await self._client.read_gatt_char(UUID_LIQUID_STATE)
-        return bytes_to_little_int(liquid_state_bytes)
+        liquid_state_bytes = await self._read(MugCharacteristic.LIQUID_STATE)
+        state = bytes_to_little_int(liquid_state_bytes)
+        return LiquidState(state)
 
     async def get_name(self) -> str:
         """Get mug name from gatt."""
-        name_bytes: bytearray = await self._client.read_gatt_char(UUID_MUG_NAME)
+        name_bytes: bytearray = await self._read(MugCharacteristic.MUG_NAME)
         return bytes(name_bytes).decode("utf8")
 
     async def set_name(self, name: str) -> None:
@@ -233,54 +231,56 @@ class EmberMugConnection:
         await self.ensure_connection()
         if MUG_NAME_REGEX.match(name) is None:
             raise ValueError('Name cannot contain any special characters')
-        await self._client.write_gatt_char(UUID_MUG_NAME, bytearray(name.encode("utf8")))
+        await self._write(MugCharacteristic.MUG_NAME, bytearray(name.encode("utf8")))
 
     async def get_udsk(self) -> str:
         """Get mug udsk from gatt."""
-        return decode_byte_string(await self._client.read_gatt_char(UUID_UDSK))
+        return decode_byte_string(await self._read(MugCharacteristic.UDSK))
 
     async def set_udsk(self, udsk: str) -> None:
         """Attempt to write udsk."""
         await self.ensure_connection()
-        await self._client.write_gatt_char(UUID_UDSK, bytearray(encode_byte_string(udsk)))
+        await self._write(MugCharacteristic.UDSK, bytearray(encode_byte_string(udsk)))
 
     async def get_dsk(self) -> str:
         """Get mug dsk from gatt."""
-        return decode_byte_string(await self._client.read_gatt_char(UUID_DSK))
+        return decode_byte_string(await self._read(MugCharacteristic.DSK))
 
-    async def get_temperature_unit(self) -> Literal["C", "F"]:
+    async def get_temperature_unit(self) -> TemperatureUnit:
         """Get mug temp unit."""
-        unit_bytes = await self._client.read_gatt_char(UUID_TEMPERATURE_UNIT)
-        return TEMP_CELSIUS if bytes_to_little_int(unit_bytes) == 0 else TEMP_FAHRENHEIT
+        unit_bytes = await self._read(MugCharacteristic.TEMPERATURE_UNIT)
+        if bytes_to_little_int(unit_bytes) == 0:
+            return TemperatureUnit.CELSIUS
+        return TemperatureUnit.FAHRENHEIT
 
-    async def set_temperature_unit(self, unit: Literal["C", "F", "°C", "°F"] | Enum) -> None:
+    async def set_temperature_unit(self, unit: Literal["°C", "°F"] | TemperatureUnit | Enum) -> None:
         """Set mug unit."""
         await self.ensure_connection()
         text_unit = unit.value if isinstance(unit, Enum) else unit
-        unit_bytes = bytearray([1 if text_unit.strip('°') == TEMP_FAHRENHEIT else 0])
-        await self._client.write_gatt_char(UUID_TEMPERATURE_UNIT, unit_bytes)
+        unit_bytes = bytearray([1 if text_unit == TemperatureUnit.FAHRENHEIT else 0])
+        await self._write(MugCharacteristic.TEMPERATURE_UNIT, unit_bytes)
 
     async def ensure_correct_unit(self) -> None:
         """Set mug unit if it's not what we want."""
-        desired: Literal["C", "F"] = TEMP_CELSIUS if self.mug.use_metric else TEMP_FAHRENHEIT
+        desired = TemperatureUnit.CELSIUS if self.mug.use_metric else TemperatureUnit.FAHRENHEIT
         if self.mug.temperature_unit != desired:
             await self.set_temperature_unit(desired)
 
     async def get_battery_voltage(self) -> int:
         """Get voltage and charge time."""
-        battery_voltage_bytes = await self._client.read_gatt_char(UUID_CONTROL_REGISTER_DATA)
+        battery_voltage_bytes = await self._read(MugCharacteristic.CONTROL_REGISTER_DATA)
         return bytes_to_big_int(battery_voltage_bytes[:1])
 
     async def get_date_time_zone(self) -> datetime | None:
         """Get date and time zone."""
-        date_time_zone_bytes = await self._client.read_gatt_char(UUID_TIME_DATE_AND_ZONE)
-        time = bytes_to_big_int(date_time_zone_bytes[:4])
+        date_time_zone_bytes = await self._read(MugCharacteristic.DATE_TIME_AND_ZONE)
+        time_value = bytes_to_big_int(date_time_zone_bytes[:4])
         # offset = bytes_to_big_int(date_time_zone_bytes[4:])
-        return datetime.fromtimestamp(time, timezone.utc) if time > 0 else None
+        return datetime.fromtimestamp(time_value, timezone.utc) if time_value > 0 else None
 
     async def get_firmware(self) -> MugFirmwareInfo:
         """Get firmware info."""
-        return MugFirmwareInfo.from_bytes(await self._client.read_gatt_char(UUID_OTA))
+        return MugFirmwareInfo.from_bytes(await self._read(MugCharacteristic.FIRMWARE))
 
     async def update_initial(self) -> list[Change]:
         """Update attributes that don't normally change and don't need to be regularly updated."""
@@ -319,37 +319,44 @@ class EmberMugConnection:
             return
         self._latest_events[event_id] = now
 
-        logger.debug("Push event received from Mug (%s) with data: %s", event_id)
+        logger.debug("Push event received from Mug (%s).", event_id)
 
         # Check known IDs
         if event_id in PUSH_EVENT_BATTERY_IDS:
             # 1, 2 and 3 : Battery Change
-            if event_id in [
-                PUSH_EVENT_ID_CHARGER_CONNECTED,
-                PUSH_EVENT_ID_CHARGER_DISCONNECTED,
-            ]:
+            if event_id in (
+                PushEvent.CHARGER_CONNECTED,
+                PushEvent.CHARGER_DISCONNECTED,
+            ):
                 # 2 -> Placed on charger, 3 -> Removed from charger
-                self.on_charging_base = event_id == PUSH_EVENT_ID_CHARGER_CONNECTED
+                self.on_charging_base = event_id == PushEvent.CHARGER_CONNECTED
                 self._fire_callbacks()
             # All indicate changes in battery
             self._queued_updates.add("battery")
-        elif event_id == PUSH_EVENT_ID_TARGET_TEMPERATURE_CHANGED:
+        elif event_id == PushEvent.TARGET_TEMPERATURE_CHANGED:
             self._queued_updates.add("target_temp")
-        elif event_id == PUSH_EVENT_ID_DRINK_TEMPERATURE_CHANGED:
+        elif event_id == PushEvent.DRINK_TEMPERATURE_CHANGED:
             self._queued_updates.add("current_temp")
-        elif event_id == PUSH_EVENT_ID_AUTH_INFO_NOT_FOUND:
+        elif event_id == PushEvent.AUTH_INFO_NOT_FOUND:
             logger.warning("Auth info missing")
-        elif event_id == PUSH_EVENT_ID_LIQUID_LEVEL_CHANGED:
+        elif event_id == PushEvent.LIQUID_LEVEL_CHANGED:
             self._queued_updates.add("liquid_level")
-        elif event_id == PUSH_EVENT_ID_LIQUID_STATE_CHANGED:
+        elif event_id == PushEvent.LIQUID_STATE_CHANGED:
             self._queued_updates.add("liquid_state")
-        elif event_id == PUSH_EVENT_ID_BATTERY_VOLTAGE_STATE_CHANGED:
+        elif event_id == PushEvent.BATTERY_VOLTAGE_STATE_CHANGED:
             self._queued_updates.add("battery_voltage")
+        else:
+            logger.debug('Unknown even received %s', event_id)
+
+    async def unsubscribe(self) -> None:
+        """Unsubscribe from Mug notifications."""
+        with contextlib.suppress(BleakError):
+            await self._client.stop_notify(MugCharacteristic.PUSH_EVENT.uuid)
 
     async def subscribe(self) -> None:
         """Subscribe to notifications from the mug."""
         try:
             logger.info("Try to subscribe to Push Events")
-            await self._client.start_notify(UUID_PUSH_EVENT, self._notify_callback)
+            await self._client.start_notify(MugCharacteristic.PUSH_EVENT.uuid, self._notify_callback)
         except Exception as e:
             logger.warning("Failed to subscribe to state attr: %s", e)

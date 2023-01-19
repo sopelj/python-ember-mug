@@ -6,24 +6,7 @@ from bleak import BleakError
 from bleak.backends.device import BLEDevice
 
 from ember_mug.connection import INITIAL_ATTRS, UPDATE_ATTRS, EmberMugConnection
-from ember_mug.consts import (
-    TEMP_CELSIUS,
-    TEMP_FAHRENHEIT,
-    UUID_BATTERY,
-    UUID_CONTROL_REGISTER_DATA,
-    UUID_CURRENT_TEMPERATURE,
-    UUID_DSK,
-    UUID_LED,
-    UUID_LIQUID_LEVEL,
-    UUID_LIQUID_STATE,
-    UUID_MUG_ID,
-    UUID_MUG_NAME,
-    UUID_OTA,
-    UUID_TARGET_TEMPERATURE,
-    UUID_TEMPERATURE_UNIT,
-    UUID_TIME_DATE_AND_ZONE,
-    UUID_UDSK,
-)
+from ember_mug.consts import MugCharacteristic, TemperatureUnit
 from ember_mug.data import Colour
 
 
@@ -124,7 +107,7 @@ async def test_get_mug_meta(mug_connection):
     meta = await mug_connection.get_meta()
     assert meta.mug_id == 'WXc9PT09'
     assert meta.serial_number == 'ABCDEFGHIJ'
-    mug_connection._client.read_gatt_char.assert_called_once_with(UUID_MUG_ID)
+    mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.MUG_ID.uuid)
 
 
 @pytest.mark.asyncio
@@ -133,7 +116,7 @@ async def test_get_mug_battery(mug_connection):
     battery = await mug_connection.get_battery()
     assert battery.percent == 53.00
     assert battery.on_charging_base is True
-    mug_connection._client.read_gatt_char.assert_called_once_with(UUID_BATTERY)
+    mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.BATTERY.uuid)
 
 
 @pytest.mark.asyncio
@@ -141,7 +124,7 @@ async def test_get_mug_led_colour(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'\xf4\x00\xa1\xff'
     colour = await mug_connection.get_led_colour()
     assert colour.as_hex() == '#f400a1'
-    mug_connection._client.read_gatt_char.assert_called_once_with(UUID_LED)
+    mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.LED.uuid)
 
 
 @pytest.mark.asyncio
@@ -149,14 +132,16 @@ async def test_set_mug_led_colour(mug_connection):
     mug_connection.ensure_connection = AsyncMock()
     await mug_connection.set_led_colour(Colour(244, 0, 161))
     mug_connection.ensure_connection.assert_called_once()
-    mug_connection._client.write_gatt_char.assert_called_once_with(UUID_LED, bytearray(b'\xf4\x00\xa1\xff'))
+    mug_connection._client.write_gatt_char.assert_called_once_with(
+        MugCharacteristic.LED.uuid, bytearray(b'\xf4\x00\xa1\xff')
+    )
 
 
 @pytest.mark.asyncio
 async def test_get_mug_target_temp(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'\xcd\x15'
     assert (await mug_connection.get_target_temp()) == 55.81
-    mug_connection._client.read_gatt_char.assert_called_once_with(UUID_TARGET_TEMPERATURE)
+    mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.TARGET_TEMPERATURE.uuid)
 
 
 @pytest.mark.asyncio
@@ -164,35 +149,37 @@ async def test_set_mug_target_temp(mug_connection):
     mug_connection.ensure_connection = AsyncMock()
     await mug_connection.set_target_temp(55.81)
     mug_connection.ensure_connection.assert_called_once()
-    mug_connection._client.write_gatt_char.assert_called_once_with(UUID_TARGET_TEMPERATURE, bytearray(b'\xcd\x15'))
+    mug_connection._client.write_gatt_char.assert_called_once_with(
+        MugCharacteristic.TARGET_TEMPERATURE.uuid, bytearray(b'\xcd\x15')
+    )
 
 
 @pytest.mark.asyncio
 async def test_get_mug_current_temp(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'\xcd\x15'
     assert (await mug_connection.get_current_temp()) == 55.81
-    mug_connection._client.read_gatt_char.assert_called_once_with(UUID_CURRENT_TEMPERATURE)
+    mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.CURRENT_TEMPERATURE.uuid)
 
 
 @pytest.mark.asyncio
 async def test_get_mug_liquid_level(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'\n'
     assert (await mug_connection.get_liquid_level()) == 10
-    mug_connection._client.read_gatt_char.assert_called_once_with(UUID_LIQUID_LEVEL)
+    mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.LIQUID_LEVEL.uuid)
 
 
 @pytest.mark.asyncio
 async def test_get_mug_liquid_state(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'\x06'
     assert (await mug_connection.get_liquid_state()) == 6
-    mug_connection._client.read_gatt_char.assert_called_once_with(UUID_LIQUID_STATE)
+    mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.LIQUID_STATE.uuid)
 
 
 @pytest.mark.asyncio
 async def test_get_mug_name(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'Mug Name'
     assert (await mug_connection.get_name()) == 'Mug Name'
-    mug_connection._client.read_gatt_char.assert_called_once_with(UUID_MUG_NAME)
+    mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.MUG_NAME.uuid)
 
 
 @pytest.mark.asyncio
@@ -203,14 +190,16 @@ async def test_set_mug_name(mug_connection):
 
     await mug_connection.set_name('Mug name')
     mug_connection.ensure_connection.assert_called()
-    mug_connection._client.write_gatt_char.assert_called_once_with(UUID_MUG_NAME, bytearray(b'Mug name'))
+    mug_connection._client.write_gatt_char.assert_called_once_with(
+        MugCharacteristic.MUG_NAME.uuid, bytearray(b'Mug name')
+    )
 
 
 @pytest.mark.asyncio
 async def test_get_mug_udsk(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'abcd12345'
     assert (await mug_connection.get_udsk()) == 'YWJjZDEyMzQ1'
-    mug_connection._client.read_gatt_char.assert_called_once_with(UUID_UDSK)
+    mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.UDSK.uuid)
 
 
 @pytest.mark.asyncio
@@ -218,7 +207,9 @@ async def test_set_mug_udsk(mug_connection):
     mug_connection.ensure_connection = AsyncMock()
     await mug_connection.set_udsk('abcd12345')
     mug_connection.ensure_connection.assert_called_once()
-    mug_connection._client.write_gatt_char.assert_called_once_with(UUID_UDSK, bytearray(b'YWJjZDEyMzQ1'))
+    mug_connection._client.write_gatt_char.assert_called_once_with(
+        MugCharacteristic.UDSK.uuid, bytearray(b'YWJjZDEyMzQ1')
+    )
 
 
 @pytest.mark.asyncio
@@ -227,45 +218,47 @@ async def test_get_mug_dsk(mug_connection):
     assert (await mug_connection.get_dsk()) == 'YWJjZDEyMzQ1'
     mug_connection._client.read_gatt_char.return_value = b'something else'
     assert (await mug_connection.get_dsk()) == "c29tZXRoaW5nIGVsc2U="
-    mug_connection._client.read_gatt_char.assert_called_with(UUID_DSK)
+    mug_connection._client.read_gatt_char.assert_called_with(MugCharacteristic.DSK.uuid)
 
 
 @pytest.mark.asyncio
 async def test_get_mug_temperature_unit(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'\x01'
-    assert (await mug_connection.get_temperature_unit()) == TEMP_FAHRENHEIT
-    mug_connection._client.read_gatt_char.assert_called_once_with(UUID_TEMPERATURE_UNIT)
+    assert (await mug_connection.get_temperature_unit()) == TemperatureUnit.FAHRENHEIT
+    mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.TEMPERATURE_UNIT.uuid)
     mug_connection._client.read_gatt_char.reset_mock()
     mug_connection._client.read_gatt_char.return_value = b'\x00'
-    assert (await mug_connection.get_temperature_unit()) == TEMP_CELSIUS
-    mug_connection._client.read_gatt_char.assert_called_once_with(UUID_TEMPERATURE_UNIT)
+    assert (await mug_connection.get_temperature_unit()) == TemperatureUnit.CELSIUS
+    mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.TEMPERATURE_UNIT.uuid)
 
 
 @pytest.mark.asyncio
 async def test_set_mug_temperature_unit(mug_connection):
     mug_connection.ensure_connection = AsyncMock()
-    await mug_connection.set_temperature_unit(TEMP_CELSIUS)
+    await mug_connection.set_temperature_unit(TemperatureUnit.CELSIUS)
     mug_connection.ensure_connection.assert_called_once()
-    mug_connection._client.write_gatt_char.assert_called_once_with(UUID_TEMPERATURE_UNIT, bytearray(b'\x00'))
+    mug_connection._client.write_gatt_char.assert_called_once_with(
+        MugCharacteristic.TEMPERATURE_UNIT.uuid, bytearray(b'\x00')
+    )
 
 
 @pytest.mark.asyncio
 async def test_mug_ensure_correct_unit(mug_connection):
-    mug_connection.mug.temperature_unit = TEMP_CELSIUS
+    mug_connection.mug.temperature_unit = TemperatureUnit.CELSIUS
     mug_connection.mug.use_metric = True
     mug_connection.set_temperature_unit = AsyncMock(return_value=None)
     await mug_connection.ensure_correct_unit()
     mug_connection.set_temperature_unit.assert_not_called()
-    mug_connection.mug.temperature_unit = TEMP_FAHRENHEIT
+    mug_connection.mug.temperature_unit = TemperatureUnit.FAHRENHEIT
     await mug_connection.ensure_correct_unit()
-    mug_connection.set_temperature_unit.assert_called_with(TEMP_CELSIUS)
+    mug_connection.set_temperature_unit.assert_called_with(TemperatureUnit.CELSIUS)
 
 
 @pytest.mark.asyncio
 async def test_get_mug_battery_voltage(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'\x01'
     assert (await mug_connection.get_battery_voltage()) == 1
-    mug_connection._client.read_gatt_char.assert_called_once_with(UUID_CONTROL_REGISTER_DATA)
+    mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.CONTROL_REGISTER_DATA.uuid)
 
 
 @pytest.mark.asyncio
@@ -273,7 +266,7 @@ async def test_get_mug_date_time_zone(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'c\x0f\xf6\x00'
     date_time = await mug_connection.get_date_time_zone()
     assert date_time.timestamp() == 1661990400.0
-    mug_connection._client.read_gatt_char.assert_called_once_with(UUID_TIME_DATE_AND_ZONE)
+    mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.DATE_TIME_AND_ZONE.uuid)
 
 
 @pytest.mark.asyncio
@@ -283,7 +276,7 @@ async def test_read_firmware(mug_connection):
     assert firmware.version == 355
     assert firmware.hardware == 128
     assert firmware.bootloader == 18
-    mug_connection._client.read_gatt_char.assert_called_once_with(UUID_OTA)
+    mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.FIRMWARE.uuid)
 
 
 @pytest.mark.asyncio
@@ -354,6 +347,3 @@ def test_mug_notify_callback(mug_connection):
     callback.reset_mock()
     mug_connection._notify_callback(1, b'\x02')
     callback.assert_not_called()
-
-
-# 116, 118->exit, 132-136, 153, 165-166, 296->298, 309->311, 324->332, 343->exit, 351-352

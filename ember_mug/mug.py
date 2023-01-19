@@ -3,11 +3,12 @@ from __future__ import annotations
 
 import logging
 from dataclasses import asdict, dataclass, is_dataclass
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any
 
 from .connection import EmberMugConnection
+from .consts import LiquidState, TemperatureUnit
 from .data import BatteryInfo, Change, Colour, MugFirmwareInfo, MugMeta
-from .formatting import format_led_colour, format_liquid_level, format_liquid_state, format_temp
+from .formatting import format_led_colour, format_liquid_level, format_temp
 
 if TYPE_CHECKING:
     from bleak.backends.device import BLEDevice
@@ -43,11 +44,11 @@ class EmberMug:
     battery: BatteryInfo | None = None
     firmware: MugFirmwareInfo | None = None
     led_colour: Colour = Colour(255, 255, 255)
+    liquid_state: LiquidState = LiquidState.UNKNOWN
     liquid_level: int = 0
-    liquid_state: int = 0
+    temperature_unit: TemperatureUnit = TemperatureUnit.CELSIUS
     current_temp: float = 0.0
     target_temp: float = 0.0
-    temperature_unit: Literal["C", "F"] = "C"
     dsk: str = ""
     udsk: str = ""
     date_time_zone: str = ""
@@ -75,7 +76,7 @@ class EmberMug:
     @property
     def liquid_state_display(self) -> str:
         """Human-readable liquid state."""
-        return format_liquid_state(self.liquid_state)
+        return self.liquid_state.label
 
     @property
     def liquid_level_display(self) -> str:

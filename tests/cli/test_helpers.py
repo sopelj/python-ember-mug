@@ -5,7 +5,7 @@ import pytest
 
 from ember_mug import EmberMug
 from ember_mug.cli.helpers import build_sub_rows, print_changes, print_info, print_table, validate_mac
-from ember_mug.consts import LIQUID_STATE_EMPTY, LIQUID_STATE_HEATING
+from ember_mug.consts import LiquidState
 from ember_mug.data import Change
 
 
@@ -30,7 +30,7 @@ def test_print_changes(capsys) -> None:
     changes = [
         Change('name', 'Mug Name', 'Test Mug'),
         Change('liquid_level', 1, 2),
-        Change('liquid_state', LIQUID_STATE_EMPTY, LIQUID_STATE_HEATING),
+        Change('liquid_state', LiquidState.EMPTY, LiquidState.HEATING),
         Change('target_temp', 45, 55),
     ]
     print_changes(changes, True)

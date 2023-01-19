@@ -1,6 +1,7 @@
 """Tests for `ember_mug.mug`."""
 from bleak.backends.device import BLEDevice
 
+from ember_mug.consts import LiquidState, TemperatureUnit
 from ember_mug.data import BatteryInfo, Change, Colour, MugFirmwareInfo, MugMeta
 from ember_mug.mug import EmberMug, EmberMugConnection
 
@@ -17,7 +18,7 @@ def test_mug_formatting():
         battery=battery,
         firmware=firmware,
         led_colour=colour,
-        liquid_state=5,
+        liquid_state=LiquidState.HEATING,
         liquid_level=5,
         current_temp=25,
         target_temp=55,
@@ -88,12 +89,12 @@ def test_mug_dict(ember_mug: EmberMug) -> None:
         'led_colour_display': '#ffffff',
         'liquid_level': 0,
         'liquid_level_display': '0.00%',
-        'liquid_state': 0,
+        'liquid_state': LiquidState.UNKNOWN,
         'liquid_state_display': 'Unknown',
         'meta': {'mug_id': 'test_id', 'serial_number': 'serial number'},
         'name': '',
         'target_temp': 0.0,
         'target_temp_display': '0.00°C',
-        'temperature_unit': 'C',
+        'temperature_unit': TemperatureUnit.CELSIUS,
         'udsk': '',
     }
