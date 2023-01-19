@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.5.3]
+
+### Changed
+* Changed UUIDs, PushEvent IDs, LiquidState and TemperatureUnit to Enum
+* TemperatureUnit changed to include degree symbol to match with Home Assistant
+
+### Added
+* Added _read and _write helper methods with logging
+
 ## [0.5.2]
 
 ### Fixed
