@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.4]
+
+### Added
+* More logging for different methods
+
 ## [0.5.3]
 
 ### Changed

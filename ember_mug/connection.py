@@ -69,6 +69,7 @@ class EmberMugConnection:
         self._queued_updates: set[str] = set()
         self._latest_events: dict[int, float] = {}
 
+        logger.debug("New mug connection initialized.")
         self._client_kwargs = {**kwargs}
         if adapter:
             if USES_BLUEZ is False:
@@ -85,6 +86,7 @@ class EmberMugConnection:
 
     def set_device(self, ble_device: BLEDevice) -> None:
         """Set the ble device."""
+        logger.debug("Set new device from %s to %s", self._device, ble_device)
         self._device = ble_device
 
     async def ensure_connection(self) -> None:
@@ -97,6 +99,7 @@ class EmberMugConnection:
             if self._client is not None and self._client.is_connected is True:
                 return
             try:
+                logger.debug("Establishing a new connection")
                 self._client = await establish_connection(
                     client_class=BleakClient,
                     device=self._device,
@@ -139,6 +142,7 @@ class EmberMugConnection:
 
     async def disconnect(self) -> None:
         """Disconnect from mug and stop listening to notifications."""
+        logger.debug("Disconnect called")
         if self._client and self._client.is_connected is True:
             async with self._connect_lock:
                 await self.unsubscribe()
@@ -146,6 +150,7 @@ class EmberMugConnection:
 
     def _disconnect_callback(self, client: BleakClient) -> None:
         """Disconnect from device."""
+        logger.debug("Disconnect callback called")
         asyncio.create_task(self.disconnect())
 
     def _fire_callbacks(self) -> None:
@@ -311,7 +316,7 @@ class EmberMugConnection:
             self._fire_callbacks()
         return changes
 
-    def _notify_callback(self, characteristic: int | BleakGATTCharacteristic, data: bytearray) -> None:
+    def _notify_callback(self, characteristic: BleakGATTCharacteristic, data: bytearray) -> None:
         """Push events from the mug to indicate changes."""
         event_id = data[0]
         now = time()
@@ -350,6 +355,7 @@ class EmberMugConnection:
 
     async def unsubscribe(self) -> None:
         """Unsubscribe from Mug notifications."""
+        logger.debug("Unsubscribe called")
         with contextlib.suppress(BleakError):
             await self._client.stop_notify(MugCharacteristic.PUSH_EVENT.uuid)
 
