@@ -89,7 +89,7 @@ class MugFirmwareInfo:
                 f'Version: {self.version}',
                 f'Hardware: {self.hardware}',
                 f'Bootloader: {self.bootloader}',
-            )
+            ),
         )
 
 

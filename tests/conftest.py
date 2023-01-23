@@ -14,7 +14,7 @@ def ember_mug():
         BLEDevice(
             address='32:36:a5:be:88:cb',
             name='Ember Ceramic Mug',
-        )
+        ),
     )
 
 

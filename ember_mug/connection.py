@@ -120,7 +120,7 @@ class EmberMugConnection:
                 # workaround for Home Assistant ESPHome Proxy backend which does not allow pairing.
                 logger.warning(
                     'Pairing not implemented. '
-                    'If your mug is still in pairing mode (blinking blue) tap the button on the bottom to exit.'
+                    'If your mug is still in pairing mode (blinking blue) tap the button on the bottom to exit.',
                 )
             await self.update_initial()
             await self.subscribe()
@@ -176,7 +176,10 @@ class EmberMugConnection:
         return self
 
     async def __aexit__(
-        self, exc_type: type[BaseException], exc_val: BaseException, exc_tb: TracebackType | None
+        self,
+        exc_type: type[BaseException],
+        exc_val: BaseException,
+        exc_tb: TracebackType | None,
     ) -> None:
         """Cleanup on exit."""
         await self.disconnect()

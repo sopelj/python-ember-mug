@@ -29,7 +29,7 @@ packages = [
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
 bleak-retry-connector = ">=2.13.0"
-bleak = ">=0.19.2"
+bleak = ">=0.19.5"
 
 [tool.poetry.group.dev.dependencies]
 black  = { version = "^22.6.0" }

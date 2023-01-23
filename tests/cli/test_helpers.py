@@ -41,7 +41,7 @@ def test_print_changes(capsys) -> None:
         Liquid Level changed from "3.33%" to "6.67%"
         Liquid State changed from "Empty" to "Heating"
         Target Temp changed from "45.00°C" to "55.00°C"
-        """
+        """,
     )
 
 
@@ -78,5 +78,5 @@ def test_print_info(ember_mug: EmberMug, capsys) -> None:
         +--------------+---------+
         | Use Metric   | True    |
         +--------------+---------+
-        """
+        """,
     )

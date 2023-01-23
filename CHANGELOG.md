@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.5]
+
+### Changed
+* Bump bleak to >=0.19.5 for Home Assistant 2023.2
+
 ## [0.5.4]
 
 ### Added

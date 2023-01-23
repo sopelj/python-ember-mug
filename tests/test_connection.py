@@ -48,7 +48,9 @@ async def test_connect(mug_update_initial, mock_establish_connection, mug_connec
 @patch('ember_mug.connection.establish_connection')
 @pytest.mark.asyncio
 async def test_connect_error(
-    mock_establish_connection: Mock, mock_logger: Mock, mug_connection: EmberMugConnection
+    mock_establish_connection: Mock,
+    mock_logger: Mock,
+    mug_connection: EmberMugConnection,
 ) -> None:
     mug_connection._client = None  # type: ignore[assignment]
     mock_establish_connection.side_effect = BleakError
@@ -64,7 +66,9 @@ async def test_connect_error(
 @patch('ember_mug.connection.establish_connection')
 @pytest.mark.asyncio
 async def test_pairing_exceptions(
-    mock_establish_connection: Mock, mock_logger: Mock, mug_connection: EmberMugConnection
+    mock_establish_connection: Mock,
+    mock_logger: Mock,
+    mug_connection: EmberMugConnection,
 ) -> None:
     mock_client = AsyncMock()
     mock_client.pair.side_effect = NotImplementedError
@@ -74,7 +78,7 @@ async def test_pairing_exceptions(
     await mug_connection.ensure_connection()
     mock_logger.warning.assert_called_with(
         'Pairing not implemented. '
-        'If your mug is still in pairing mode (blinking blue) tap the button on the bottom to exit.'
+        'If your mug is still in pairing mode (blinking blue) tap the button on the bottom to exit.',
     )
 
 
@@ -133,7 +137,8 @@ async def test_set_mug_led_colour(mug_connection):
     await mug_connection.set_led_colour(Colour(244, 0, 161))
     mug_connection.ensure_connection.assert_called_once()
     mug_connection._client.write_gatt_char.assert_called_once_with(
-        MugCharacteristic.LED.uuid, bytearray(b'\xf4\x00\xa1\xff')
+        MugCharacteristic.LED.uuid,
+        bytearray(b'\xf4\x00\xa1\xff'),
     )
 
 
@@ -150,7 +155,8 @@ async def test_set_mug_target_temp(mug_connection):
     await mug_connection.set_target_temp(55.81)
     mug_connection.ensure_connection.assert_called_once()
     mug_connection._client.write_gatt_char.assert_called_once_with(
-        MugCharacteristic.TARGET_TEMPERATURE.uuid, bytearray(b'\xcd\x15')
+        MugCharacteristic.TARGET_TEMPERATURE.uuid,
+        bytearray(b'\xcd\x15'),
     )
 
 
@@ -191,7 +197,8 @@ async def test_set_mug_name(mug_connection):
     await mug_connection.set_name('Mug name')
     mug_connection.ensure_connection.assert_called()
     mug_connection._client.write_gatt_char.assert_called_once_with(
-        MugCharacteristic.MUG_NAME.uuid, bytearray(b'Mug name')
+        MugCharacteristic.MUG_NAME.uuid,
+        bytearray(b'Mug name'),
     )
 
 
@@ -208,7 +215,8 @@ async def test_set_mug_udsk(mug_connection):
     await mug_connection.set_udsk('abcd12345')
     mug_connection.ensure_connection.assert_called_once()
     mug_connection._client.write_gatt_char.assert_called_once_with(
-        MugCharacteristic.UDSK.uuid, bytearray(b'YWJjZDEyMzQ1')
+        MugCharacteristic.UDSK.uuid,
+        bytearray(b'YWJjZDEyMzQ1'),
     )
 
 
@@ -238,7 +246,8 @@ async def test_set_mug_temperature_unit(mug_connection):
     await mug_connection.set_temperature_unit(TemperatureUnit.CELSIUS)
     mug_connection.ensure_connection.assert_called_once()
     mug_connection._client.write_gatt_char.assert_called_once_with(
-        MugCharacteristic.TEMPERATURE_UNIT.uuid, bytearray(b'\x00')
+        MugCharacteristic.TEMPERATURE_UNIT.uuid,
+        bytearray(b'\x00'),
     )
 
 

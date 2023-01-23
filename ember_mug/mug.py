@@ -124,7 +124,7 @@ class EmberMug:
             {
                 f'{attr}_display': getattr(self, f'{attr}_display')
                 for attr in ('led_colour', 'liquid_state', 'liquid_level', 'current_temp', 'target_temp')
-            }
+            },
         )
         return data
 
