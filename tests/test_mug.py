@@ -1,4 +1,8 @@
 """Tests for `ember_mug.mug`."""
+from __future__ import annotations
+
+from typing import Any
+
 from bleak.backends.device import BLEDevice
 
 from ember_mug.consts import LiquidState, TemperatureUnit
@@ -6,7 +10,7 @@ from ember_mug.data import BatteryInfo, Change, Colour, MugFirmwareInfo, MugMeta
 from ember_mug.mug import EmberMug, EmberMugConnection
 
 
-def test_mug_formatting():
+def test_mug_formatting() -> None:
     mug = EmberMug(BLEDevice(address='32:36:a5:be:88:cb', name='Ember Ceramic Mug'))
     meta = MugMeta('A', 'ABCDEF')
     battery = BatteryInfo(35.46, False)
@@ -35,7 +39,7 @@ def test_mug_formatting():
     assert mug.liquid_level_display == "16.67%"
     assert mug.current_temp_display == "25.00°C"
     assert mug.target_temp_display == "55.00°C"
-    basic_info = {
+    basic_info: dict[str, Any] = {
         'Mug Name': 'Mug Name',
         'Meta': "Serial Number: ABCDEF",
         'Battery': battery,

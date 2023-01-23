@@ -47,4 +47,3 @@ repos:
           - --show-error-codes
           - --show-error-context
         language_version: python3.10
-        exclude: tests/

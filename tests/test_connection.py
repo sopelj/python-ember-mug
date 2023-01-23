@@ -1,4 +1,6 @@
 """Tests for `ember_mug.connection`."""
+from __future__ import annotations
+
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
@@ -24,7 +26,6 @@ def test_adapter_without_bluez(ember_mug):
 
 @patch('ember_mug.connection.EmberMugConnection.update_initial')
 @patch('ember_mug.connection.establish_connection')
-@pytest.mark.asyncio
 async def test_connect(mug_update_initial, mock_establish_connection, mug_connection):
     # Already connected
     mug_connection._client = AsyncMock()
@@ -46,7 +47,6 @@ async def test_connect(mug_update_initial, mock_establish_connection, mug_connec
 
 @patch('ember_mug.connection.logger')
 @patch('ember_mug.connection.establish_connection')
-@pytest.mark.asyncio
 async def test_connect_error(
     mock_establish_connection: Mock,
     mock_logger: Mock,
@@ -64,7 +64,6 @@ async def test_connect_error(
 
 @patch('ember_mug.connection.logger')
 @patch('ember_mug.connection.establish_connection')
-@pytest.mark.asyncio
 async def test_pairing_exceptions(
     mock_establish_connection: Mock,
     mock_logger: Mock,
@@ -82,7 +81,6 @@ async def test_pairing_exceptions(
     )
 
 
-@pytest.mark.asyncio
 async def test_disconnect(mug_connection):
     mug_connection._client = AsyncMock()
 
@@ -105,7 +103,6 @@ def test_set_device(mug_connection: EmberMugConnection) -> None:
     assert mug_connection.mug.device.address == new_device.address
 
 
-@pytest.mark.asyncio
 async def test_get_mug_meta(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'Yw====-ABCDEFGHIJ'
     meta = await mug_connection.get_meta()
@@ -114,7 +111,6 @@ async def test_get_mug_meta(mug_connection):
     mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.MUG_ID.uuid)
 
 
-@pytest.mark.asyncio
 async def test_get_mug_battery(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'5\x01'
     battery = await mug_connection.get_battery()
@@ -123,7 +119,6 @@ async def test_get_mug_battery(mug_connection):
     mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.BATTERY.uuid)
 
 
-@pytest.mark.asyncio
 async def test_get_mug_led_colour(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'\xf4\x00\xa1\xff'
     colour = await mug_connection.get_led_colour()
@@ -131,7 +126,6 @@ async def test_get_mug_led_colour(mug_connection):
     mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.LED.uuid)
 
 
-@pytest.mark.asyncio
 async def test_set_mug_led_colour(mug_connection):
     mug_connection.ensure_connection = AsyncMock()
     await mug_connection.set_led_colour(Colour(244, 0, 161))
@@ -142,14 +136,12 @@ async def test_set_mug_led_colour(mug_connection):
     )
 
 
-@pytest.mark.asyncio
 async def test_get_mug_target_temp(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'\xcd\x15'
     assert (await mug_connection.get_target_temp()) == 55.81
     mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.TARGET_TEMPERATURE.uuid)
 
 
-@pytest.mark.asyncio
 async def test_set_mug_target_temp(mug_connection):
     mug_connection.ensure_connection = AsyncMock()
     await mug_connection.set_target_temp(55.81)
@@ -160,35 +152,30 @@ async def test_set_mug_target_temp(mug_connection):
     )
 
 
-@pytest.mark.asyncio
 async def test_get_mug_current_temp(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'\xcd\x15'
     assert (await mug_connection.get_current_temp()) == 55.81
     mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.CURRENT_TEMPERATURE.uuid)
 
 
-@pytest.mark.asyncio
 async def test_get_mug_liquid_level(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'\n'
     assert (await mug_connection.get_liquid_level()) == 10
     mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.LIQUID_LEVEL.uuid)
 
 
-@pytest.mark.asyncio
 async def test_get_mug_liquid_state(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'\x06'
     assert (await mug_connection.get_liquid_state()) == 6
     mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.LIQUID_STATE.uuid)
 
 
-@pytest.mark.asyncio
 async def test_get_mug_name(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'Mug Name'
     assert (await mug_connection.get_name()) == 'Mug Name'
     mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.MUG_NAME.uuid)
 
 
-@pytest.mark.asyncio
 async def test_set_mug_name(mug_connection):
     mug_connection.ensure_connection = AsyncMock()
     with pytest.raises(ValueError):
@@ -202,14 +189,12 @@ async def test_set_mug_name(mug_connection):
     )
 
 
-@pytest.mark.asyncio
 async def test_get_mug_udsk(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'abcd12345'
     assert (await mug_connection.get_udsk()) == 'YWJjZDEyMzQ1'
     mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.UDSK.uuid)
 
 
-@pytest.mark.asyncio
 async def test_set_mug_udsk(mug_connection):
     mug_connection.ensure_connection = AsyncMock()
     await mug_connection.set_udsk('abcd12345')
@@ -220,7 +205,6 @@ async def test_set_mug_udsk(mug_connection):
     )
 
 
-@pytest.mark.asyncio
 async def test_get_mug_dsk(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'abcd12345'
     assert (await mug_connection.get_dsk()) == 'YWJjZDEyMzQ1'
@@ -229,7 +213,6 @@ async def test_get_mug_dsk(mug_connection):
     mug_connection._client.read_gatt_char.assert_called_with(MugCharacteristic.DSK.uuid)
 
 
-@pytest.mark.asyncio
 async def test_get_mug_temperature_unit(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'\x01'
     assert (await mug_connection.get_temperature_unit()) == TemperatureUnit.FAHRENHEIT
@@ -240,7 +223,6 @@ async def test_get_mug_temperature_unit(mug_connection):
     mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.TEMPERATURE_UNIT.uuid)
 
 
-@pytest.mark.asyncio
 async def test_set_mug_temperature_unit(mug_connection):
     mug_connection.ensure_connection = AsyncMock()
     await mug_connection.set_temperature_unit(TemperatureUnit.CELSIUS)
@@ -251,7 +233,6 @@ async def test_set_mug_temperature_unit(mug_connection):
     )
 
 
-@pytest.mark.asyncio
 async def test_mug_ensure_correct_unit(mug_connection):
     mug_connection.mug.temperature_unit = TemperatureUnit.CELSIUS
     mug_connection.mug.use_metric = True
@@ -263,14 +244,12 @@ async def test_mug_ensure_correct_unit(mug_connection):
     mug_connection.set_temperature_unit.assert_called_with(TemperatureUnit.CELSIUS)
 
 
-@pytest.mark.asyncio
 async def test_get_mug_battery_voltage(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'\x01'
     assert (await mug_connection.get_battery_voltage()) == 1
     mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.CONTROL_REGISTER_DATA.uuid)
 
 
-@pytest.mark.asyncio
 async def test_get_mug_date_time_zone(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'c\x0f\xf6\x00'
     date_time = await mug_connection.get_date_time_zone()
@@ -278,7 +257,6 @@ async def test_get_mug_date_time_zone(mug_connection):
     mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.DATE_TIME_AND_ZONE.uuid)
 
 
-@pytest.mark.asyncio
 async def test_read_firmware(mug_connection):
     mug_connection._client.read_gatt_char.return_value = b'c\x01\x80\x00\x12\x00'
     firmware = await mug_connection.get_firmware()
@@ -288,7 +266,6 @@ async def test_read_firmware(mug_connection):
     mug_connection._client.read_gatt_char.assert_called_once_with(MugCharacteristic.FIRMWARE.uuid)
 
 
-@pytest.mark.asyncio
 async def test_mug_update_initial(mug_connection):
     mug_connection._update_multiple = AsyncMock(return_value={})
     mug_connection.ensure_connection = AsyncMock()
@@ -296,7 +273,6 @@ async def test_mug_update_initial(mug_connection):
     mug_connection._update_multiple.assert_called_once_with(INITIAL_ATTRS)
 
 
-@pytest.mark.asyncio
 async def test_mug_update_all(mug_connection):
     mug_connection._update_multiple = AsyncMock(return_value={})
     mug_connection.ensure_connection = AsyncMock()
@@ -304,7 +280,6 @@ async def test_mug_update_all(mug_connection):
     mug_connection._update_multiple.assert_called_once_with(UPDATE_ATTRS)
 
 
-@pytest.mark.asyncio
 async def test_mug_update_multiple(mug_connection):
     mug_connection.get_name = AsyncMock(return_value='name')
     mug_connection.mug.update_info = AsyncMock()
@@ -312,7 +287,6 @@ async def test_mug_update_multiple(mug_connection):
     mug_connection.mug.update_info.assert_called_once_with(name='name')
 
 
-@pytest.mark.asyncio
 async def test_mug_update_queued_attributes(mug_connection):
     mug_connection._queued_updates = set()
     assert (await mug_connection.update_queued_attributes()) == []

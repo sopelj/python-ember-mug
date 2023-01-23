@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 from argparse import ArgumentTypeError
 from textwrap import dedent
 
 import pytest
+from pytest import CaptureFixture
 
 from ember_mug import EmberMug
 from ember_mug.cli.helpers import build_sub_rows, print_changes, print_info, print_table, validate_mac
@@ -26,7 +29,7 @@ def test_build_sub_rows() -> None:
     assert sub_rows[2][1] == 'test3'
 
 
-def test_print_changes(capsys) -> None:
+def test_print_changes(capsys: CaptureFixture) -> None:
     changes = [
         Change('name', 'Mug Name', 'Test Mug'),
         Change('liquid_level', 1, 2),
@@ -45,13 +48,13 @@ def test_print_changes(capsys) -> None:
     )
 
 
-def test_print_table(ember_mug: EmberMug, capsys) -> None:
+def test_print_table(ember_mug: EmberMug, capsys: CaptureFixture) -> None:
     print_table([])
     captured = capsys.readouterr()
     assert captured.out == ''
 
 
-def test_print_info(ember_mug: EmberMug, capsys) -> None:
+def test_print_info(ember_mug: EmberMug, capsys: CaptureFixture) -> None:
     print_info(ember_mug)
     captured = capsys.readouterr()
     assert captured.out == dedent(

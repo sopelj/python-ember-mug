@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+from typing import AsyncGenerator, Generator
 from unittest.mock import AsyncMock
 
 import pytest
@@ -9,7 +12,7 @@ from ember_mug.connection import EmberMugConnection
 
 
 @pytest.fixture
-def ember_mug():
+def ember_mug() -> Generator[EmberMug, None, None]:
     yield EmberMug(
         BLEDevice(
             address='32:36:a5:be:88:cb',
@@ -19,7 +22,7 @@ def ember_mug():
 
 
 @pytest_asyncio.fixture
-async def mug_connection():
+async def mug_connection() -> AsyncGenerator[EmberMugConnection, None]:
     mug = EmberMug(BLEDevice(address='32:36:a5:be:88:cb', name='Ember Ceramic Mug'))
     connection = EmberMugConnection(mug)
     connection._client = AsyncMock()
