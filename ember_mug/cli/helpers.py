@@ -5,7 +5,7 @@ import re
 from argparse import ArgumentTypeError
 from collections import defaultdict
 from functools import partial
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING, Callable, Generator
 
 from ..consts import MAC_ADDRESS_REGEX
 from ..data import Change
@@ -70,3 +70,20 @@ def print_changes(changes: list[Change], metric: bool = True) -> None:
         if formatter := formatters.get(attr):
             old_value, new_value = formatter(old_value), formatter(new_value)
         print(Change(attr, old_value, new_value))
+
+
+class CommandLoop:
+    """Class to handle command loop."""
+
+    def __init__(self) -> None:
+        """Start running."""
+        self.running = True
+
+    def __iter__(self) -> Generator[None, None, None]:
+        """Yield until stopped."""
+        try:
+            while self.running:
+                yield
+        except KeyboardInterrupt:
+            self.running = False
+            raise

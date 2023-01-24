@@ -1,17 +1,19 @@
 from __future__ import annotations
 
 from argparse import Namespace
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 from bleak import BleakError, BLEDevice
 from pytest import CaptureFixture
 
 from ember_mug import EmberMug
-from ember_mug.cli.commands import discover, find_device, get_mug
+from ember_mug.cli.commands import EmberMugCli, discover, fetch_info, find_device, get_mug
 
 MUG_ADDRESS = '32:36:a5:be:88:cb'
 MUG_DEVICE = BLEDevice(address=MUG_ADDRESS, name='Ember Ceramic Mug')
+
+# 71-76, 81-95, 100-111, 116-129, 134-144, 161-193, 197-202
 
 
 @patch('ember_mug.cli.commands.EmberMug', spec=EmberMug)
@@ -112,3 +114,51 @@ async def test_discover_bleak_error(mock_discover_mugs: AsyncMock, capsys: Captu
     mock_discover_mugs.assert_called_once_with(mac=MUG_ADDRESS)
     captured = capsys.readouterr()
     assert captured.out == "An error occurred trying to discover mugs: Test Error\n"
+
+
+@patch('ember_mug.cli.commands.print_info')
+@patch('ember_mug.cli.commands.get_mug')
+async def test_fetch_info(mock_get_mug: AsyncMock, mock_print_info: AsyncMock) -> None:
+    mock_mug_connection = AsyncMock()
+    mock_mug_connection.__aenter__.return_value = mock_mug_connection
+    mock_mug_connection.__aexit__ = AsyncMock()
+    mock_mug = Mock()
+    mock_mug.connection.return_value = mock_mug_connection
+    mock_get_mug.return_value = mock_mug
+    args = Namespace(mac=MUG_ADDRESS, adapter=None, raw=False)
+    await fetch_info(args)
+    mock_print_info.assert_called_once_with(mock_mug)
+
+
+def test_ember_cli():
+    cli = EmberMugCli()
+    args = cli.parser.parse_args(['find'])
+    assert args.command == 'find'
+
+    args = cli.parser.parse_args(['discover'])
+    assert args.command == 'discover'
+
+    args = cli.parser.parse_args(['info', '-m', MUG_ADDRESS, '--imperial'])
+    assert args.command == 'info'
+    assert args.mac == MUG_ADDRESS
+    assert args.imperial is True
+
+    args = cli.parser.parse_args(['poll'])
+    assert args.command == 'poll'
+
+    args = cli.parser.parse_args(['get', 'led-colour'])
+    assert args.command == 'get'
+    assert args.attributes == ['led-colour']
+
+    args = cli.parser.parse_args(['set', '--name', 'TEST'])
+    assert args.command == 'set'
+    assert args.name == 'TEST'
+
+
+@patch('sys.argv', ['file.py', 'find', '-m', MUG_ADDRESS])
+async def test_cli_run():
+    cli = EmberMugCli()
+    mock_find = AsyncMock()
+    with patch.object(cli, '_commands', {'find': mock_find}):
+        await cli.run()
+    mock_find.assert_called_once()

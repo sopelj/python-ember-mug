@@ -14,7 +14,7 @@ from bleak import BleakError
 from ..data import Colour
 from ..mug import EmberMug, attr_labels, extra_attrs
 from ..scanner import discover_mugs, find_mug
-from .helpers import print_changes, print_info, print_table, validate_mac
+from .helpers import CommandLoop, print_changes, print_info, print_table, validate_mac
 
 if TYPE_CHECKING:
     from bleak.backends.device import BLEDevice
@@ -87,7 +87,7 @@ async def poll_mug(args: Namespace) -> None:
         await con.subscribe()
         if not args.raw:
             print('\nWatching for changes')
-        while True:
+        for _ in CommandLoop():
             for _ in range(60):
                 await asyncio.sleep(1)
                 print_changes(await con.update_queued_attributes(), con.mug.use_metric)
@@ -195,8 +195,4 @@ class EmberMugCli:
     async def run(self) -> None:
         """Run the specified command based on subparser."""
         args = self.parser.parse_args()
-        if not args.command:
-            print('Please specify a command.\n')
-            self.parser.print_help()
-            sys.exit(1)
         await self._commands[args.command](args)

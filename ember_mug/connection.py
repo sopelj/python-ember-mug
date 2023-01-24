@@ -135,7 +135,7 @@ class EmberMugConnection:
         """Helper to write characteristic to Mug."""
         try:
             await self._client.write_gatt_char(characteristic.uuid, data)
-            logger.debug("Wrote %s to attribute '%s'", characteristic, data)
+            logger.debug("Wrote '%s' to attribute '%s'", data, characteristic)
         except BleakError as e:
             logger.error("Failed to write '%s' to attribute '%s': %s", data, characteristic, e)
             raise

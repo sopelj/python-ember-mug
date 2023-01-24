@@ -48,7 +48,7 @@ async def test_connect(mug_update_initial, mock_establish_connection, mug_connec
 @patch('ember_mug.connection.logger')
 @patch('ember_mug.connection.establish_connection')
 async def test_connect_error(
-    mock_establish_connection: Mock,
+    mock_establish_connection: AsyncMock,
     mock_logger: Mock,
     mug_connection: EmberMugConnection,
 ) -> None:
@@ -64,24 +64,43 @@ async def test_connect_error(
 
 @patch('ember_mug.connection.logger')
 @patch('ember_mug.connection.establish_connection')
-async def test_pairing_exceptions(
-    mock_establish_connection: Mock,
+async def test_pairing_exceptions_esphome(
+    mock_establish_connection: AsyncMock,
     mock_logger: Mock,
     mug_connection: EmberMugConnection,
 ) -> None:
     mock_client = AsyncMock()
     mock_client.pair.side_effect = NotImplementedError
     mock_establish_connection.return_value = mock_client
-    mug_connection.update_initial = AsyncMock()  # type: ignore[assignment]
-    mug_connection.subscribe = AsyncMock()  # type: ignore[assignment]
-    await mug_connection.ensure_connection()
+    with patch.multiple(
+        mug_connection,
+        update_initial=AsyncMock(),
+        subscribe=AsyncMock(),
+    ):
+        await mug_connection.ensure_connection()
     mock_logger.warning.assert_called_with(
         'Pairing not implemented. '
         'If your mug is still in pairing mode (blinking blue) tap the button on the bottom to exit.',
     )
 
 
-async def test_disconnect(mug_connection):
+@patch('ember_mug.connection.establish_connection')
+async def test_pairing_exceptions(
+    mock_establish_connection: AsyncMock,
+    mug_connection: EmberMugConnection,
+) -> None:
+    mock_client = AsyncMock()
+    mock_client.pair.side_effect = BleakError
+    mock_establish_connection.return_value = mock_client
+    with patch.multiple(
+        mug_connection,
+        update_initial=AsyncMock(),
+        subscribe=AsyncMock(),
+    ):
+        await mug_connection.ensure_connection()
+
+
+async def test_disconnect(mug_connection: EmberMugConnection) -> None:
     mug_connection._client = AsyncMock()
 
     mug_connection._client.is_connected = False
@@ -91,6 +110,75 @@ async def test_disconnect(mug_connection):
     mug_connection._client.is_connected = True
     await mug_connection.disconnect()
     mug_connection._client.disconnect.assert_called()
+
+
+@patch('ember_mug.connection.logger')
+@patch('ember_mug.connection.asyncio')
+def test_disconnect_callback(
+    mock_asyncio: AsyncMock,
+    mock_logger: Mock,
+    mug_connection: EmberMugConnection,
+) -> None:
+    mug_connection._disconnect_callback(AsyncMock())
+    mock_logger.debug.assert_called_with("Disconnect callback called")
+    mock_asyncio.create_task.assert_called_once()
+
+
+@patch('ember_mug.connection.logger')
+async def test_read(
+    mock_logger: Mock,
+    mug_connection: EmberMugConnection,
+) -> None:
+    mug_connection._client = AsyncMock()
+    mug_connection._client.read_gatt_char.return_value = b'TEST'
+    await mug_connection._read(MugCharacteristic.MUG_NAME)
+    mug_connection._client.read_gatt_char.assert_called_with(
+        MugCharacteristic.MUG_NAME.uuid,
+    )
+    mock_logger.debug.assert_called_with(
+        "Read attribute '%s' with value '%s'",
+        MugCharacteristic.MUG_NAME,
+        b'TEST',
+    )
+
+
+@patch('ember_mug.connection.logger')
+async def test_write(
+    mock_logger: Mock,
+    mug_connection: EmberMugConnection,
+) -> None:
+    mug_connection._client = AsyncMock()
+    test_name = bytearray(b'TEST')
+    await mug_connection._write(
+        MugCharacteristic.MUG_NAME,
+        test_name,
+    )
+    mug_connection._client.write_gatt_char.assert_called_with(
+        MugCharacteristic.MUG_NAME.uuid,
+        test_name,
+    )
+    mock_logger.debug.assert_called_with(
+        "Wrote '%s' to attribute '%s'",
+        test_name,
+        MugCharacteristic.MUG_NAME,
+    )
+
+    mug_connection._client = AsyncMock()
+    mug_connection._client.write_gatt_char.side_effect = BleakError
+    with pytest.raises(BleakError):
+        await mug_connection._write(
+            MugCharacteristic.MUG_NAME,
+            test_name,
+        )
+    mug_connection._client.write_gatt_char.assert_called_with(
+        MugCharacteristic.MUG_NAME.uuid,
+        test_name,
+    )
+    msg, data, char, exception = mock_logger.error.mock_calls[0].args
+    assert msg == "Failed to write '%s' to attribute '%s': %s"
+    assert data == test_name
+    assert char == MugCharacteristic.MUG_NAME
+    assert isinstance(exception, BleakError)
 
 
 def test_set_device(mug_connection: EmberMugConnection) -> None:
@@ -297,23 +385,25 @@ async def test_mug_update_queued_attributes(mug_connection):
     mug_connection.mug.update_info.assert_called_once_with(name='name')
 
 
-def test_mug_notify_callback(mug_connection):
-    mug_connection._notify_callback(1, b'\x02')
-    mug_connection._notify_callback(1, b'\x02')
+def test_mug_notify_callback(mug_connection: EmberMugConnection) -> None:
+    gatt_char = AsyncMock()
+    mug_connection._notify_callback(gatt_char, bytearray(b'\x01'))
+    mug_connection._notify_callback(gatt_char, bytearray(b'\x02'))
     assert 2 in mug_connection._latest_events
-    mug_connection._notify_callback(1, b'\x04')
+    mug_connection._notify_callback(gatt_char, bytearray(b'\x04'))
     assert 4 in mug_connection._latest_events
-    mug_connection._notify_callback(1, b'\x05')
+    mug_connection._notify_callback(gatt_char, bytearray(b'\x05'))
     assert 5 in mug_connection._latest_events
-    mug_connection._notify_callback(1, b'\x06')
+    mug_connection._notify_callback(gatt_char, bytearray(b'\x06'))
     assert 6 in mug_connection._latest_events
-    mug_connection._notify_callback(1, b'\x07')
+    mug_connection._notify_callback(gatt_char, bytearray(b'\x07'))
     assert 7 in mug_connection._latest_events
-    mug_connection._notify_callback(1, b'\x08')
+    mug_connection._notify_callback(gatt_char, bytearray(b'\x08'))
     assert 8 in mug_connection._latest_events
     callback = Mock()
-    mug_connection.register_callback(callback)
-    mug_connection._notify_callback(1, b'\x09')
+    unregister = mug_connection.register_callback(callback)
+    assert callback in mug_connection._callbacks
+    mug_connection._notify_callback(gatt_char, bytearray(b'\x09'))
     assert 9 in mug_connection._latest_events
     callback.assert_not_called()
     assert mug_connection._queued_updates == {
@@ -325,8 +415,11 @@ def test_mug_notify_callback(mug_connection):
         "battery_voltage",
     }
     mug_connection._latest_events = {}
-    mug_connection._notify_callback(1, b'\x02')
+    mug_connection._notify_callback(gatt_char, bytearray(b'\x02'))
     callback.assert_called_once()
     callback.reset_mock()
-    mug_connection._notify_callback(1, b'\x02')
+    mug_connection._notify_callback(gatt_char, bytearray(b'\x02'))
     callback.assert_not_called()
+    # Remove callback
+    unregister()
+    assert callback not in mug_connection._callbacks
