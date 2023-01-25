@@ -8,12 +8,22 @@ from bleak import BleakError, BLEDevice
 from pytest import CaptureFixture
 
 from ember_mug import EmberMug
-from ember_mug.cli.commands import EmberMugCli, discover, fetch_info, find_device, get_mug
+from ember_mug.cli.commands import EmberMugCli, discover, fetch_info, find_device, get_mug, get_mug_value
 
 MUG_ADDRESS = '32:36:a5:be:88:cb'
 MUG_DEVICE = BLEDevice(address=MUG_ADDRESS, name='Ember Ceramic Mug')
 
-# 71-76, 81-95, 100-111, 116-129, 134-144, 161-193, 197-202
+
+@pytest.fixture()
+def mock_mug_and_connection():
+    mock_mug_connection = AsyncMock()
+    mock_mug_connection.__aenter__.return_value = mock_mug_connection
+    mock_mug_connection.__aexit__ = AsyncMock()
+    mock_mug = Mock()
+    mock_mug.connection.return_value = mock_mug_connection
+    with patch('ember_mug.cli.commands.get_mug') as mock:
+        mock.return_value = mock_mug
+        yield mock_mug, mock_mug_connection
 
 
 @patch('ember_mug.cli.commands.EmberMug', spec=EmberMug)
@@ -117,17 +127,47 @@ async def test_discover_bleak_error(mock_discover_mugs: AsyncMock, capsys: Captu
 
 
 @patch('ember_mug.cli.commands.print_info')
-@patch('ember_mug.cli.commands.get_mug')
-async def test_fetch_info(mock_get_mug: AsyncMock, mock_print_info: AsyncMock) -> None:
-    mock_mug_connection = AsyncMock()
-    mock_mug_connection.__aenter__.return_value = mock_mug_connection
-    mock_mug_connection.__aexit__ = AsyncMock()
-    mock_mug = Mock()
-    mock_mug.connection.return_value = mock_mug_connection
-    mock_get_mug.return_value = mock_mug
+async def test_fetch_info(
+    mock_print_info: AsyncMock,
+    mock_mug_and_connection: tuple[AsyncMock, AsyncMock],
+    capsys: CaptureFixture,
+) -> None:
+    mock_mug, mock_mug_connection = mock_mug_and_connection
+
+    # Test normal
     args = Namespace(mac=MUG_ADDRESS, adapter=None, raw=False)
     await fetch_info(args)
+    captured = capsys.readouterr()
+    assert captured.out == "Connected.\nFetching Info\n"
     mock_print_info.assert_called_once_with(mock_mug)
+
+    # Test with Raw
+    args = Namespace(mac=MUG_ADDRESS, adapter=None, raw=True)
+    await fetch_info(args)
+    captured = capsys.readouterr()
+    assert captured.out == ""
+
+
+@patch('ember_mug.cli.commands.print_table')
+async def test_get_mug_value(
+    mocked_print_table: Mock,
+    mock_mug_and_connection: tuple[AsyncMock, AsyncMock],
+    capsys: CaptureFixture,
+) -> None:
+    mock_mug, mock_mug_connection = mock_mug_and_connection
+    mock_mug.get_formatted_attr.return_value = 'test'
+    mock_mug_connection.get_target_temp.return_value = 55.5
+    mock_mug_connection.get_name.return_value = 'test'
+    args = Namespace(adapter=None, raw=False, attributes=['target_temp', 'name'])
+    await get_mug_value(args)
+    mock_mug_connection.get_target_temp.assert_called_once()
+    mocked_print_table.assert_called_once_with([('Target Temp', "test"), ('Mug Name', "test")])
+
+    mock_mug_connection.get_led_colour.return_value = 55.5
+    args = Namespace(adapter=None, raw=True, attributes=['led_colour', 'name'])
+    await get_mug_value(args)
+    captured = capsys.readouterr()
+    assert captured.out == "55.5\ntest\n"
 
 
 def test_ember_cli():
