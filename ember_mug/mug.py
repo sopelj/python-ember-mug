@@ -5,7 +5,7 @@ import logging
 from dataclasses import asdict, dataclass, is_dataclass
 from typing import TYPE_CHECKING, Any
 
-from .connection import EmberMugConnection
+from .connection import EXTRA_ATTRS, EmberMugConnection
 from .consts import LiquidState, TemperatureUnit
 from .data import BatteryInfo, Change, Colour, MugFirmwareInfo, MugMeta
 from .formatting import format_led_colour, format_liquid_level, format_temp
@@ -32,7 +32,6 @@ attr_labels = {
     'date_time_zone': 'Date Time + Time Zone',
     'battery_voltage': 'Voltage',
 }
-extra_attrs = ('dsk', 'udsk', 'battery_voltage', 'date_time_zone')
 
 
 @dataclass
@@ -114,7 +113,7 @@ class EmberMug:
         return {
             label: self.get_formatted_attr(attr)
             for attr, label in attr_labels.items()
-            if self.include_extra or attr not in extra_attrs
+            if self.include_extra or attr not in EXTRA_ATTRS
         }
 
     def as_dict(self) -> dict[str, Any]:

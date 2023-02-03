@@ -4,6 +4,8 @@
 
 ### Changed
 * Bump bleak to >=0.19.5 for Home Assistant 2023.2
+* Catch exceptions on querying DSK and UDSK and return empty strings
+* No longer query "extra" attributes unless `include_extra=True` was passed to mug
 
 ## [0.5.4]
 

@@ -7,7 +7,7 @@ import pytest
 from bleak import BleakError
 from bleak.backends.device import BLEDevice
 
-from ember_mug.connection import INITIAL_ATTRS, UPDATE_ATTRS, EmberMugConnection
+from ember_mug.connection import EXTRA_ATTRS, INITIAL_ATTRS, UPDATE_ATTRS, EmberMugConnection
 from ember_mug.consts import MugCharacteristic, TemperatureUnit
 from ember_mug.data import Colour
 
@@ -355,8 +355,16 @@ async def test_read_firmware(mug_connection):
 
 
 async def test_mug_update_initial(mug_connection):
+    no_extra = INITIAL_ATTRS - EXTRA_ATTRS
+
     mug_connection._update_multiple = AsyncMock(return_value={})
     mug_connection.ensure_connection = AsyncMock()
+    assert (await mug_connection.update_initial()) == {}
+    mug_connection._update_multiple.assert_called_once_with(no_extra)
+
+    # Try with extra
+    mug_connection._update_multiple.reset_mock()
+    mug_connection._initial_attrs = INITIAL_ATTRS
     assert (await mug_connection.update_initial()) == {}
     mug_connection._update_multiple.assert_called_once_with(INITIAL_ATTRS)
 
@@ -364,6 +372,12 @@ async def test_mug_update_initial(mug_connection):
 async def test_mug_update_all(mug_connection):
     mug_connection._update_multiple = AsyncMock(return_value={})
     mug_connection.ensure_connection = AsyncMock()
+    assert (await mug_connection.update_all()) == {}
+    mug_connection._update_multiple.assert_called_once_with(UPDATE_ATTRS - EXTRA_ATTRS)
+
+    # Try with extras
+    mug_connection._update_multiple.reset_mock()
+    mug_connection._update_attrs = UPDATE_ATTRS
     assert (await mug_connection.update_all()) == {}
     mug_connection._update_multiple.assert_called_once_with(UPDATE_ATTRS)
 

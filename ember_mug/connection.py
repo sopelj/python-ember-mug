@@ -36,14 +36,14 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_ATTEMPTS = 3
 
-INITIAL_ATTRS = (
+INITIAL_ATTRS = {
     "meta",
     "udsk",
     "dsk",
     "date_time_zone",
     "firmware",
-)
-UPDATE_ATTRS = (
+}
+UPDATE_ATTRS = {
     "name",
     "led_colour",
     "current_temp",
@@ -53,7 +53,8 @@ UPDATE_ATTRS = (
     "liquid_level",
     "liquid_state",
     "battery_voltage",
-)
+}
+EXTRA_ATTRS = {'dsk', 'udsk', 'battery_voltage', 'date_time_zone'}
 
 
 class EmberMugConnection:
@@ -68,6 +69,8 @@ class EmberMugConnection:
 
         self._queued_updates: set[str] = set()
         self._latest_events: dict[int, float] = {}
+        self._initial_attrs = INITIAL_ATTRS if mug.include_extra else (INITIAL_ATTRS - EXTRA_ATTRS)
+        self._update_attrs = UPDATE_ATTRS if mug.include_extra else (UPDATE_ATTRS - EXTRA_ATTRS)
 
         logger.debug("New mug connection initialized.")
         self._client_kwargs = {**kwargs}
@@ -243,7 +246,11 @@ class EmberMugConnection:
 
     async def get_udsk(self) -> str:
         """Get mug udsk from gatt."""
-        return decode_byte_string(await self._read(MugCharacteristic.UDSK))
+        try:
+            return decode_byte_string(await self._read(MugCharacteristic.UDSK))
+        except BleakError as e:
+            logger.debug('Unable to read UDSK: %s', e)
+        return ''
 
     async def set_udsk(self, udsk: str) -> None:
         """Attempt to write udsk."""
@@ -252,7 +259,11 @@ class EmberMugConnection:
 
     async def get_dsk(self) -> str:
         """Get mug dsk from gatt."""
-        return decode_byte_string(await self._read(MugCharacteristic.DSK))
+        try:
+            return decode_byte_string(await self._read(MugCharacteristic.DSK))
+        except BleakError as e:
+            logger.debug('Unable to read DSK: %s', e)
+        return ''
 
     async def get_temperature_unit(self) -> TemperatureUnit:
         """Get mug temp unit."""
@@ -292,13 +303,13 @@ class EmberMugConnection:
 
     async def update_initial(self) -> list[Change]:
         """Update attributes that don't normally change and don't need to be regularly updated."""
-        return await self._update_multiple(INITIAL_ATTRS)
+        return await self._update_multiple(self._initial_attrs)
 
     async def update_all(self) -> list[Change]:
         """Update all standard attributes."""
-        return await self._update_multiple(UPDATE_ATTRS)
+        return await self._update_multiple(self._update_attrs)
 
-    async def _update_multiple(self, attrs: tuple[str, ...]) -> list[Change]:
+    async def _update_multiple(self, attrs: set[str]) -> list[Change]:
         """Helper to update a list of attributes from the mug."""
         logger.debug('Updating the following attributes: %s', attrs)
         changes = self.mug.update_info(**{attr: await getattr(self, f"get_{attr}")() for attr in attrs})

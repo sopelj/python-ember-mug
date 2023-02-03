@@ -12,14 +12,14 @@ from typing import TYPE_CHECKING
 from bleak import BleakError
 
 from ..data import Colour
-from ..mug import EmberMug, attr_labels, extra_attrs
+from ..mug import EXTRA_ATTRS, EmberMug, attr_labels
 from ..scanner import discover_mugs, find_mug
 from .helpers import CommandLoop, print_changes, print_info, print_table, validate_mac
 
 if TYPE_CHECKING:
     from bleak.backends.device import BLEDevice
 
-all_attrs = list(attr_labels) + list(extra_attrs)
+all_attrs = list(attr_labels) + list(EXTRA_ATTRS)
 get_attribute_names = [n.replace('_', '-') for n in all_attrs]
 
 
