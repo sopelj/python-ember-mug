@@ -1,10 +1,16 @@
 # Changelog
 
+## [0.5.5]
+
+### Changed
+* Set values on mug immediately after setting them
+* Only add/remove callback if not already done
+
 ## [0.5.4]
 
 ### Added
 * More logging for different methods
-*
+
 ### Changed
 * Bump bleak to >=0.19.5 for Home Assistant 2023.2
 * Catch exceptions on querying DSK and UDSK and return empty strings

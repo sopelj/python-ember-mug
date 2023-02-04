@@ -166,10 +166,12 @@ class EmberMugConnection:
         """Register a callback to be called when the state changes."""
 
         def unregister_callback() -> None:
-            self._callbacks.remove(callback)
+            if callback in self._callbacks:
+                self._callbacks.remove(callback)
             logger.debug("Unregistered callback: %s", callback)
 
-        self._callbacks.append(callback)
+        if callback not in self._callbacks:
+            self._callbacks.append(callback)
         logger.debug("Registered callback: %s", callback)
         return unregister_callback
 
@@ -204,6 +206,7 @@ class EmberMugConnection:
         await self.ensure_connection()
         colour = Colour(*colour[:3], 255)  # It always expects 255 for alpha
         await self._write(MugCharacteristic.LED, colour.as_bytearray())
+        self.mug.led_colour = colour
 
     async def get_target_temp(self) -> float:
         """Get target temp form mug gatt."""
@@ -215,6 +218,7 @@ class EmberMugConnection:
         await self.ensure_connection()
         target = bytearray(int(target_temp / 0.01).to_bytes(2, "little"))
         await self._write(MugCharacteristic.TARGET_TEMPERATURE, target)
+        self.mug.target_temp = target_temp
 
     async def get_current_temp(self) -> float:
         """Get current temp from mug gatt."""
@@ -243,6 +247,7 @@ class EmberMugConnection:
         if MUG_NAME_REGEX.match(name) is None:
             raise ValueError('Name cannot contain any special characters')
         await self._write(MugCharacteristic.MUG_NAME, bytearray(name.encode("utf8")))
+        self.mug.name = name
 
     async def get_udsk(self) -> str:
         """Get mug udsk from gatt."""
@@ -256,6 +261,7 @@ class EmberMugConnection:
         """Attempt to write udsk."""
         await self.ensure_connection()
         await self._write(MugCharacteristic.UDSK, bytearray(encode_byte_string(udsk)))
+        self.mug.udsk = udsk
 
     async def get_dsk(self) -> str:
         """Get mug dsk from gatt."""
@@ -278,6 +284,7 @@ class EmberMugConnection:
         text_unit = unit.value if isinstance(unit, Enum) else unit
         unit_bytes = bytearray([1 if text_unit == TemperatureUnit.FAHRENHEIT else 0])
         await self._write(MugCharacteristic.TEMPERATURE_UNIT, unit_bytes)
+        self.mug.temperature_unit = TemperatureUnit(unit)
 
     async def ensure_correct_unit(self) -> None:
         """Set mug unit if it's not what we want."""
