@@ -58,7 +58,7 @@ async def test_connect_error(
         await mug_connection.ensure_connection()
     msg, device, exception = mock_logger.error.mock_calls[0].args
     assert msg == "%s: Failed to connect to the mug: %s"
-    assert device == mug_connection._device
+    assert device == mug_connection.mug.device
     assert isinstance(exception, BleakError)
 
 

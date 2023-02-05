@@ -79,18 +79,10 @@ class EmberMugConnection:
                 raise ValueError('The adapter option is only valid for the Linux BlueZ Backend.')
             self._client_kwargs['adapter'] = adapter
 
-    @property
-    def _device(self) -> BLEDevice:
-        return self.mug.device
-
-    @_device.setter
-    def _device(self, device: BLEDevice) -> None:
-        self.mug.device = device
-
     def set_device(self, ble_device: BLEDevice) -> None:
         """Set the ble device."""
-        logger.debug("Set new device from %s to %s", self._device, ble_device)
-        self._device = ble_device
+        logger.debug("Set new device from %s to %s", self.mug.device, ble_device)
+        self.mug.device = ble_device
 
     async def ensure_connection(self) -> None:
         """Connect to mug."""
@@ -105,14 +97,14 @@ class EmberMugConnection:
                 logger.debug("Establishing a new connection")
                 self._client = await establish_connection(
                     client_class=BleakClient,
-                    device=self._device,
-                    name=f'{self.mug.name} ({self._device.address})',
+                    device=self.mug.device,
+                    name=f'{self.mug.name} ({self.mug.device.address})',
                     disconnected_callback=self._disconnect_callback,  # type: ignore
-                    ble_device_callback=lambda: self._device,
+                    ble_device_callback=lambda: self.mug.device,
                     **self._client_kwargs,
                 )
             except (asyncio.TimeoutError, BleakError) as error:
-                logger.error("%s: Failed to connect to the mug: %s", self._device, error)
+                logger.error("%s: Failed to connect to the mug: %s", self.mug.device, error)
                 raise error
             # Attempt to pair for good measure and perform an initial update
             try:
