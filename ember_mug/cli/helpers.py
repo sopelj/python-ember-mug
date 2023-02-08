@@ -4,8 +4,9 @@ from __future__ import annotations
 import re
 from argparse import ArgumentTypeError
 from collections import defaultdict
+from collections.abc import Generator
 from functools import partial
-from typing import TYPE_CHECKING, Callable, Generator
+from typing import TYPE_CHECKING, Callable
 
 from ..consts import MAC_ADDRESS_REGEX
 from ..data import Change
