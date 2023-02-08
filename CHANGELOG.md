@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.6]
+
+### Changed
+* Update pre-commit, pytest and add dependabot
+
 ## [0.5.5]
 
 ### Changed
