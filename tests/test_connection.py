@@ -415,7 +415,13 @@ def test_mug_notify_callback(mug_connection: EmberMugConnection) -> None:
     mug_connection._notify_callback(gatt_char, bytearray(b'\x08'))
     assert 8 in mug_connection._latest_events
     callback = Mock()
+    second_callback = Mock()
     unregister = mug_connection.register_callback(callback)
+    second_unregister = mug_connection.register_callback(second_callback)
+    repeat_unregister = mug_connection.register_callback(callback)
+    assert unregister is repeat_unregister
+    assert unregister is not second_unregister
+
     assert callback in mug_connection._callbacks
     mug_connection._notify_callback(gatt_char, bytearray(b'\x09'))
     assert 9 in mug_connection._latest_events

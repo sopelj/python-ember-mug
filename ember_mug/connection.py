@@ -64,7 +64,7 @@ class EmberMugConnection:
         """Initialize connection manager."""
         self.mug = mug
         self._connect_lock: Lock = Lock()
-        self._callbacks: list[Callable[[EmberMug], None]] = []
+        self._callbacks: dict[Callable[[EmberMug], None], Callable[[], None]] = {}
         self._client: BleakClient = None  # type: ignore[assignment]
 
         self._queued_updates: set[str] = set()
@@ -156,14 +156,16 @@ class EmberMugConnection:
 
     def register_callback(self, callback: Callable[[EmberMug], None]) -> Callable[[], None]:
         """Register a callback to be called when the state changes."""
+        if existing_unregister_callback := self._callbacks.get(callback):
+            logger.debug("Callback %s already registered", callback)
+            return existing_unregister_callback
 
         def unregister_callback() -> None:
             if callback in self._callbacks:
-                self._callbacks.remove(callback)
+                del self._callbacks[callback]
             logger.debug("Unregistered callback: %s", callback)
 
-        if callback not in self._callbacks:
-            self._callbacks.append(callback)
+        self._callbacks[callback] = unregister_callback
         logger.debug("Registered callback: %s", callback)
         return unregister_callback
 
@@ -347,7 +349,10 @@ class EmberMugConnection:
                 PushEvent.CHARGER_DISCONNECTED,
             ):
                 # 2 -> Placed on charger, 3 -> Removed from charger
-                self.on_charging_base = event_id == PushEvent.CHARGER_CONNECTED
+                self.mug.battery = BatteryInfo(
+                    percent=self.mug.battery.percent if self.mug.battery else 0,
+                    on_charging_base=event_id == PushEvent.CHARGER_CONNECTED,
+                )
                 self._fire_callbacks()
             # All indicate changes in battery
             self._queued_updates.add("battery")

@@ -2,8 +2,12 @@
 
 ## [0.5.6]
 
+### Fixed
+* Set proper attribute for on charging base
+
 ### Changed
 * Update pre-commit, pytest and add dependabot
+* register callback stores a dict to avoid duplicate registrations
 
 ## [0.5.5]
 
