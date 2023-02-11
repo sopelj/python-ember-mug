@@ -6,7 +6,7 @@
 [![codecov](https://codecov.io/gh/sopelj/python-ember-mug/branch/main/graphs/badge.svg)](https://codecov.io/github/sopelj/python-ember-mug)
 ![Project Maintenance](https://img.shields.io/maintenance/yes/2023.svg?style=for-the-badge)
 
-Python Library for Ember Mugs
+Python Library for interacting with Ember Mugs over Bluetooth
 
 * Documentation: <https://sopelj.github.io/python-ember-mug>
 * GitHub: <https://github.com/sopelj/python-ember-mug>
@@ -15,11 +15,11 @@ Python Library for Ember Mugs
 
 ## Summary
 
-Library to attempt to interact with Ember Mugs via Bluetooth using the bleak library.
+This is an *unofficial* library to attempt to interact with Ember Mugs via Bluetooth.
 This was created for use with my [Home Assistant integration](https://github.com/sopelj/hass-ember-mug-component),
 but could be useful separately and has a simple CLI interface too.
 
-**Note**: I have only tested with my Ember Mug 2, but others should work. (Please let me know)
+**Note**: Should work with the standard Ember Mugs (1 and 2), but the thermoses have not been tested.
 
 ## Features
 
@@ -96,3 +96,9 @@ Please ensure the mug is in pairing mode (ie the light is flashing blue) and run
 ## Credits
 
 This package was created with [Cookiecutter](https://github.com/audreyr/cookiecutter) and the [waynerv/cookiecutter-pypackage](https://github.com/waynerv/cookiecutter-pypackage) project template.
+
+## Notice of Non-Affiliation and Disclaimer
+
+This project is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Ember.
+
+The name Ember as well as related names, marks, emblems and images are registered trademarks of their respective owners.

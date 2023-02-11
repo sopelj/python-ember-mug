@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.6.0b1]
+
+### Changed
+* EmberMugConnection changed to EmberMug
+* EmberMug changed to MugData
+* _ensure_connection now called before every read/write
+* Enforce one query at a time with a lock
+* Log if disconnect was expected or not
+
+### Fixed
+* Don't call disconnect in disconnect callback
+
 ## [0.5.6]
 
 ### Fixed
