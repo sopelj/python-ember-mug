@@ -1,7 +1,10 @@
 """Helpers for formatting values for display."""
 from __future__ import annotations
 
-from .data import Colour
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .data import Colour
 
 
 def format_temp(temp: float, metric: bool = True) -> str:

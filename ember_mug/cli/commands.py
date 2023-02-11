@@ -11,15 +11,16 @@ from typing import TYPE_CHECKING
 
 from bleak import BleakError
 
+from ..consts import ATTR_LABELS, EXTRA_ATTRS
 from ..data import Colour
-from ..mug import EXTRA_ATTRS, EmberMug, attr_labels
+from ..mug import EmberMug
 from ..scanner import discover_mugs, find_mug
 from .helpers import CommandLoop, print_changes, print_info, print_table, validate_mac
 
 if TYPE_CHECKING:
     from bleak.backends.device import BLEDevice
 
-all_attrs = list(attr_labels) + list(EXTRA_ATTRS)
+all_attrs = list(ATTR_LABELS) + list(EXTRA_ATTRS)
 get_attribute_names = [n.replace('_', '-') for n in all_attrs]
 
 
@@ -69,30 +70,29 @@ async def discover(args: Namespace) -> list[BLEDevice]:
 async def fetch_info(args: Namespace) -> None:
     """Fetch all information from a mug and end."""
     mug = await get_mug(args)
-    async with mug.connection(adapter=args.adapter) as con:
+    async with mug.connection(adapter=args.adapter):
         if not args.raw:
             print('Connected.\nFetching Info')
-        await con.update_all()
+        await mug.update_all()
     print_info(mug)
 
 
 async def poll_mug(args: Namespace) -> None:
     """Fetch all information and keep polling for changes."""
     mug = await get_mug(args)
-    async with mug.connection(adapter=args.adapter) as con:
+    async with mug.connection(adapter=args.adapter):
         if not args.raw:
             print('Connected.\nFetching Info')
-        await con.update_all()
+        await mug.update_all()
         print_info(mug)
-        await con.subscribe()
         if not args.raw:
             print('\nWatching for changes')
         for _ in CommandLoop():
             for _ in range(60):
                 await asyncio.sleep(1)
-                print_changes(await con.update_queued_attributes(), con.mug.use_metric)
+                print_changes(await mug.update_queued_attributes(), mug.data.use_metric)
             # Every minute do a full update
-            print_changes(await con.update_all(), con.mug.use_metric)
+            print_changes(await mug.update_all(), mug.data.use_metric)
 
 
 async def get_mug_value(args: Namespace) -> None:
@@ -100,15 +100,15 @@ async def get_mug_value(args: Namespace) -> None:
     mug = await get_mug(args)
     data = {}
     attributes = [a.replace('-', '_') for a in args.attributes]
-    async with mug.connection(adapter=args.adapter) as con:
+    async with mug.connection(adapter=args.adapter):
         for attr in attributes:
-            value = await getattr(con, f'get_{attr}')()
-            setattr(mug, attr, value)
+            value = await getattr(mug, f'get_{attr}')()
+            setattr(mug.data, attr, value)
             data[attr] = value
     if args.raw:
         print('\n'.join(str(v) for v in data.values()))
     else:
-        print_table([(attr_labels.get(attr, attr), str(mug.get_formatted_attr(attr))) for attr in data])
+        print_table([(ATTR_LABELS.get(attr, attr), str(mug.data.get_formatted_attr(attr))) for attr in data])
 
 
 async def set_mug_value(args: Namespace) -> None:
@@ -122,9 +122,9 @@ async def set_mug_value(args: Namespace) -> None:
         sys.exit(1)
 
     mug = await get_mug(args)
-    async with mug.connection(adapter=args.adapter) as con:
+    async with mug.connection(adapter=args.adapter):
         for attr, value in values:
-            method = getattr(con, f'set_{attr.replace("-", "_")}')
+            method = getattr(mug, f'set_{attr.replace("-", "_")}')
             print(f'Setting {attr} to {value}')
             await method(value)
 

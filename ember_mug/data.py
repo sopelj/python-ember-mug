@@ -1,9 +1,11 @@
 """Classes for representing data from the mug."""
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, is_dataclass
 from typing import Any, NamedTuple
 
+from .consts import ATTR_LABELS, EXTRA_ATTRS, LiquidState, TemperatureUnit
+from .formatting import format_led_colour, format_liquid_level, format_temp
 from .utils import bytes_to_little_int, decode_byte_string
 
 
@@ -111,3 +113,96 @@ class MugMeta:
     def __str__(self) -> str:
         """String representation for printing."""
         return f'Mug ID: {self.mug_id}, Serial Number: {self.serial_number}'
+
+
+@dataclass
+class MugData:
+    """Class to store/display the state of the mug."""
+
+    # Options
+    model: str
+    use_metric: bool = True
+    include_extra: bool = False
+
+    # Attributes
+    name: str = ""
+    meta: MugMeta | None = None
+    battery: BatteryInfo | None = None
+    firmware: MugFirmwareInfo | None = None
+    led_colour: Colour = Colour(255, 255, 255)
+    liquid_state: LiquidState = LiquidState.UNKNOWN
+    liquid_level: int = 0
+    temperature_unit: TemperatureUnit = TemperatureUnit.CELSIUS
+    current_temp: float = 0.0
+    target_temp: float = 0.0
+    dsk: str = ""
+    udsk: str = ""
+    date_time_zone: str = ""
+    battery_voltage: str = ""
+
+    @property
+    def meta_display(self) -> str:
+        """Return Meta infor based on preference."""
+        if self.meta and not self.include_extra:
+            return f'Serial Number: {self.meta.serial_number}'
+        return str(self.meta)
+
+    @property
+    def led_colour_display(self) -> str:
+        """Return colour as hex value."""
+        return format_led_colour(self.led_colour)
+
+    @property
+    def liquid_state_display(self) -> str:
+        """Human-readable liquid state."""
+        return self.liquid_state.label
+
+    @property
+    def liquid_level_display(self) -> str:
+        """Human-readable liquid level."""
+        return format_liquid_level(self.liquid_level)
+
+    @property
+    def current_temp_display(self) -> str:
+        """Human-readable current temp with unit."""
+        return format_temp(self.current_temp, self.use_metric)
+
+    @property
+    def target_temp_display(self) -> str:
+        """Human-readable target temp with unit."""
+        return format_temp(self.target_temp, self.use_metric)
+
+    def update_info(self, **kwargs: Any) -> list[Change]:
+        """Update attributes of the mug if they haven't changed."""
+        changes: list[Change] = []
+        for attr, new_value in kwargs.items():
+            if (old_value := getattr(self, attr)) != new_value:
+                setattr(self, attr, new_value)
+                changes.append(Change(attr, old_value, new_value))
+        return changes
+
+    def get_formatted_attr(self, attr: str) -> str | None:
+        """Get the display value of a given attribute."""
+        if display_value := getattr(self, f'{attr}_display', None):
+            return display_value
+        return getattr(self, attr)
+
+    @property
+    def formatted(self) -> dict[str, Any]:
+        """Return human-readable names and values for all attributes for display."""
+        return {
+            label: self.get_formatted_attr(attr)
+            for attr, label in ATTR_LABELS.items()
+            if self.include_extra or attr not in EXTRA_ATTRS
+        }
+
+    def as_dict(self) -> dict[str, Any]:
+        """Dump all attributes as dict for info/debugging."""
+        data = {k: asdict(v) if is_dataclass(v) else v for k, v in asdict(self).items()}
+        data.update(
+            {
+                f'{attr}_display': getattr(self, f'{attr}_display')
+                for attr in ('led_colour', 'liquid_state', 'liquid_level', 'current_temp', 'target_temp')
+            },
+        )
+        return data

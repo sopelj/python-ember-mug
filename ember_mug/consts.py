@@ -134,6 +134,45 @@ PUSH_EVENT_BATTERY_IDS = [
     PushEvent.CHARGER_DISCONNECTED,
 ]
 
+# Labels for formatting attributes
+ATTR_LABELS = {
+    'name': 'Mug Name',
+    'meta': 'Meta',
+    'battery': 'Battery',
+    'firmware': 'Firmware',
+    'led_colour': 'LED Colour',
+    'liquid_state': 'Liquid State',
+    'liquid_level': 'Liquid Level',
+    'current_temp': 'Current Temp',
+    'target_temp': 'Target Temp',
+    'use_metric': 'Use Metric',
+    'dsk': 'DSK',
+    'udsk': 'UDSK',
+    'date_time_zone': 'Date Time + Time Zone',
+    'battery_voltage': 'Voltage',
+}
+
+# Attributes
+INITIAL_ATTRS = {
+    "meta",
+    "udsk",
+    "dsk",
+    "date_time_zone",
+    "firmware",
+}
+UPDATE_ATTRS = {
+    "name",
+    "led_colour",
+    "current_temp",
+    "target_temp",
+    "temperature_unit",
+    "battery",
+    "liquid_level",
+    "liquid_state",
+    "battery_voltage",
+}
+EXTRA_ATTRS = {'dsk', 'udsk', 'battery_voltage', 'date_time_zone'}
+
 # Validation
 MUG_NAME_REGEX = re.compile(r"^[A-Za-z0-9,.\[\]#()!\"\';:|\-_+<>%= ]{1,16}$")
 MAC_ADDRESS_REGEX = re.compile(r"^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$")

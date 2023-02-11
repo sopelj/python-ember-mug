@@ -14,10 +14,10 @@ device = mugs[0]
 # after paired you can simply use
 device = await find_mug()
 mug = EmberMug(device)
-async with mug.connection() as con:
+async with mug.connection():
     print('Connected.\nFetching Info')
-    await con.update_all()
-    print(mug.formatted_data)
+    await mug.update_all()
+    print(mug.data.formatted)
 ```
 
 ### Using CLI interface

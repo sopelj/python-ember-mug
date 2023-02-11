@@ -3,20 +3,16 @@ from __future__ import annotations
 
 from typing import Any
 
-from bleak.backends.device import BLEDevice
-
 from ember_mug.consts import LiquidState, TemperatureUnit
-from ember_mug.data import BatteryInfo, Change, Colour, MugFirmwareInfo, MugMeta
-from ember_mug.mug import EmberMug, EmberMugConnection
+from ember_mug.data import BatteryInfo, Change, Colour, MugData, MugFirmwareInfo, MugMeta
 
 
-def test_mug_formatting() -> None:
-    mug = EmberMug(BLEDevice(address='32:36:a5:be:88:cb', name='Ember Ceramic Mug'))
+def test_mug_formatting(mug_data: MugData) -> None:
     meta = MugMeta('A', 'ABCDEF')
     battery = BatteryInfo(35.46, False)
     firmware = MugFirmwareInfo(12, 35, 55)
     colour = Colour(244, 0, 161)
-    mug.update_info(
+    mug_data.update_info(
         name='Mug Name',
         meta=meta,
         battery=battery,
@@ -31,14 +27,14 @@ def test_mug_formatting() -> None:
         date_time_zone=None,
         battery_voltage=0.1,
     )
-    assert mug.meta_display == "Serial Number: ABCDEF"
-    mug.include_extra = True
-    assert mug.meta_display == "Mug ID: A, Serial Number: ABCDEF"
-    assert mug.led_colour_display == "#f400a1"
-    assert mug.liquid_state_display == "Heating"
-    assert mug.liquid_level_display == "16.67%"
-    assert mug.current_temp_display == "25.00°C"
-    assert mug.target_temp_display == "55.00°C"
+    assert mug_data.meta_display == "Serial Number: ABCDEF"
+    mug_data.include_extra = True
+    assert mug_data.meta_display == "Mug ID: A, Serial Number: ABCDEF"
+    assert mug_data.led_colour_display == "#f400a1"
+    assert mug_data.liquid_state_display == "Heating"
+    assert mug_data.liquid_level_display == "16.67%"
+    assert mug_data.current_temp_display == "25.00°C"
+    assert mug_data.target_temp_display == "55.00°C"
     basic_info: dict[str, Any] = {
         'Mug Name': 'Mug Name',
         'Meta': "Serial Number: ABCDEF",
@@ -51,7 +47,7 @@ def test_mug_formatting() -> None:
         'Target Temp': "55.00°C",
         'Use Metric': True,
     }
-    assert mug.formatted_data == {
+    assert mug_data.formatted == {
         **basic_info,
         'Meta': "Mug ID: A, Serial Number: ABCDEF",
         'DSK': "dsk",
@@ -59,16 +55,15 @@ def test_mug_formatting() -> None:
         'Date Time + Time Zone': None,
         'Voltage': 0.1,
     }
-    mug.include_extra = False
-    assert mug.formatted_data == basic_info
-    assert isinstance(mug.connection(), EmberMugConnection)
+    mug_data.include_extra = False
+    assert mug_data.formatted == basic_info
 
 
-def test_update_info(ember_mug: EmberMug) -> None:
-    ember_mug.current_temp = 55
-    ember_mug.target_temp = 55
-    ember_mug.led_colour = Colour(255, 0, 0)
-    changes = ember_mug.update_info(
+def test_update_info(mug_data: MugData) -> None:
+    mug_data.current_temp = 55
+    mug_data.target_temp = 55
+    mug_data.led_colour = Colour(255, 0, 0)
+    changes = mug_data.update_info(
         current_temp=55,
         target_temp=68,
         led_colour=Colour(0, 255, 0),
@@ -79,9 +74,12 @@ def test_update_info(ember_mug: EmberMug) -> None:
     ]
 
 
-def test_mug_dict(ember_mug: EmberMug) -> None:
-    ember_mug.update_info(meta=MugMeta('test_id', 'serial number'))
-    assert ember_mug.as_dict() == {
+def test_mug_dict(mug_data: MugData) -> None:
+    mug_data.update_info(meta=MugMeta('test_id', 'serial number'))
+    assert mug_data.as_dict() == {
+        'model': 'Ember Ceramic Mug',
+        'include_extra': False,
+        'use_metric': True,
         'battery': None,
         'battery_voltage': '',
         'current_temp': 0.0,
