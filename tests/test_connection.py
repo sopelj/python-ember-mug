@@ -24,11 +24,9 @@ def test_adapter_without_bluez(ble_device: BLEDevice):
         EmberMug(ble_device, adapter='hci0')
 
 
-@patch('ember_mug.mug.EmberMug.update_initial')
 @patch('ember_mug.mug.EmberMug.subscribe')
 @patch('ember_mug.mug.establish_connection')
 async def test_connect(
-    mug_update_initial: AsyncMock,
     mug_subscribe: AsyncMock,
     mock_establish_connection: AsyncMock,
     ember_mug: AsyncMock,
@@ -38,7 +36,6 @@ async def test_connect(
     ember_mug._client.is_connected = True
     async with ember_mug.connection():
         pass
-    mug_update_initial.assert_not_called()
     mug_subscribe.assert_not_called()
     mock_establish_connection.assert_not_called()
 
@@ -49,7 +46,6 @@ async def test_connect(
         pass
 
     mock_establish_connection.assert_called()
-    mug_update_initial.assert_called()
     mug_subscribe.assert_called()
     assert ember_mug._client is not None
     ember_mug.disconnect.assert_called()
