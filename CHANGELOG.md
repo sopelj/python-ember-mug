@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.6.0b1]
+## [0.6.0]
 
 ### Changed
 * EmberMugConnection changed to EmberMug
