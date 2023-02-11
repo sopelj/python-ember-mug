@@ -105,8 +105,8 @@ class EmberMug:
                     'Pairing not implemented. '
                     'If your mug is still in pairing mode (blinking blue) tap the button on the bottom to exit.',
                 )
-            await self.update_initial()
-            await self.subscribe()
+        await self.update_initial()
+        await self.subscribe()
 
     @contextlib.asynccontextmanager
     async def _acquire_operation_lock(self) -> AsyncIterator[None]:
