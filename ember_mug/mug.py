@@ -80,6 +80,13 @@ class EmberMug:
             # Also check after lock is acquired
             if self._client is not None and self._client.is_connected is True:
                 return
+            if self._client is not None:
+                with contextlib.suppress(BleakError, TimeoutError):
+                    logger.debug("client exists, but not connected. Trying to connect.")
+                    await self._client.connect()
+                if self._client.is_connected is True:
+                    logger.debug("Reconnect successful.")
+                    return
             try:
                 logger.debug("Establishing a new connection")
                 self._client = await establish_connection(
@@ -94,7 +101,7 @@ class EmberMug:
             except (asyncio.TimeoutError, BleakError) as error:
                 logger.error("%s: Failed to connect to the mug: %s", self.device, error)
                 raise error
-            # Attempt to pair for good measure and perform an initial update
+            # Attempt to pair for good measure
             try:
                 await self._client.pair()
             except (BleakError, EOFError):
