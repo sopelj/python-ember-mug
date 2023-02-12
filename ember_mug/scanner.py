@@ -6,8 +6,9 @@ import logging
 from typing import TYPE_CHECKING, Any, Callable
 
 from bleak import BleakScanner
+from bleak_retry_connector import IS_LINUX
 
-from .consts import EMBER_BLUETOOTH_NAMES, USES_BLUEZ, MugCharacteristic
+from .consts import EMBER_BLUETOOTH_NAMES, MugCharacteristic
 
 if TYPE_CHECKING:
     from bleak.backends.device import BLEDevice
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 def build_scanner_kwargs(adapter: str | None = None) -> dict[str, Any]:
     """Add Adapter to kwargs for scanner if specified and using BlueZ."""
-    if adapter and not USES_BLUEZ:
+    if adapter and IS_LINUX is not True:
         raise ValueError('The adapter option is only valid for the Linux BlueZ Backend.')
     return {'adapter': adapter} if adapter else {}
 

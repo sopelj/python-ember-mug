@@ -10,13 +10,13 @@ MUG_2 = BLEDevice(address='9c:da:8c:19:27:da', name='Ember Ceramic Mug')
 EXAMPLE_MUGS = [MUG_1, MUG_2]
 
 
-@patch('ember_mug.scanner.USES_BLUEZ', True)
+@patch('ember_mug.scanner.IS_LINUX', True)
 def test_build_scanner_kwargs_linux() -> None:
     assert build_scanner_kwargs() == {}
     assert build_scanner_kwargs(adapter='hci0') == {'adapter': 'hci0'}
 
 
-@patch('ember_mug.scanner.USES_BLUEZ', False)
+@patch('ember_mug.scanner.IS_LINUX', False)
 def test_build_scanner_kwargs_other() -> None:
     with pytest.raises(ValueError):
         assert build_scanner_kwargs(adapter='hci0')

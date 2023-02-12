@@ -13,7 +13,7 @@ from typing import Any, Callable, Literal
 from bleak import BleakClient, BleakError
 from bleak.backends.characteristic import BleakGATTCharacteristic
 from bleak.backends.device import BLEDevice
-from bleak_retry_connector import establish_connection
+from bleak_retry_connector import IS_LINUX, establish_connection
 
 from .consts import (
     EXTRA_ATTRS,
@@ -21,7 +21,6 @@ from .consts import (
     MUG_NAME_REGEX,
     PUSH_EVENT_BATTERY_IDS,
     UPDATE_ATTRS,
-    USES_BLUEZ,
     LiquidState,
     MugCharacteristic,
     PushEvent,
@@ -114,25 +113,22 @@ class EmberMug:
                 )
             await self.subscribe()
 
-    @contextlib.asynccontextmanager
-    async def _acquire_operation_lock(self) -> AsyncIterator[None]:
-        """Prepare to read/write and ensure we wait for access."""
-        await self._ensure_connection()
+    async def _read(self, characteristic: MugCharacteristic) -> bytearray:
+        """Helper to read characteristic from Mug."""
         if self._operation_lock.locked():
             logger.debug("Operation already in progress. waiting for it to complete")
         async with self._operation_lock:
-            yield
-
-    async def _read(self, characteristic: MugCharacteristic) -> bytearray:
-        """Helper to read characteristic from Mug."""
-        async with self._acquire_operation_lock():
+            await self._ensure_connection()
             data = await self._client.read_gatt_char(characteristic.uuid)
             logger.debug("Read attribute '%s' with value '%s'", characteristic, data)
             return data
 
     async def _write(self, characteristic: MugCharacteristic, data: bytearray) -> None:
         """Helper to write characteristic to Mug."""
-        async with self._acquire_operation_lock():
+        if self._operation_lock.locked():
+            logger.debug("Operation already in progress. Waiting for it to complete")
+        async with self._operation_lock:
+            await self._ensure_connection()
             try:
                 await self._client.write_gatt_char(characteristic.uuid, data)
                 logger.debug("Wrote '%s' to attribute '%s'", data, characteristic)
@@ -378,7 +374,7 @@ class EmberMug:
 
     def set_client_options(self, **kwargs: str) -> None:
         """Update options in case they need to overriden in some cases."""
-        if kwargs.get('adapter') and USES_BLUEZ is False:
+        if kwargs.get('adapter') and IS_LINUX is False:
             raise ValueError('The adapter option is only valid for the Linux BlueZ Backend.')
         self._client_kwargs = {**kwargs}
 

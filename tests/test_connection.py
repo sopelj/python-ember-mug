@@ -12,13 +12,13 @@ from ember_mug.data import Colour
 from ember_mug.mug import EXTRA_ATTRS, INITIAL_ATTRS, UPDATE_ATTRS, EmberMug
 
 
-@patch('ember_mug.mug.USES_BLUEZ', True)
+@patch('ember_mug.mug.IS_LINUX', True)
 def test_adapter_with_bluez(ble_device: BLEDevice):
     mug = EmberMug(ble_device, adapter='hci0')
     assert mug._client_kwargs['adapter'] == 'hci0'
 
 
-@patch('ember_mug.mug.USES_BLUEZ', False)
+@patch('ember_mug.mug.IS_LINUX', False)
 def test_adapter_without_bluez(ble_device: BLEDevice):
     with pytest.raises(ValueError):
         EmberMug(ble_device, adapter='hci0')
