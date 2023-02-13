@@ -379,46 +379,50 @@ async def test_read_firmware(ember_mug: AsyncMock):
 async def test_mug_update_initial(ember_mug):
     no_extra = INITIAL_ATTRS - EXTRA_ATTRS
 
-    ember_mug._update_multiple = AsyncMock(return_value={})
-    ember_mug._ensure_connection = AsyncMock()
-    assert (await ember_mug.update_initial()) == {}
-    ember_mug._update_multiple.assert_called_once_with(no_extra)
+    with patch.object(ember_mug, '_ensure_connection', AsyncMock()):
+        ember_mug._update_multiple = AsyncMock(return_value={})
+        assert (await ember_mug.update_initial()) == {}
+        ember_mug._update_multiple.assert_called_once_with(no_extra)
 
     # Try with extra
-    ember_mug._update_multiple.reset_mock()
-    ember_mug._initial_attrs = INITIAL_ATTRS
-    assert (await ember_mug.update_initial()) == {}
-    ember_mug._update_multiple.assert_called_once_with(INITIAL_ATTRS)
+    with patch.object(ember_mug, '_ensure_connection', AsyncMock()):
+        ember_mug._update_multiple.reset_mock()
+        ember_mug._initial_attrs = INITIAL_ATTRS
+        assert (await ember_mug.update_initial()) == {}
+        ember_mug._update_multiple.assert_called_once_with(INITIAL_ATTRS)
 
 
 async def test_mug_update_all(ember_mug):
-    ember_mug._update_multiple = AsyncMock(return_value={})
-    ember_mug._ensure_connection = AsyncMock()
-    assert (await ember_mug.update_all()) == {}
-    ember_mug._update_multiple.assert_called_once_with(UPDATE_ATTRS - EXTRA_ATTRS)
+    with patch.object(ember_mug, '_ensure_connection', AsyncMock()):
+        ember_mug._update_multiple = AsyncMock(return_value={})
+        assert (await ember_mug.update_all()) == {}
+        ember_mug._update_multiple.assert_called_once_with(UPDATE_ATTRS - EXTRA_ATTRS)
 
     # Try with extras
-    ember_mug._update_multiple.reset_mock()
-    ember_mug._update_attrs = UPDATE_ATTRS
-    assert (await ember_mug.update_all()) == {}
-    ember_mug._update_multiple.assert_called_once_with(UPDATE_ATTRS)
+    with patch.object(ember_mug, '_ensure_connection', AsyncMock()):
+        ember_mug._update_multiple.reset_mock()
+        ember_mug._update_attrs = UPDATE_ATTRS
+        assert (await ember_mug.update_all()) == {}
+        ember_mug._update_multiple.assert_called_once_with(UPDATE_ATTRS)
 
 
 async def test_mug_update_multiple(ember_mug):
-    ember_mug.get_name = AsyncMock(return_value='name')
-    ember_mug.data.update_info = AsyncMock()
-    await ember_mug._update_multiple(('name',))
-    ember_mug.data.update_info.assert_called_once_with(name='name')
+    with patch.object(ember_mug, '_ensure_connection', AsyncMock()):
+        ember_mug.get_name = AsyncMock(return_value='name')
+        ember_mug.data.update_info = AsyncMock()
+        await ember_mug._update_multiple(('name',))
+        ember_mug.data.update_info.assert_called_once_with(name='name')
 
 
 async def test_mug_update_queued_attributes(ember_mug):
-    ember_mug._queued_updates = set()
-    assert (await ember_mug.update_queued_attributes()) == []
-    ember_mug.get_name = AsyncMock(return_value='name')
-    ember_mug.data.update_info = AsyncMock()
-    ember_mug._queued_updates = {'name'}
-    await ember_mug.update_queued_attributes()
-    ember_mug.data.update_info.assert_called_once_with(name='name')
+    with patch.object(ember_mug, '_ensure_connection', AsyncMock()):
+        ember_mug._queued_updates = set()
+        assert (await ember_mug.update_queued_attributes()) == []
+        ember_mug.get_name = AsyncMock(return_value='name')
+        ember_mug.data.update_info = AsyncMock()
+        ember_mug._queued_updates = {'name'}
+        await ember_mug.update_queued_attributes()
+        ember_mug.data.update_info.assert_called_once_with(name='name')
 
 
 def test_mug_notify_callback(ember_mug: EmberMug) -> None:

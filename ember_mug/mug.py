@@ -13,7 +13,7 @@ from typing import Any, Callable, Literal
 from bleak import BleakClient, BleakError
 from bleak.backends.characteristic import BleakGATTCharacteristic
 from bleak.backends.device import BLEDevice
-from bleak_retry_connector import IS_LINUX, establish_connection
+from bleak_retry_connector import IS_LINUX, close_stale_connections, establish_connection
 
 from .consts import (
     EXTRA_ATTRS,
@@ -87,7 +87,7 @@ class EmberMug:
                     logger.debug("Reconnect successful.")
                     return
             try:
-                logger.debug("Establishing a new connection")
+                logger.debug("Establishing a new connection from mug (ID: %s) to %s", id(self), self.device)
                 self._client = await establish_connection(
                     client_class=BleakClient,
                     device=self.device,
@@ -112,13 +112,13 @@ class EmberMug:
                     'If your mug is still in pairing mode (blinking blue) tap the button on the bottom to exit.',
                 )
             await self.subscribe()
+            await close_stale_connections(self.device)
 
     async def _read(self, characteristic: MugCharacteristic) -> bytearray:
         """Helper to read characteristic from Mug."""
         if self._operation_lock.locked():
             logger.debug("Operation already in progress. waiting for it to complete")
         async with self._operation_lock:
-            await self._ensure_connection()
             data = await self._client.read_gatt_char(characteristic.uuid)
             logger.debug("Read attribute '%s' with value '%s'", characteristic, data)
             return data
@@ -299,6 +299,7 @@ class EmberMug:
     async def _update_multiple(self, attrs: set[str]) -> list[Change]:
         """Helper to update a list of attributes from the mug."""
         logger.debug('Updating the following attributes: %s', attrs)
+        await self._ensure_connection()
         changes = self.data.update_info(**{attr: await getattr(self, f"get_{attr}")() for attr in attrs})
         if changes:
             self._fire_callbacks()
@@ -312,6 +313,7 @@ class EmberMug:
             return []
         queued_updates = set(self._queued_updates)
         self._queued_updates.clear()
+        await self._ensure_connection()
         changes = self.data.update_info(**{attr: await getattr(self, f"get_{attr}")() for attr in queued_updates})
         if changes:
             self._fire_callbacks()
