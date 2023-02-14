@@ -6,9 +6,8 @@ import logging
 from typing import TYPE_CHECKING, Any, Callable
 
 from bleak import BleakScanner
-from bleak_retry_connector import IS_LINUX
 
-from .consts import EMBER_BLUETOOTH_NAMES, MugCharacteristic
+from .consts import EMBER_BLUETOOTH_NAMES, IS_LINUX, MugCharacteristic
 
 if TYPE_CHECKING:
     from bleak.backends.device import BLEDevice

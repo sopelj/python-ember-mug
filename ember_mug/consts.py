@@ -1,6 +1,7 @@
 """Bluetooth UUIDs and other constants used for communicating with the mug."""
 from __future__ import annotations
 
+import platform
 import re
 from enum import Enum, IntEnum
 from functools import cached_property
@@ -174,3 +175,5 @@ EXTRA_ATTRS = {'dsk', 'udsk', 'battery_voltage', 'date_time_zone'}
 # Validation
 MUG_NAME_REGEX = re.compile(r"^[A-Za-z0-9,.\[\]#()!\"\';:|\-_+<>%= ]{1,16}$")
 MAC_ADDRESS_REGEX = re.compile(r"^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$")
+
+IS_LINUX = platform.system() == "Linux"

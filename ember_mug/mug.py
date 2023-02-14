@@ -13,11 +13,12 @@ from typing import Any, Callable, Literal
 from bleak import BleakClient, BleakError
 from bleak.backends.characteristic import BleakGATTCharacteristic
 from bleak.backends.device import BLEDevice
-from bleak_retry_connector import IS_LINUX, close_stale_connections, establish_connection
+from bleak_retry_connector import establish_connection
 
 from .consts import (
     EXTRA_ATTRS,
     INITIAL_ATTRS,
+    IS_LINUX,
     MUG_NAME_REGEX,
     PUSH_EVENT_BATTERY_IDS,
     UPDATE_ATTRS,
@@ -79,13 +80,6 @@ class EmberMug:
             # Also check after lock is acquired
             if self._client is not None and self._client.is_connected is True:
                 return
-            if self._client is not None:
-                with contextlib.suppress(BleakError, TimeoutError):
-                    logger.debug("client exists, but not connected. Trying to connect.")
-                    await self._client.connect()
-                if self._client.is_connected is True:
-                    logger.debug("Reconnect successful.")
-                    return
             try:
                 logger.debug("Establishing a new connection from mug (ID: %s) to %s", id(self), self.device)
                 self._client = await establish_connection(
@@ -112,7 +106,6 @@ class EmberMug:
                     'If your mug is still in pairing mode (blinking blue) tap the button on the bottom to exit.',
                 )
             await self.subscribe()
-            await close_stale_connections(self.device)
 
     async def _read(self, characteristic: MugCharacteristic) -> bytearray:
         """Helper to read characteristic from Mug."""
