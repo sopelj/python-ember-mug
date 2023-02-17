@@ -13,13 +13,13 @@ from ember_mug.mug import EXTRA_ATTRS, INITIAL_ATTRS, UPDATE_ATTRS, EmberMug
 
 
 @patch('ember_mug.mug.IS_LINUX', True)
-def test_adapter_with_bluez(ble_device: BLEDevice):
+async def test_adapter_with_bluez(ble_device: BLEDevice):
     mug = EmberMug(ble_device, adapter='hci0')
     assert mug._client_kwargs['adapter'] == 'hci0'
 
 
 @patch('ember_mug.mug.IS_LINUX', False)
-def test_adapter_without_bluez(ble_device: BLEDevice):
+async def test_adapter_without_bluez(ble_device: BLEDevice):
     with pytest.raises(ValueError):
         EmberMug(ble_device, adapter='hci0')
 
@@ -110,15 +110,19 @@ async def test_pairing_exceptions(
 
 
 async def test_disconnect(ember_mug: AsyncMock) -> None:
-    ember_mug._client = AsyncMock()
+    mock_client = AsyncMock()
+    ember_mug._client = mock_client
 
-    ember_mug._client.is_connected = False
+    mock_client.is_connected = False
     await ember_mug.disconnect()
-    ember_mug._client.disconnect.assert_not_called()
+    assert ember_mug._client is None
+    mock_client.disconnect.assert_not_called()
 
-    ember_mug._client.is_connected = True
+    mock_client.is_connected = True
+    ember_mug._client = mock_client
     await ember_mug.disconnect()
-    ember_mug._client.disconnect.assert_called()
+    assert ember_mug._client is None
+    mock_client.disconnect.assert_called()
 
 
 @patch('ember_mug.mug.logger')

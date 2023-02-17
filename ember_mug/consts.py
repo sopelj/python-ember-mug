@@ -22,6 +22,14 @@ class TemperatureUnit(str, Enum):
     FAHRENHEIT: Literal["°F"] = "°F"
 
 
+class DisconnectReason(str, Enum):
+    """Helper to differentiate disconnect reasons for debugging."""
+
+    TIMEOUT = "timeout"
+    EXPECTED = "expected"
+    UNEXPECTED = "unexpected"
+
+
 class MugCharacteristic(IntEnum):
     """Characteristic IDs for the Mug."""
 
