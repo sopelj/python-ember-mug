@@ -7,7 +7,6 @@ import logging
 from collections.abc import AsyncIterator
 from datetime import datetime, timezone
 from enum import Enum
-from functools import partial
 from time import time
 from typing import Any, Callable, Literal
 
@@ -23,7 +22,6 @@ from .consts import (
     MUG_NAME_REGEX,
     PUSH_EVENT_BATTERY_IDS,
     UPDATE_ATTRS,
-    DisconnectReason,
     LiquidState,
     MugCharacteristic,
     PushEvent,
@@ -56,8 +54,6 @@ class EmberMug:
         self._expected_disconnect = False
         self._callbacks: dict[Callable[[MugData], None], Callable[[], None]] = {}
         self._client: BleakClient = None  # type: ignore[assignment]
-        self._loop = asyncio.get_running_loop()
-        self._disconnect_timer: asyncio.TimerHandle | None = None
         self._queued_updates: set[str] = set()
         self._latest_events: dict[int, float] = {}
         self._client_kwargs: dict[str, str] = {}
@@ -75,16 +71,14 @@ class EmberMug:
     async def _ensure_connection(self) -> None:
         """Connect to mug."""
         if self._connect_lock.locked():
-            logger.debug("Connection to %s already in progress. Waiting first.", self.data.name)
+            logger.debug("Connection to %s already in progress. Waiting first.", self.device.name)
 
         if self._client is not None and self._client.is_connected:
-            self._reset_disconnect_timer()
             return
 
         async with self._connect_lock:
             # Also check after lock is acquired
             if self._client is not None and self._client.is_connected:
-                self._reset_disconnect_timer()
                 return
             try:
                 logger.debug("Establishing a new connection from mug (ID: %s) to %s", id(self), self.device)
@@ -112,18 +106,7 @@ class EmberMug:
                     'If your mug is still in pairing mode (blinking blue) tap the button on the bottom to exit.',
                 )
             self._client = client
-            self._reset_disconnect_timer()
             await self.subscribe()
-
-    def _reset_disconnect_timer(self) -> None:
-        """Reset disconnect timer."""
-        if self._disconnect_timer:
-            self._disconnect_timer.cancel()
-        self._expected_disconnect = False
-        self._disconnect_timer = self._loop.call_later(
-            DISCONNECT_DELAY,
-            partial(self.disconnect, reason=DisconnectReason.TIMEOUT),
-        )
 
     async def _read(self, characteristic: MugCharacteristic) -> bytearray:
         """Helper to read characteristic from Mug."""
@@ -147,10 +130,10 @@ class EmberMug:
                 logger.error("Failed to write '%s' to attribute '%s': %s", data, characteristic, e)
                 raise
 
-    async def disconnect(self, reason: DisconnectReason = DisconnectReason.EXPECTED) -> None:
+    async def disconnect(self, expected: bool = True) -> None:
         """Disconnect from mug and stop listening to notifications."""
-        logger.debug("%s disconnect called", reason.value.title())
-        self._expected_disconnect = reason != DisconnectReason.EXPECTED
+        logger.debug("%s disconnect called", "Expected" if expected else "Unexpected")
+        self._expected_disconnect = expected
         if self._client and self._client.is_connected:
             async with self._connect_lock:
                 await self.unsubscribe()
