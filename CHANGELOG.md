@@ -5,11 +5,15 @@
 ### Changed
 * EmberMugConnection changed to EmberMug
 * EmberMug changed to MugData
-* _ensure_connection now called before every read/write
-* Enforce one query at a time with a lock
+* Made ensure_connection private and call it automatically in most cases
 * Log if disconnect was expected or not
 
+### Added
+* Lock for operations to ensure only one at a time
+* _ensure_connection now called before every write and before bulk reads
+
 ### Fixed
+* Changed condition that caused connections to be constantly reestablished because is_connected is not a bool.
 * Don't call disconnect in disconnect callback
 
 ## [0.5.6]
