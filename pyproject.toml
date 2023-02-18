@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "python-ember-mug"
-version = "0.6.0b8"
+version = "0.6.0b9"
 homepage = "https://github.com/sopelj/python-ember-mug"
 description = "Python Library for Ember Mugs."
 authors = ["Jesse Sopel <jesse.sopel@gmail.com>"]
