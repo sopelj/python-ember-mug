@@ -77,13 +77,13 @@ class EmberMug:
         if self._connect_lock.locked():
             logger.debug("Connection to %s already in progress. Waiting first.", self.data.name)
 
-        if self._client is not None and self._client.is_connected is True:
+        if self._client is not None and self._client.is_connected:
             self._reset_disconnect_timer()
             return
 
         async with self._connect_lock:
             # Also check after lock is acquired
-            if self._client is not None and self._client.is_connected is True:
+            if self._client is not None and self._client.is_connected:
                 self._reset_disconnect_timer()
                 return
             try:
@@ -151,7 +151,7 @@ class EmberMug:
         """Disconnect from mug and stop listening to notifications."""
         logger.debug("%s disconnect called", reason.value.title())
         self._expected_disconnect = reason != DisconnectReason.EXPECTED
-        if self._client and self._client.is_connected is True:
+        if self._client and self._client.is_connected:
             async with self._connect_lock:
                 await self.unsubscribe()
                 await self._client.disconnect()

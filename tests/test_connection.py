@@ -75,6 +75,7 @@ async def test_pairing_exceptions_esphome(
     mock_logger: Mock,
     ember_mug: AsyncMock,
 ) -> None:
+    ember_mug._client.is_connected = False
     mock_client = AsyncMock()
     mock_client.connect.side_effect = BleakError
     mock_client.pair.side_effect = NotImplementedError
