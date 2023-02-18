@@ -436,6 +436,12 @@
 <span class="c1"># after paired you can simply use</span>
 <span class="n">device</span> <span class="o">=</span> <span class="k">await</span> <span class="n">find_mug</span><span class="p">()</span>
 <span class="n">mug</span> <span class="o">=</span> <span class="n">EmberMug</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="k">await</span> <span class="n">mug</span><span class="o">.</span><span class="n">update_all</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mug</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">formatted</span><span class="p">)</span>
+<span class="k">await</span> <span class="n">mug</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+
+<span class="c1"># You can also use connection as a context manager</span>
+<span class="c1"># if you want to ensure connection before starting and cleanup on exit</span>
 <span class="k">async</span> <span class="k">with</span> <span class="n">mug</span><span class="o">.</span><span class="n">connection</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Connected.</span><span class="se">\n</span><span class="s1">Fetching Info&#39;</span><span class="p">)</span>
     <span class="k">await</span> <span class="n">mug</span><span class="o">.</span><span class="n">update_all</span><span class="p">()</span>
