@@ -34,7 +34,7 @@ bleak = ">=0.19.5"
 [tool.poetry.group.dev.dependencies]
 black  = { version = "^22.6.0" }
 isort  = { version = "^5.8.0" }
-flake8  = { version = "^5.0" }
+flake8  = { version = ">=5,<7" }
 flake8-docstrings = { version = "^1.6.0" }
 mypy = { version = ">=0.971,<1.1" }
 pytest  = { version = "^7.2.1" }
