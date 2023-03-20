@@ -43,7 +43,7 @@ def build_find_filter(mac: str | None = None) -> Callable:
         """Filter by mac if specified else just check the name."""
         if mac is not None and device.address.lower() != mac:
             return False
-        return device.name.lower() in known_names
+        return bool(device.name and device.name.lower() in known_names)
 
     return mug_filter
 

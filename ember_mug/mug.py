@@ -47,7 +47,7 @@ class EmberMug:
     ) -> None:
         """Initialize connection manager."""
         self.device = ble_device
-        self.data = MugData(ble_device.name, include_extra=include_extra, use_metric=use_metric)
+        self.data = MugData(ble_device.name or 'EMBER', include_extra=include_extra, use_metric=use_metric)
 
         self._connect_lock = asyncio.Lock()
         self._operation_lock = asyncio.Lock()

@@ -31,12 +31,12 @@ mock_connection = MagicMock(AsyncContextManager)
 
 @pytest.fixture(name='ble_device')
 def ble_device_fixture() -> Generator[BLEDevice, None, None]:
-    yield BLEDevice(address=TEST_MAC, name=TEST_MODEL_NAME)
+    yield BLEDevice(address=TEST_MAC, name=TEST_MODEL_NAME, details={}, rssi=1)
 
 
 @pytest.fixture
 def mug_data(ble_device: BLEDevice) -> Generator[MugData, None, None]:
-    yield MugData(ble_device.name)
+    yield MugData(ble_device.name or TEST_MODEL_NAME)
 
 
 @pytest_asyncio.fixture

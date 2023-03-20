@@ -196,6 +196,8 @@ def test_set_device(ember_mug: AsyncMock) -> None:
     new_device = BLEDevice(
         address='BA:36:a5:be:88:cb',
         name='Ember Ceramic Mug',
+        details={},
+        rssi=1,
     )
     assert ember_mug.device.address != new_device.address
     ember_mug.set_device(new_device)
