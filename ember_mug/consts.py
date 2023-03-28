@@ -9,7 +9,7 @@ from typing import Literal
 from uuid import UUID
 
 # Bluetooth names of supported mugs
-EMBER_BLUETOOTH_NAMES: tuple[str, ...] = ("Ember Ceramic Mug",)
+EMBER_BLUETOOTH_NAMES: tuple[str, ...] = ("Ember Ceramic Mug", "Ember Travel Mug")
 
 # Format for all the mug's Bluetooth UUIDs
 UUID_TEMPLATE = "fc54{:0>4x}-236c-4c94-8fa9-944a3e5353fa"
