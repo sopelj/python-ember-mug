@@ -3,10 +3,11 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import logging
 import platform
 import re
 import sys
-from argparse import ArgumentParser, ArgumentTypeError, Namespace
+from argparse import ArgumentParser, ArgumentTypeError, FileType, Namespace
 from typing import TYPE_CHECKING
 
 from bleak import BleakError
@@ -173,6 +174,13 @@ class EmberMugCli:
             action='store_true',
             help='Print extra information for development or debugging issues',
         )
+        shared_parser.add_argument(
+            '--log-file',
+            type=FileType('w', encoding='utf-8'),
+            nargs='?',
+            default=sys.stdout,
+            help='File to write logs too (Will be overwritten)',
+        )
         shared_parser.add_argument('-r', '--raw', help='No formatting. One value per line.', action='store_true')
         if platform.system() == 'Linux':
             # Only works on Linux with BlueZ so don't add for others.
@@ -201,4 +209,10 @@ class EmberMugCli:
     async def run(self) -> None:
         """Run the specified command based on subparser."""
         args = self.parser.parse_args()
+        if args.debug:
+            logging.basicConfig(
+                stream=args.log_file,
+                level=logging.DEBUG,
+                format='[%(asctime)s] %(levelname)s [%(filename)s.%(funcName)s:%(lineno)d] %(message)s',
+            )
         await self._commands[args.command](args)
