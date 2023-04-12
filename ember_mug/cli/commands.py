@@ -27,7 +27,7 @@ get_attribute_names = [n.replace('_', '-') for n in all_attrs]
 async def get_mug(args: Namespace) -> EmberMug:
     """Helper to get the mug based on args."""
     device = await find_device(args)
-    mug = EmberMug(device, use_metric=not args.imperial, include_extra=args.extra)
+    mug = EmberMug(device, use_metric=not args.imperial, include_extra=args.extra, debug=args.debug)
     if not args.raw:
         print('Connecting...')
     return mug
@@ -166,6 +166,12 @@ class EmberMugCli:
             action='store',
             type=validate_mac,
             help='Only look for this specific address',
+        )
+        shared_parser.add_argument(
+            '-d',
+            '--debug',
+            action='store_true',
+            help='Print extra information for development or debugging issues',
         )
         shared_parser.add_argument('-r', '--raw', help='No formatting. One value per line.', action='store_true')
         if platform.system() == 'Linux':

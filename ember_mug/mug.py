@@ -28,7 +28,14 @@ from .consts import (
     TemperatureUnit,
 )
 from .data import BatteryInfo, Change, Colour, MugData, MugFirmwareInfo, MugMeta
-from .utils import bytes_to_big_int, bytes_to_little_int, decode_byte_string, encode_byte_string, temp_from_bytes
+from .utils import (
+    bytes_to_big_int,
+    bytes_to_little_int,
+    decode_byte_string,
+    encode_byte_string,
+    log_services,
+    temp_from_bytes,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -43,12 +50,14 @@ class EmberMug:
         ble_device: BLEDevice,
         include_extra: bool = False,
         use_metric: bool = True,
+        debug: bool = False,
         **kwargs: Any,
     ) -> None:
         """Initialize connection manager."""
         self.device = ble_device
         self.data = MugData(ble_device.name or 'EMBER', include_extra=include_extra, use_metric=use_metric)
 
+        self.debug = debug
         self._connect_lock = asyncio.Lock()
         self._operation_lock = asyncio.Lock()
         self._expected_disconnect = False
@@ -90,6 +99,8 @@ class EmberMug:
                     disconnected_callback=self._disconnect_callback,  # type: ignore
                     ble_device_callback=lambda: self.device,
                 )
+                if self.debug is True:
+                    log_services(client.services)
                 self._expected_disconnect = False
             except (asyncio.TimeoutError, BleakError) as error:
                 logger.error("%s: Failed to connect to the mug: %s", self.device, error)

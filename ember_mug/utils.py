@@ -5,6 +5,10 @@ import base64
 import contextlib
 import logging
 import re
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from bleak import BleakGATTServiceCollection
 
 logger = logging.getLogger(__name__)
 
@@ -42,3 +46,17 @@ def temp_from_bytes(temp_bytes: bytearray, metric: bool = True) -> float:
         # Convert to fahrenheit
         temp = (temp * 9 / 5) + 32
     return round(temp, 2)
+
+
+def log_services(services: BleakGATTServiceCollection) -> None:
+    """Log services for debugging."""
+    logger.debug("Logging all services that were discovered")
+    for service in services:
+        logger.debug(
+            "Service '%s' (UUID: %s) has the characteristics:\n %s",
+            service.description,
+            service.uuid,
+            "\n".join(
+                f'{characteristic.uuid}: {characteristic.description}' for characteristic in service.characteristics
+            ),
+        )

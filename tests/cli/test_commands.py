@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from argparse import Namespace
 from collections.abc import Generator
+from typing import Any
 from unittest.mock import AsyncMock, MagicMock, Mock, patch
 
 import pytest
@@ -25,6 +26,18 @@ def mock_mug_with_connection() -> Generator[AsyncMock, None, None]:
         yield mock_mug
 
 
+def mock_namespace(**kwargs: Any) -> Namespace:
+    defaults = {
+        'imperial': False,
+        'extra': False,
+        'raw': False,
+        'debug': False,
+        'adapter': None,
+    }
+    defaults.update(**kwargs)
+    return Namespace(**defaults)
+
+
 @patch('ember_mug.cli.commands.EmberMug', spec=EmberMug)
 @patch('ember_mug.cli.commands.find_device')
 async def test_get_mug(
@@ -34,16 +47,16 @@ async def test_get_mug(
     ble_device: BLEDevice,
 ) -> None:
     mock_find_device.return_value = ble_device
-    args = Namespace(imperial=False, extra=True, raw=False)
+    args = mock_namespace(extra=True)
     mug = await get_mug(args)
     assert mug is not None
     mock_find_device.assert_called_once_with(args)
-    mock_ember_mug.assert_called_once_with(ble_device, use_metric=True, include_extra=True)
+    mock_ember_mug.assert_called_once_with(ble_device, use_metric=True, include_extra=True, debug=False)
     captured = capsys.readouterr()
     assert captured.out == "Connecting...\n"
 
     # Raw prints nothing
-    args = Namespace(imperial=False, extra=True, raw=True)
+    args = mock_namespace(extra=True, raw=True)
     mug = await get_mug(args)
     assert mug is not None
     captured = capsys.readouterr()
@@ -53,7 +66,7 @@ async def test_get_mug(
 @patch('ember_mug.cli.commands.find_mug')
 async def test_find_device(mock_find_mug: AsyncMock, capsys: CaptureFixture, ble_device: BLEDevice) -> None:
     mock_find_mug.return_value = ble_device
-    args = Namespace(mac=ble_device.address, adapter=None, raw=False)
+    args = mock_namespace(mac=ble_device.address)
     device = await find_device(args)
     assert device == ble_device
     mock_find_mug.assert_called_once_with(mac=ble_device.address, adapter=None)
@@ -70,7 +83,7 @@ async def test_find_device(mock_find_mug: AsyncMock, capsys: CaptureFixture, ble
 @patch('ember_mug.cli.commands.find_mug')
 async def test_find_device_no_device(mock_find_mug: AsyncMock, capsys: CaptureFixture) -> None:
     mock_find_mug.return_value = None
-    args = Namespace(mac=TEST_MAC, adapter=None, raw=False)
+    args = mock_namespace(mac=TEST_MAC)
     with pytest.raises(SystemExit):
         await find_device(args)
     mock_find_mug.assert_called_once_with(mac=TEST_MAC, adapter=None)
@@ -81,7 +94,7 @@ async def test_find_device_no_device(mock_find_mug: AsyncMock, capsys: CaptureFi
 @patch('ember_mug.cli.commands.find_mug')
 async def test_find_device_bleak_error(mock_find_mug: AsyncMock, capsys: CaptureFixture) -> None:
     mock_find_mug.side_effect = BleakError('Test Error')
-    args = Namespace(mac=TEST_MAC, adapter=None, raw=False)
+    args = mock_namespace(mac=TEST_MAC)
     with pytest.raises(SystemExit):
         await find_device(args)
     mock_find_mug.assert_called_once_with(mac=TEST_MAC, adapter=None)
@@ -92,7 +105,7 @@ async def test_find_device_bleak_error(mock_find_mug: AsyncMock, capsys: Capture
 @patch('ember_mug.cli.commands.discover_mugs')
 async def test_discover(mock_discover_mugs: AsyncMock, capsys: CaptureFixture, ble_device: BLEDevice) -> None:
     mock_discover_mugs.return_value = [ble_device]
-    args = Namespace(mac=TEST_MAC, adapter=None, raw=False)
+    args = mock_namespace(mac=TEST_MAC)
     mugs = await discover(args)
     assert mugs == [ble_device]
     mock_discover_mugs.assert_called_once_with(mac=TEST_MAC)
@@ -100,7 +113,7 @@ async def test_discover(mock_discover_mugs: AsyncMock, capsys: CaptureFixture, b
     assert captured.out == f"Found mug: {ble_device}\n"
 
     mock_discover_mugs.reset_mock()
-    args = Namespace(mac=TEST_MAC, adapter=None, raw=True)
+    args = mock_namespace(mac=TEST_MAC, raw=True)
     mugs = await discover(args)
     assert mugs == [ble_device]
     mock_discover_mugs.assert_called_once_with(mac=TEST_MAC)
@@ -111,7 +124,7 @@ async def test_discover(mock_discover_mugs: AsyncMock, capsys: CaptureFixture, b
 @patch('ember_mug.cli.commands.discover_mugs')
 async def test_discover_no_device(mock_discover_mugs: AsyncMock, capsys: CaptureFixture) -> None:
     mock_discover_mugs.return_value = []
-    args = Namespace(mac=TEST_MAC, adapter=None, raw=False)
+    args = mock_namespace(mac=TEST_MAC)
     with pytest.raises(SystemExit):
         await discover(args)
     mock_discover_mugs.assert_called_once_with(mac=TEST_MAC)
@@ -122,7 +135,7 @@ async def test_discover_no_device(mock_discover_mugs: AsyncMock, capsys: Capture
 @patch('ember_mug.cli.commands.discover_mugs')
 async def test_discover_bleak_error(mock_discover_mugs: AsyncMock, capsys: CaptureFixture) -> None:
     mock_discover_mugs.side_effect = BleakError('Test Error')
-    args = Namespace(mac=TEST_MAC, adapter=None, raw=False)
+    args = mock_namespace(mac=TEST_MAC)
     with pytest.raises(SystemExit):
         await discover(args)
     mock_discover_mugs.assert_called_once_with(mac=TEST_MAC)
@@ -137,14 +150,14 @@ async def test_fetch_info(
     capsys: CaptureFixture,
 ) -> None:
     # Test normal
-    args = Namespace(mac=TEST_MAC, adapter=None, raw=False)
+    args = mock_namespace(mac=TEST_MAC)
     await fetch_info(args)
     captured = capsys.readouterr()
     assert captured.out == "Connected.\nFetching Info\n"
     mock_print_info.assert_called_once_with(mock_mug_with_connection)
 
     # Test with Raw
-    args = Namespace(mac=TEST_MAC, adapter=None, raw=True)
+    args = mock_namespace(mac=TEST_MAC, raw=True)
     await fetch_info(args)
     captured = capsys.readouterr()
     assert captured.out == ""
@@ -160,13 +173,13 @@ async def test_get_mug_value(
     mock_mug_with_connection.data.get_formatted_attr = Mock(return_value='test')  # type: ignore[assignment]
     mock_mug_with_connection.get_target_temp.return_value = 55.5
     mock_mug_with_connection.get_name.return_value = 'test'
-    args = Namespace(adapter=None, raw=False, attributes=['target_temp', 'name'])
+    args = mock_namespace(attributes=['target_temp', 'name'])
     await get_mug_value(args)
     mock_mug_with_connection.get_target_temp.assert_called_once()
     mocked_print_table.assert_called_once_with([('Target Temp', "test"), ('Mug Name', "test")])
 
     mock_mug_with_connection.get_led_colour.return_value = 55.5
-    args = Namespace(adapter=None, raw=True, attributes=['led_colour', 'name'])
+    args = mock_namespace(attributes=['led_colour', 'name'], raw=True)
     await get_mug_value(args)
     captured = capsys.readouterr()
     assert captured.out == "55.5\ntest\n"

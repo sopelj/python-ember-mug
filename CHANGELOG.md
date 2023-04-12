@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.1]
+
+### Added
+* Discover Cups and Thermoses, but they are still not fully supported
+* Debug option to print services and characteristics for debugging
+
 ## [0.6.0]
 
 ### Changed
