@@ -16,18 +16,15 @@ from bleak.backends.device import BLEDevice
 from bleak_retry_connector import establish_connection
 
 from .consts import (
-    EXTRA_ATTRS,
-    INITIAL_ATTRS,
     IS_LINUX,
     MUG_NAME_REGEX,
     PUSH_EVENT_BATTERY_IDS,
-    UPDATE_ATTRS,
     LiquidState,
     MugCharacteristic,
     PushEvent,
     TemperatureUnit,
 )
-from .data import BatteryInfo, Change, Colour, MugData, MugFirmwareInfo, MugMeta
+from .data import BatteryInfo, Change, Colour, Model, MugData, MugFirmwareInfo, MugMeta
 from .utils import (
     bytes_to_big_int,
     bytes_to_little_int,
@@ -55,7 +52,10 @@ class EmberMug:
     ) -> None:
         """Initialize connection manager."""
         self.device = ble_device
-        self.data = MugData(ble_device.name or 'EMBER', include_extra=include_extra, use_metric=use_metric)
+        self.data = MugData(
+            Model(ble_device.name or 'EMBER', include_extra),
+            use_metric=use_metric,
+        )
 
         self.debug = debug
         self._connect_lock = asyncio.Lock()
@@ -66,8 +66,6 @@ class EmberMug:
         self._queued_updates: set[str] = set()
         self._latest_events: dict[int, float] = {}
         self._client_kwargs: dict[str, str] = {}
-        self._initial_attrs = INITIAL_ATTRS if include_extra else (INITIAL_ATTRS - EXTRA_ATTRS)
-        self._update_attrs = UPDATE_ATTRS if include_extra else (UPDATE_ATTRS - EXTRA_ATTRS)
 
         logger.debug("New mug connection initialized.")
         self.set_client_options(**kwargs)
@@ -296,11 +294,11 @@ class EmberMug:
 
     async def update_initial(self) -> list[Change]:
         """Update attributes that don't normally change and don't need to be regularly updated."""
-        return await self._update_multiple(self._initial_attrs)
+        return await self._update_multiple(self.data.model.initial_attributes)
 
     async def update_all(self) -> list[Change]:
         """Update all standard attributes."""
-        return await self._update_multiple(self._update_attrs)
+        return await self._update_multiple(self.data.model.update_attributes)
 
     async def _update_multiple(self, attrs: set[str]) -> list[Change]:
         """Helper to update a list of attributes from the mug."""

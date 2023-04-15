@@ -8,8 +8,8 @@ from pytest import CaptureFixture
 
 from ember_mug import EmberMug
 from ember_mug.cli.helpers import build_sub_rows, print_changes, print_info, print_table, validate_mac
-from ember_mug.consts import LiquidState
-from ember_mug.data import Change
+from ember_mug.consts import EMBER_MUG, LiquidState
+from ember_mug.data import Change, Model
 
 
 def test_validate_mac() -> None:

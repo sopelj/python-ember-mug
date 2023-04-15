@@ -8,12 +8,17 @@ from functools import cached_property
 from typing import Literal
 from uuid import UUID
 
-# Bluetooth names of supported mugs
+# Bluetooth names of Ember devices
+EMBER_MUG = "Ember Ceramic Mug"
+EMBER_CUP = "Ember Cup"
+EMBER_CUP_2 = "Ember Cup 2"
+EMBER_TRAVEL_MUG = "Ember Travel Mug"
+
 EMBER_BLUETOOTH_NAMES: tuple[str, ...] = (
-    "Ember Ceramic Mug",
-    "Ember Travel Mug",
-    "Ember Cup",
-    "Ember Cup 2",
+    EMBER_MUG,
+    EMBER_CUP,
+    EMBER_CUP_2,
+    EMBER_TRAVEL_MUG,
 )
 
 # Format for all the mug's Bluetooth UUIDs
@@ -173,8 +178,8 @@ UPDATE_ATTRS = {
     "battery",
     "liquid_level",
     "liquid_state",
-    "battery_voltage",
 }
+TRAVEL_MUG_ATTRS = {"battery_voltage"}
 EXTRA_ATTRS = {'dsk', 'udsk', 'battery_voltage', 'date_time_zone'}
 
 # Validation

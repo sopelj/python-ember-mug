@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.6.2]
+
+### Added
+* Added attributes to differentiate between device types
+* Don't fetch name for the Ember "Cup" as it doesn't have it
+* In theory the "Cup" should be supported
+
+### Changed
+* The model attribute of the data is now a Model class that provides attributes based on model
+
 ## [0.6.1]
 
 ### Added

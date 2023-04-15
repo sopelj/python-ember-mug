@@ -11,7 +11,7 @@ from pytest import CaptureFixture
 
 from ember_mug import EmberMug
 from ember_mug.cli.commands import EmberMugCli, discover, fetch_info, find_device, get_mug, get_mug_value
-from ember_mug.data import MugData
+from ember_mug.data import Model, MugData
 from tests.conftest import TEST_MAC
 
 from ..conftest import mock_connection
@@ -169,7 +169,7 @@ async def test_get_mug_value(
     mock_mug_with_connection: AsyncMock,
     capsys: CaptureFixture,
 ) -> None:
-    mock_mug_with_connection.data = MugData('test')
+    mock_mug_with_connection.data = MugData(Model('Test'))
     mock_mug_with_connection.data.get_formatted_attr = Mock(return_value='test')  # type: ignore[assignment]
     mock_mug_with_connection.get_target_temp.return_value = 55.5
     mock_mug_with_connection.get_name.return_value = 'test'

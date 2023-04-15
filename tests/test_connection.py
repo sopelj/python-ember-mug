@@ -7,9 +7,9 @@ import pytest
 from bleak import BleakError
 from bleak.backends.device import BLEDevice
 
-from ember_mug.consts import MugCharacteristic, TemperatureUnit
-from ember_mug.data import Colour
-from ember_mug.mug import EXTRA_ATTRS, INITIAL_ATTRS, UPDATE_ATTRS, EmberMug
+from ember_mug.consts import EMBER_MUG, EXTRA_ATTRS, INITIAL_ATTRS, UPDATE_ATTRS, MugCharacteristic, TemperatureUnit
+from ember_mug.data import Colour, Model
+from ember_mug.mug import EmberMug
 
 
 @patch('ember_mug.mug.IS_LINUX', True)
@@ -388,13 +388,14 @@ async def test_mug_update_initial(ember_mug):
 
     with patch.object(ember_mug, '_ensure_connection', AsyncMock()):
         ember_mug._update_multiple = AsyncMock(return_value={})
+        ember_mug.data.model = Model(EMBER_MUG, include_extra=False)
         assert (await ember_mug.update_initial()) == {}
         ember_mug._update_multiple.assert_called_once_with(no_extra)
 
     # Try with extra
     with patch.object(ember_mug, '_ensure_connection', AsyncMock()):
         ember_mug._update_multiple.reset_mock()
-        ember_mug._initial_attrs = INITIAL_ATTRS
+        ember_mug.data.model = Model(EMBER_MUG, include_extra=True)
         assert (await ember_mug.update_initial()) == {}
         ember_mug._update_multiple.assert_called_once_with(INITIAL_ATTRS)
 

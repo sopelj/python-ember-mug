@@ -3,8 +3,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from ember_mug.consts import LiquidState, TemperatureUnit
-from ember_mug.data import BatteryInfo, Change, Colour, MugData, MugFirmwareInfo, MugMeta
+from ember_mug.consts import EMBER_MUG, LiquidState, TemperatureUnit
+from ember_mug.data import BatteryInfo, Change, Colour, Model, MugData, MugFirmwareInfo, MugMeta
 
 
 def test_mug_formatting(mug_data: MugData) -> None:
@@ -28,7 +28,7 @@ def test_mug_formatting(mug_data: MugData) -> None:
         battery_voltage=0.1,
     )
     assert mug_data.meta_display == "Serial Number: ABCDEF"
-    mug_data.include_extra = True
+    mug_data.model = Model(EMBER_MUG, include_extra=True)
     assert mug_data.meta_display == "Mug ID: A, Serial Number: ABCDEF"
     assert mug_data.led_colour_display == "#f400a1"
     assert mug_data.liquid_state_display == "Heating"
@@ -53,9 +53,8 @@ def test_mug_formatting(mug_data: MugData) -> None:
         'DSK': "dsk",
         'UDSK': "udsk",
         'Date Time + Time Zone': None,
-        'Voltage': 0.1,
     }
-    mug_data.include_extra = False
+    mug_data.model = Model(EMBER_MUG, include_extra=False)
     assert mug_data.formatted == basic_info
 
 
@@ -77,8 +76,7 @@ def test_update_info(mug_data: MugData) -> None:
 def test_mug_dict(mug_data: MugData) -> None:
     mug_data.update_info(meta=MugMeta('test_id', 'serial number'))
     assert mug_data.as_dict() == {
-        'model': 'Ember Ceramic Mug',
-        'include_extra': False,
+        'model': {'include_extra': False, 'name': 'Ember Ceramic Mug'},
         'use_metric': True,
         'battery': None,
         'battery_voltage': '',
