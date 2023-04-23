@@ -145,7 +145,7 @@ class Model:
         if self.is_cup:
             attributes = attributes - {'name'}
         elif self.is_travel_mug:
-            attributes = attributes | TRAVEL_MUG_ATTRS
+            attributes = (attributes - {'led_colour', 'liquid_level'}) | TRAVEL_MUG_ATTRS
         return attributes
 
 
