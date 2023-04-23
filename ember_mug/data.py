@@ -8,7 +8,7 @@ from typing import Any, NamedTuple
 from .consts import (
     ATTR_LABELS,
     EMBER_CUP,
-    EMBER_TRAVEL_MUG,
+    EMBER_TRAVEL_MUG_SHORT,
     EXTRA_ATTRS,
     INITIAL_ATTRS,
     TRAVEL_MUG_ATTRS,
@@ -121,7 +121,7 @@ class Model:
     @cached_property
     def is_travel_mug(self) -> bool:
         """Check if the model is a Travel mug."""
-        return self.name.startswith(EMBER_TRAVEL_MUG)
+        return self.name.startswith(EMBER_TRAVEL_MUG_SHORT)
 
     @cached_property
     def attribute_labels(self) -> dict[str, str]:

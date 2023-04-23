@@ -12,6 +12,7 @@ from uuid import UUID
 EMBER_MUG = "Ember Ceramic Mug"
 EMBER_CUP = "Ember Cup"
 EMBER_CUP_2 = "Ember Cup 2"
+EMBER_TRAVEL_MUG_SHORT = "Ember Travel M"
 EMBER_TRAVEL_MUG = "Ember Travel Mug"
 
 EMBER_BLUETOOTH_NAMES: tuple[str, ...] = (
@@ -19,6 +20,7 @@ EMBER_BLUETOOTH_NAMES: tuple[str, ...] = (
     EMBER_CUP,
     EMBER_CUP_2,
     EMBER_TRAVEL_MUG,
+    EMBER_TRAVEL_MUG_SHORT,
 )
 
 # Format for all the mug's Bluetooth UUIDs
