@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.6.3]
+
+### Changed
+* Allow Travel Mug to be detected with shortened Bluetooth name
+
 ## [0.6.2]
 
 ### Added
