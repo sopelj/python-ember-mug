@@ -1,9 +1,10 @@
 # Changelog
 
-## [0.6.3]
+## [0.7.0]
 
 ### Changed
 * Allow Travel Mug to be detected with shortened Bluetooth name
+* Exclude led_colour and liquid_level attributes from the Travel Mug
 
 ## [0.6.2]
 
