@@ -36,7 +36,7 @@ def bytes_to_little_int(data: bytearray | bytes) -> int:
 
 def bytes_to_big_int(data: bytearray | bytes) -> int:
     """Convert bytes to big int."""
-    return int.from_bytes(data, "big")
+    return int.from_bytes(data, byteorder="big")
 
 
 def temp_from_bytes(temp_bytes: bytearray, metric: bool = True) -> float:

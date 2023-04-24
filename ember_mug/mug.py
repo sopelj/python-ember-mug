@@ -217,6 +217,19 @@ class EmberMug:
         liquid_level_bytes = await self._read(MugCharacteristic.LIQUID_LEVEL)
         return bytes_to_little_int(liquid_level_bytes)
 
+    async def get_volume(self) -> int | None:
+        """Get volume from mug gatt."""
+        try:
+            volume_bytes = await self._read(MugCharacteristic.VOLUME)
+        except (BleakError, ValueError, TypeError) as e:
+            logger.error('Failed to read volume attribute.  Error was: %s', e)
+            return None
+        try:
+            return bytes_to_little_int(volume_bytes)
+        except (TypeError, ValueError) as e:
+            logger.error('Failed to decode volume value. Values was %s, Error was: %s', volume_bytes, e)
+        return None
+
     async def get_liquid_state(self) -> LiquidState:
         """Get liquid state from mug gatt."""
         liquid_state_bytes = await self._read(MugCharacteristic.LIQUID_STATE)

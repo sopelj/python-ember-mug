@@ -161,6 +161,7 @@ ATTR_LABELS = {
     'udsk': 'UDSK',
     'date_time_zone': 'Date Time + Time Zone',
     'battery_voltage': 'Voltage',
+    'volume': 'Volume',
 }
 
 # Attributes
@@ -181,7 +182,6 @@ UPDATE_ATTRS = {
     "liquid_level",
     "liquid_state",
 }
-TRAVEL_MUG_ATTRS = {"battery_voltage"}
 EXTRA_ATTRS = {'dsk', 'udsk', 'battery_voltage', 'date_time_zone'}
 
 # Validation

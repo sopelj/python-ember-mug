@@ -79,10 +79,10 @@ def test_mug_dict(mug_data: MugData) -> None:
         'model': {'include_extra': False, 'name': 'Ember Ceramic Mug'},
         'use_metric': True,
         'battery': None,
-        'battery_voltage': '',
+        'battery_voltage': None,
         'current_temp': 0.0,
         'current_temp_display': '0.00°C',
-        'date_time_zone': '',
+        'date_time_zone': None,
         'dsk': '',
         'firmware': None,
         'led_colour': Colour(red=255, green=255, blue=255),
@@ -97,4 +97,5 @@ def test_mug_dict(mug_data: MugData) -> None:
         'target_temp_display': '0.00°C',
         'temperature_unit': TemperatureUnit.CELSIUS,
         'udsk': '',
+        'volume': None,
     }

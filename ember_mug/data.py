@@ -2,16 +2,17 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, is_dataclass
+from datetime import datetime
 from functools import cached_property
 from typing import Any, NamedTuple
 
 from .consts import (
     ATTR_LABELS,
     EMBER_CUP,
+    EMBER_TRAVEL_MUG,
     EMBER_TRAVEL_MUG_SHORT,
     EXTRA_ATTRS,
     INITIAL_ATTRS,
-    TRAVEL_MUG_ATTRS,
     UPDATE_ATTRS,
     LiquidState,
     TemperatureUnit,
@@ -106,12 +107,20 @@ class MugFirmwareInfo:
         )
 
 
-@dataclass
+@dataclass(init=False)
 class Model:
     """Model name and attributes based on mode."""
 
     name: str
     include_extra: bool = False
+
+    def __init__(self, name: str, include_extra: bool = False) -> None:
+        """Override init to set long name for travel mug."""
+        if name == EMBER_TRAVEL_MUG_SHORT:
+            # Replace with full name for aesthetics
+            name = EMBER_TRAVEL_MUG
+        self.name = name
+        self.include_extra = include_extra
 
     @cached_property
     def is_cup(self) -> bool:
@@ -145,7 +154,7 @@ class Model:
         if self.is_cup:
             attributes = attributes - {'name'}
         elif self.is_travel_mug:
-            attributes = (attributes - {'led_colour', 'liquid_level'}) | TRAVEL_MUG_ATTRS
+            attributes = (attributes - {'led_colour', 'liquid_level'}) | {'volume'}
         return attributes
 
 
@@ -190,8 +199,9 @@ class MugData:
     target_temp: float = 0.0
     dsk: str = ""
     udsk: str = ""
-    date_time_zone: str = ""
-    battery_voltage: str = ""
+    volume: int | None = None
+    date_time_zone: datetime | None = None
+    battery_voltage: int | None = None
 
     @property
     def meta_display(self) -> str:

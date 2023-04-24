@@ -50,17 +50,18 @@ def test_mug_model() -> None:
     assert 'battery_voltage' not in mug.update_attributes
     mug_with_extra = Model(EMBER_MUG, include_extra=True)
     assert 'udsk' in mug_with_extra.initial_attributes
+    assert 'battery_voltage' not in mug.update_attributes
 
     travel_mug = Model(EMBER_TRAVEL_MUG)
     assert travel_mug.is_travel_mug is True
     assert travel_mug.is_cup is False
     assert 'name' in travel_mug.update_attributes
     assert 'name' in travel_mug.attribute_labels
-    assert 'battery_voltage' in travel_mug.attribute_labels
+    assert 'volume' in travel_mug.attribute_labels
 
     cup = Model(EMBER_CUP)
     assert cup.is_cup is True
     assert cup.is_travel_mug is False
     assert 'name' not in cup.update_attributes
     assert 'name' not in cup.attribute_labels
-    assert 'battery_voltage' not in cup.update_attributes
+    assert 'volume' not in cup.update_attributes
