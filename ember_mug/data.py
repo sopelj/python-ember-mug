@@ -133,6 +133,15 @@ class Model:
         return self.name.startswith(EMBER_TRAVEL_MUG_SHORT)
 
     @cached_property
+    def type(self) -> str:
+        """Model type as short string."""
+        if self.is_cup:
+            return "cup"
+        elif self.is_travel_mug:
+            return "travel_mug"
+        return "mug"
+
+    @cached_property
     def attribute_labels(self) -> dict[str, str]:
         """Calculated labels for includes attributes."""
         all_attrs = self.initial_attributes | self.update_attributes | {'use_metric'}
