@@ -78,7 +78,8 @@ class MugCharacteristic(IntEnum):
     # RGBA Colour of LED (Read/Write)
     LED = 20
     # Service
-    SERVICE = 13858
+    TRAVEL_MUG_SERVICE = 13857
+    STANDARD_SERVICE = 13858
 
     @cached_property
     def uuid(self) -> UUID:

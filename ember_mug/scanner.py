@@ -27,7 +27,8 @@ def build_scanner_kwargs(adapter: str | None = None) -> dict[str, Any]:
 async def discover_mugs(mac: str | None = None, adapter: str | None = None, wait: int = 5) -> list[BLEDevice]:
     """Discover new mugs in pairing mode."""
     scanner_kwargs = build_scanner_kwargs(adapter)
-    async with BleakScanner(service_uuids=[str(MugCharacteristic.SERVICE)], **scanner_kwargs) as scanner:
+    service_uuids = [str(uuid) for uuid in (MugCharacteristic.STANDARD_SERVICE, MugCharacteristic.TRAVEL_MUG_SERVICE)]
+    async with BleakScanner(service_uuids=service_uuids, **scanner_kwargs) as scanner:
         await asyncio.sleep(wait)
         if mac:
             mac = mac.lower()

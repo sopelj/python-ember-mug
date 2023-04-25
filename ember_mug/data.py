@@ -161,9 +161,11 @@ class Model:
         if self.include_extra is False:
             attributes = attributes - EXTRA_ATTRS
         if self.is_cup:
+            # The Cup cannot be named
             attributes = attributes - {'name'}
         elif self.is_travel_mug:
-            attributes = (attributes - {'led_colour', 'liquid_level'}) | {'volume'}
+            # Tge Travel Mug does not have an LED colour, but has a volume attribute
+            attributes = (attributes - {'led_colour'}) | {'volume'}
         return attributes
 
 
