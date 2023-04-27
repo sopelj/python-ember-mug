@@ -113,6 +113,24 @@ class LiquidState(IntEnum):
         return self.label
 
 
+class VolumeLevel(str, Enum):
+    """Class to manage volume levels."""
+
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+
+    @classmethod
+    def from_state(cls, state: int) -> VolumeLevel:
+        """Build Volume level from int value."""
+        return {0: cls.LOW, 1: cls.MEDIUM, 2: cls.HIGH}[state]
+
+    @cached_property
+    def state(self) -> int:
+        """Get int value from value."""
+        return {self.LOW: 0, self.MEDIUM: 1, self.HIGH: 2}[self]
+
+
 # Push event codes
 class PushEvent(IntEnum):
     """IDs for Push Events."""
@@ -162,7 +180,7 @@ ATTR_LABELS = {
     'udsk': 'UDSK',
     'date_time_zone': 'Date Time + Time Zone',
     'battery_voltage': 'Voltage',
-    'volume': 'Volume',
+    'volume_level': 'Volume Level',
 }
 
 # Attributes

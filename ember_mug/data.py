@@ -16,6 +16,7 @@ from .consts import (
     UPDATE_ATTRS,
     LiquidState,
     TemperatureUnit,
+    VolumeLevel,
 )
 from .formatting import format_led_colour, format_liquid_level, format_temp
 from .utils import bytes_to_little_int, decode_byte_string
@@ -165,7 +166,7 @@ class Model:
             attributes = attributes - {'name'}
         elif self.is_travel_mug:
             # Tge Travel Mug does not have an LED colour, but has a volume attribute
-            attributes = (attributes - {'led_colour'}) | {'volume'}
+            attributes = (attributes - {'led_colour'}) | {'volume_level'}
         return attributes
 
 
@@ -210,7 +211,7 @@ class MugData:
     target_temp: float = 0.0
     dsk: str = ""
     udsk: str = ""
-    volume: int | None = None
+    volume_level: VolumeLevel | None = None
     date_time_zone: datetime | None = None
     battery_voltage: int | None = None
 
@@ -230,6 +231,13 @@ class MugData:
     def liquid_state_display(self) -> str:
         """Human-readable liquid state."""
         return self.liquid_state.label
+
+    @property
+    def volume_level_display(self) -> str | None:
+        """Human-readable volume level."""
+        if self.volume_level:
+            return self.volume_level.value.capitalize()
+        return None
 
     @property
     def liquid_level_display(self) -> str:

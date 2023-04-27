@@ -57,11 +57,11 @@ def test_mug_model() -> None:
     assert travel_mug.is_cup is False
     assert 'name' in travel_mug.update_attributes
     assert 'name' in travel_mug.attribute_labels
-    assert 'volume' in travel_mug.attribute_labels
+    assert 'volume_level' in travel_mug.attribute_labels
 
     cup = Model(EMBER_CUP)
     assert cup.is_cup is True
     assert cup.is_travel_mug is False
     assert 'name' not in cup.update_attributes
     assert 'name' not in cup.attribute_labels
-    assert 'volume' not in cup.update_attributes
+    assert 'volume_level' not in cup.update_attributes

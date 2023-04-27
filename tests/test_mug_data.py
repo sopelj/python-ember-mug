@@ -97,5 +97,5 @@ def test_mug_dict(mug_data: MugData) -> None:
         'target_temp_display': '0.00°C',
         'temperature_unit': TemperatureUnit.CELSIUS,
         'udsk': '',
-        'volume': None,
+        'volume_level': None,
     }

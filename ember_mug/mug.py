@@ -7,6 +7,7 @@ import logging
 from collections.abc import AsyncIterator
 from datetime import datetime, timezone
 from enum import Enum
+from functools import cached_property
 from time import time
 from typing import Any, Callable, Literal
 
@@ -23,6 +24,7 @@ from .consts import (
     MugCharacteristic,
     PushEvent,
     TemperatureUnit,
+    VolumeLevel,
 )
 from .data import BatteryInfo, Change, Colour, Model, MugData, MugFirmwareInfo, MugMeta
 from .utils import (
@@ -74,6 +76,11 @@ class EmberMug:
         """Set the ble device."""
         logger.debug("Set new device from %s to %s", self.device, ble_device)
         self.device = ble_device
+
+    @cached_property
+    def model_name(self) -> str:
+        """Shortcut to model name."""
+        return self.data.model.name
 
     async def _ensure_connection(self) -> None:
         """Connect to mug."""
@@ -217,18 +224,25 @@ class EmberMug:
         liquid_level_bytes = await self._read(MugCharacteristic.LIQUID_LEVEL)
         return bytes_to_little_int(liquid_level_bytes)
 
-    async def get_volume(self) -> int | None:
-        """Get volume from mug gatt."""
+    async def get_volume_level(self) -> VolumeLevel | None:
+        """Get volume level from mug gatt."""
         try:
             volume_bytes = await self._read(MugCharacteristic.VOLUME)
-        except (BleakError, ValueError, TypeError) as e:
-            logger.error('Failed to read volume attribute.  Error was: %s', e)
+        except BleakError as e:
+            if not self.data.model.is_travel_mug:
+                raise NotImplementedError('Ony the travel mug has a volume')
+            logger.error('Failed to fetch volume attribute: %s', e)
             return None
-        try:
-            return bytes_to_little_int(volume_bytes)
-        except (TypeError, ValueError) as e:
-            logger.error('Failed to decode volume value. Values was %s, Error was: %s', volume_bytes, e)
-        return None
+        volume_int = bytes_to_little_int(volume_bytes)
+        return VolumeLevel.from_state(volume_int)
+
+    async def set_volume_level(self, volume: int | VolumeLevel) -> None:
+        """Set volume_level on Travel Mug."""
+        if volume not in (0, 1, 2):
+            raise ValueError('Volume level must be between 0 and 2 inclusively')
+        volume_level = volume if isinstance(volume, VolumeLevel) else VolumeLevel.from_state(volume)
+        await self._write(MugCharacteristic.VOLUME, bytearray(bytearray([volume_level.state])))
+        self.data.volume_level = volume_level
 
     async def get_liquid_state(self) -> LiquidState:
         """Get liquid state from mug gatt."""
@@ -344,7 +358,7 @@ class EmberMug:
             return
         self._latest_events[event_id] = now
 
-        logger.debug("Push event received from Mug (%s) - Data: %s.", event_id, data)
+        logger.debug("Push event received from %s (%s) - Data: %s.", self.model_name, event_id, data)
 
         # Check known IDs
         if event_id in PUSH_EVENT_BATTERY_IDS:
@@ -373,7 +387,7 @@ class EmberMug:
         elif event_id == PushEvent.BATTERY_VOLTAGE_STATE_CHANGED:
             self._queued_updates.add("battery_voltage")
         else:
-            logger.debug('Unknown even received %s', event_id)
+            logger.debug('Unknown event received %s', event_id)
 
     async def unsubscribe(self) -> None:
         """Unsubscribe from Mug notifications."""
