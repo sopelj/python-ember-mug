@@ -50,13 +50,19 @@ def temp_from_bytes(temp_bytes: bytearray, metric: bool = True) -> float:
 
 def log_services(services: BleakGATTServiceCollection) -> None:
     """Log services for debugging."""
-    logger.debug("Logging all services that were discovered")
+    logger.info("Logging all services that were discovered")
     for service in services:
-        logger.debug(
-            "Service '%s' (UUID: %s) has the characteristics:\n %s",
-            service.description,
-            service.uuid,
-            "\n".join(
-                f'{characteristic.uuid}: {characteristic.description}' for characteristic in service.characteristics
-            ),
-        )
+        logger.info("[Service] %s: %s", service.uuid, service.description)
+        for characteristic in service.characteristics:
+            logger.info(
+                "\t[Characteristic] %s: (%s) | Name: %s ",
+                characteristic.uuid,
+                ",".join(characteristic.properties),
+                characteristic.description,
+            )
+            for descriptor in characteristic.descriptors:
+                logger.info(
+                    "\t\t[Descriptor] %s: (Handle: %s)",
+                    descriptor.uuid,
+                    descriptor.handle,
+                )
