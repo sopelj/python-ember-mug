@@ -7,8 +7,10 @@ import logging
 import re
 from typing import TYPE_CHECKING
 
+from bleak import BleakError
+
 if TYPE_CHECKING:
-    from bleak import BleakClient, BleakError
+    from bleak import BleakClient
 
 logger = logging.getLogger(__name__)
 
@@ -54,21 +56,21 @@ async def log_services(client: BleakClient) -> None:
     for service in client.services:
         logger.info("[Service] %s: %s", service.uuid, service.description)
         for characteristic in service.characteristics:
-            value: bytearray | BleakError | None = None
+            value: bytes | BleakError | None = None
             if "read" in characteristic.properties:
                 try:
-                    value = await client.read_gatt_char(characteristic.uuid)
+                    value = bytes(await client.read_gatt_char(characteristic.uuid))
                 except BleakError as e:
                     value = e
             logger.info(
-                "\t[Characteristic] %s: %s | Name: %s | Value: '%s'",
+                "\t[Characteristic] %s: %s | Description: %s | Value: '%s'",
                 characteristic.uuid,
                 ",".join(characteristic.properties),
                 characteristic.description,
                 value,
             )
             for descriptor in characteristic.descriptors:
-                value = await client.read_gatt_descriptor(descriptor.handle)
+                value = bytes(await client.read_gatt_descriptor(descriptor.handle))
                 logger.info(
                     "\t\t[Descriptor] %s: Handle: %s | Value: '%s'",
                     descriptor.uuid,

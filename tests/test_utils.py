@@ -1,10 +1,12 @@
 """Tests for `ember_mug.utils`."""
+from unittest.mock import AsyncMock, MagicMock, Mock, call, patch
 
 from ember_mug.utils import (
     bytes_to_big_int,
     bytes_to_little_int,
     decode_byte_string,
     encode_byte_string,
+    log_services,
     temp_from_bytes,
 )
 
@@ -30,3 +32,39 @@ def test_decode_byte_string() -> None:
 
 def test_encode_byte_string() -> None:
     assert encode_byte_string('abcd12345') == b'YWJjZDEyMzQ1'
+
+
+@patch('ember_mug.utils.logger')
+async def test_log_services(read_gatt_descriptor: Mock) -> None:
+    mock_descriptor = MagicMock(uuid='test-desc', handle=2)
+    mock_characteristic = MagicMock(
+        uuid='char-abc',
+        description='test char',
+        properties=['read'],
+        descriptors=[mock_descriptor],
+    )
+    mock_service = MagicMock(
+        uuid='service-abc',
+        description='test service',
+        characteristics=[mock_characteristic],
+    )
+    client = AsyncMock(services=[mock_service])
+    client.read_gatt_char = AsyncMock(return_value=bytearray(b'test char'))
+    client.read_gatt_descriptor = AsyncMock(return_value=bytearray(b'test descriptor'))
+    await log_services(client)
+    read_gatt_descriptor.info.assert_has_calls(
+        [
+            call('Logging all services that were discovered'),
+            call('[Service] %s: %s', 'service-abc', 'test service'),
+            call(
+                "\t[Characteristic] %s: %s | Description: %s | Value: '%s'",
+                'char-abc',
+                'read',
+                'test char',
+                b'test char',
+            ),
+            call("\t\t[Descriptor] %s: Handle: %s | Value: '%s'", 'test-desc', 2, b'test descriptor'),
+        ],
+    )
+    client.read_gatt_char.assert_called_once_with('char-abc')
+    client.read_gatt_descriptor.assert_called_once_with(2)
