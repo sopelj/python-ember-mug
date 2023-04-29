@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from ember_mug.consts import LiquidState, MugCharacteristic
+from ember_mug.consts import LiquidState, MugCharacteristic, VolumeLevel
 
 
 def test_mug_uuids() -> None:
@@ -20,3 +20,13 @@ def test_liquid_state() -> None:
     assert LiquidState(5).label == "Heating"
     assert LiquidState(6).label == "Perfect"
     assert LiquidState(7).label == "Warm (No control)"
+
+
+def test_volume_level() -> None:
+    assert VolumeLevel.from_state(0) == VolumeLevel.LOW
+    assert VolumeLevel.from_state(1) == VolumeLevel.MEDIUM
+    assert VolumeLevel.from_state(2) == VolumeLevel.HIGH
+
+    assert VolumeLevel.HIGH.state == 2
+    assert VolumeLevel.MEDIUM.state == 1
+    assert VolumeLevel.LOW.state == 0

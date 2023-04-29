@@ -8,7 +8,7 @@ import re
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from bleak import BleakGATTServiceCollection
+    from bleak import BleakClient, BleakError
 
 logger = logging.getLogger(__name__)
 
@@ -48,21 +48,30 @@ def temp_from_bytes(temp_bytes: bytearray, metric: bool = True) -> float:
     return round(temp, 2)
 
 
-def log_services(services: BleakGATTServiceCollection) -> None:
-    """Log services for debugging."""
+async def log_services(client: BleakClient) -> None:
+    """Log all services and all values for debugging/development."""
     logger.info("Logging all services that were discovered")
-    for service in services:
+    for service in client.services:
         logger.info("[Service] %s: %s", service.uuid, service.description)
         for characteristic in service.characteristics:
+            value: bytearray | BleakError | None = None
+            if "read" in characteristic.properties:
+                try:
+                    value = await client.read_gatt_char(characteristic.uuid)
+                except BleakError as e:
+                    value = e
             logger.info(
-                "\t[Characteristic] %s: (%s) | Name: %s ",
+                "\t[Characteristic] %s: %s | Name: %s | Value: '%s'",
                 characteristic.uuid,
                 ",".join(characteristic.properties),
                 characteristic.description,
+                value,
             )
             for descriptor in characteristic.descriptors:
+                value = await client.read_gatt_descriptor(descriptor.handle)
                 logger.info(
-                    "\t\t[Descriptor] %s: (Handle: %s)",
+                    "\t\t[Descriptor] %s: Handle: %s | Value: '%s'",
                     descriptor.uuid,
                     descriptor.handle,
+                    value,
                 )

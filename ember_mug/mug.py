@@ -105,7 +105,7 @@ class EmberMug:
                     ble_device_callback=lambda: self.device,
                 )
                 if self.debug is True:
-                    log_services(client.services)
+                    await log_services(client)
                 self._expected_disconnect = False
             except (asyncio.TimeoutError, BleakError) as error:
                 logger.error("%s: Failed to connect to the mug: %s", self.device, error)
