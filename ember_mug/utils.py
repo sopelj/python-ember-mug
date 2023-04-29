@@ -5,7 +5,7 @@ import base64
 import contextlib
 import logging
 import re
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from bleak import BleakError
 
@@ -50,11 +50,17 @@ def temp_from_bytes(temp_bytes: bytearray, metric: bool = True) -> float:
     return round(temp, 2)
 
 
-async def log_services(client: BleakClient) -> None:
+async def discover_services(client: BleakClient) -> dict[str, Any]:
     """Log all services and all values for debugging/development."""
     logger.info("Logging all services that were discovered")
+    services: dict[str, Any] = {}
     for service in client.services:
-        logger.info("[Service] %s: %s", service.uuid, service.description)
+        logger.debug("[Service] %s: %s", service.uuid, service.description)
+        characteristics: dict[str, Any] = {}
+        services[service.uuid] = {
+            'uuid': service.uuid,
+            'characteristics': characteristics,
+        }
         for characteristic in service.characteristics:
             value: bytes | BleakError | None = None
             if "read" in characteristic.properties:
@@ -62,18 +68,33 @@ async def log_services(client: BleakClient) -> None:
                     value = bytes(await client.read_gatt_char(characteristic.uuid))
                 except BleakError as e:
                     value = e
-            logger.info(
+            logger.debug(
                 "\t[Characteristic] %s: %s | Description: %s | Value: '%s'",
                 characteristic.uuid,
                 ",".join(characteristic.properties),
                 characteristic.description,
                 value,
             )
+            descriptors: list[dict[str, Any]] = []
+            characteristics[characteristic.uuid] = {
+                'uuid': characteristic.uuid,
+                'properties': characteristic.properties,
+                'value': value,
+                'descriptors': descriptors,
+            }
             for descriptor in characteristic.descriptors:
                 value = bytes(await client.read_gatt_descriptor(descriptor.handle))
-                logger.info(
+                logger.debug(
                     "\t\t[Descriptor] %s: Handle: %s | Value: '%s'",
                     descriptor.uuid,
                     descriptor.handle,
                     value,
                 )
+                descriptors.append(
+                    {
+                        'uuid': descriptor.uuid,
+                        'handle': descriptor.handle,
+                        'value': value,
+                    },
+                )
+    return services

@@ -31,8 +31,8 @@ from .utils import (
     bytes_to_big_int,
     bytes_to_little_int,
     decode_byte_string,
+    discover_services,
     encode_byte_string,
-    log_services,
     temp_from_bytes,
 )
 
@@ -109,7 +109,7 @@ class EmberMug:
                     ble_device_callback=lambda: self.device,
                 )
                 if self.debug is True:
-                    await log_services(client)
+                    await discover_services(client)
                 self._expected_disconnect = False
             except (asyncio.TimeoutError, BleakError) as error:
                 logger.error("%s: Failed to connect to the mug: %s", self.device, error)

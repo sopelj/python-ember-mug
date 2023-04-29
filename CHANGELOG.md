@@ -2,9 +2,15 @@
 
 ## [0.7.0]
 
+### Added
+* Added support for Travel Mug
+* Added debugger to dump characteristics and their values for debugging
+
 ### Changed
 * Allow Travel Mug to be detected with shortened Bluetooth name
-* Exclude led_colour and liquid_level attributes from the Travel Mug
+* Exclude led_colour attributes from the Travel Mug
+* Add volume_level attribute for Travel Mug
+* Make terms more generic as all devices are not Mugs
 
 ## [0.6.2]
 
