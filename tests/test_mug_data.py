@@ -92,6 +92,7 @@ def test_mug_dict(mug_data: MugData) -> None:
         'liquid_state': LiquidState.UNKNOWN,
         'liquid_state_display': 'Unknown',
         'meta': {'mug_id': 'test_id', 'serial_number': 'serial number'},
+        'meta_display': 'Serial Number: serial number',
         'name': '',
         'target_temp': 0.0,
         'target_temp_display': '0.00°C',

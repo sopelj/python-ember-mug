@@ -69,6 +69,10 @@ class EmberMug:
         self._latest_events: dict[int, float] = {}
         self._client_kwargs: dict[str, str] = {}
 
+        # Just shortcuts, the value doesn't change once initialized
+        self.is_travel_mug = self.data.model.is_travel_mug
+        self.is_cup = self.data.model.is_cup
+
         logger.debug("New mug connection initialized.")
         self.set_client_options(**kwargs)
 
@@ -195,10 +199,14 @@ class EmberMug:
 
     async def get_led_colour(self) -> Colour:
         """Get RGBA colours from mug gatt."""
+        if self.is_travel_mug is True:
+            raise NotImplementedError('The Travel Mug does not have an LED colour attribute')
         return Colour.from_bytes(await self._read(MugCharacteristic.LED))
 
     async def set_led_colour(self, colour: Colour) -> None:
         """Set new target temp for mug."""
+        if self.is_travel_mug is True:
+            raise NotImplementedError('The Travel Mug does not have an LED colour attribute')
         colour = Colour(*colour[:3], 255)  # It always expects 255 for alpha
         await self._write(MugCharacteristic.LED, colour.as_bytearray())
         self.data.led_colour = colour
@@ -226,13 +234,9 @@ class EmberMug:
 
     async def get_volume_level(self) -> VolumeLevel | None:
         """Get volume level from mug gatt."""
-        try:
-            volume_bytes = await self._read(MugCharacteristic.VOLUME)
-        except BleakError as e:
-            if not self.data.model.is_travel_mug:
-                raise NotImplementedError('Ony the travel mug has a volume')
-            logger.error('Failed to fetch volume attribute: %s', e)
-            return None
+        if self.is_travel_mug is False:
+            raise NotImplementedError('The Mug and Cup do not have a volume level attribute')
+        volume_bytes = await self._read(MugCharacteristic.VOLUME)
         volume_int = bytes_to_little_int(volume_bytes)
         return VolumeLevel.from_state(volume_int)
 
@@ -240,8 +244,10 @@ class EmberMug:
         """Set volume_level on Travel Mug."""
         if volume not in (0, 1, 2):
             raise ValueError('Volume level must be between 0 and 2 inclusively')
+        if self.is_travel_mug is False:
+            raise NotImplementedError('The Mug and Cup do not have a volume level attribute')
         volume_level = volume if isinstance(volume, VolumeLevel) else VolumeLevel.from_state(volume)
-        await self._write(MugCharacteristic.VOLUME, bytearray(bytearray([volume_level.state])))
+        await self._write(MugCharacteristic.VOLUME, bytearray([volume_level.state]))
         self.data.volume_level = volume_level
 
     async def get_liquid_state(self) -> LiquidState:
@@ -252,13 +258,17 @@ class EmberMug:
 
     async def get_name(self) -> str:
         """Get mug name from gatt."""
+        if self.is_cup is True:
+            raise NotImplementedError('The Cup does not have a name attribute')
         name_bytes: bytearray = await self._read(MugCharacteristic.MUG_NAME)
         return bytes(name_bytes).decode("utf8")
 
     async def set_name(self, name: str) -> None:
         """Assign new name to mug."""
         if MUG_NAME_REGEX.match(name) is None:
-            raise ValueError('Name cannot contain any special characters')
+            raise ValueError('Name cannot contain any special characters and must be 16 characters or less')
+        if self.is_cup is True:
+            raise NotImplementedError('The Cup does not have a name attribute')
         await self._write(MugCharacteristic.MUG_NAME, bytearray(name.encode("utf8")))
         self.data.name = name
 

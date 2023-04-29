@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING
 
 from bleak import BleakError
 
-from ..consts import ATTR_LABELS, EXTRA_ATTRS
+from ..consts import ATTR_LABELS, EXTRA_ATTRS, VolumeLevel
 from ..data import Colour
 from ..mug import EmberMug
 from ..scanner import discover_mugs, find_mug
@@ -103,7 +103,11 @@ async def get_mug_value(args: Namespace) -> None:
     attributes = [a.replace('-', '_') for a in args.attributes]
     async with mug.connection(adapter=args.adapter):
         for attr in attributes:
-            value = await getattr(mug, f'get_{attr}')()
+            try:
+                value = await getattr(mug, f'get_{attr}')()
+            except NotImplementedError as e:
+                print(e)
+                sys.exit(1)
             setattr(mug.data, attr, value)
             data[attr] = value
     if args.raw:
@@ -114,7 +118,7 @@ async def get_mug_value(args: Namespace) -> None:
 
 async def set_mug_value(args: Namespace) -> None:
     """Set one or more values on the mug."""
-    attrs = ('name', 'target_temp', 'temperature_unit', 'led_colour')
+    attrs = ('name', 'target_temp', 'temperature_unit', 'led_colour', 'volume_level')
     values = [(attr, value) for attr in attrs if (value := getattr(args, attr))]
     if not values:
         print('Please specify at least one attribute and value to set.')
@@ -127,7 +131,11 @@ async def set_mug_value(args: Namespace) -> None:
         for attr, value in values:
             method = getattr(mug, f'set_{attr.replace("-", "_")}')
             print(f'Setting {attr} to {value}')
-            await method(value)
+            try:
+                await method(value)
+            except NotImplementedError as e:
+                print(e)
+                sys.exit(1)
 
 
 def colour_type(value: str) -> Colour:
@@ -205,6 +213,12 @@ class EmberMugCli:
         set_parser.add_argument('--target-temp', help='Target Temperature', type=float, required=False)
         set_parser.add_argument('--temperature-unit', help='Temperature Unit', choices=['C', 'F'], required=False)
         set_parser.add_argument('--led-colour', help='LED Colour', type=colour_type, required=False)
+        set_parser.add_argument(
+            '--volume-level',
+            help='Volume Level',
+            choices=[v.value for v in VolumeLevel],
+            required=False,
+        )
 
     async def run(self) -> None:
         """Run the specified command based on subparser."""

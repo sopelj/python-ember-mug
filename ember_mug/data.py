@@ -156,6 +156,11 @@ class Model:
         return INITIAL_ATTRS
 
     @cached_property
+    def all_attributes(self) -> set[str]:
+        """All attributes."""
+        return self.initial_attributes | self.update_attributes
+
+    @cached_property
     def update_attributes(self) -> set[str]:
         """Attributes to update based on model and extra."""
         attributes = UPDATE_ATTRS
@@ -279,8 +284,9 @@ class MugData:
         data = {k: asdict(v) if is_dataclass(v) else v for k, v in asdict(self).items()}
         data.update(
             {
-                f'{attr}_display': getattr(self, f'{attr}_display')
-                for attr in ('led_colour', 'liquid_state', 'liquid_level', 'current_temp', 'target_temp')
+                f'{attr}_display': getattr(self, f'{attr}_display', None)
+                for attr in self.model.all_attributes
+                if hasattr(self, f'{attr}_display')
             },
         )
         return data
