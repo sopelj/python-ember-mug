@@ -130,8 +130,7 @@ class EmberMug:
 
     async def _read(self, characteristic: MugCharacteristic) -> bytearray:
         """Helper to read characteristic from Mug."""
-        if self._operation_lock.locked():
-            logger.debug("Operation already in progress. waiting for it to complete")
+        self._check_operation_lock()
         async with self._operation_lock:
             data = await self._client.read_gatt_char(characteristic.uuid)
             logger.debug("Read attribute '%s' with value '%s'", characteristic, data)
@@ -139,8 +138,7 @@ class EmberMug:
 
     async def _write(self, characteristic: MugCharacteristic, data: bytearray) -> None:
         """Helper to write characteristic to Mug."""
-        if self._operation_lock.locked():
-            logger.debug("Operation already in progress. Waiting for it to complete")
+        self._check_operation_lock()
         async with self._operation_lock:
             await self._ensure_connection()
             try:
@@ -174,6 +172,11 @@ class EmberMug:
         for callback in self._callbacks:
             callback(self.data)
 
+    def _check_operation_lock(self) -> None:
+        """Check and print message if lock occupied."""
+        if self._operation_lock.locked():
+            logger.debug("Operation already in progress. waiting for it to complete")
+
     def register_callback(self, callback: Callable[[MugData], None]) -> Callable[[], None]:
         """Register a callback to be called when the state changes."""
         if existing_unregister_callback := self._callbacks.get(callback):
@@ -188,6 +191,16 @@ class EmberMug:
         self._callbacks[callback] = unregister_callback
         logger.debug("Registered callback: %s", callback)
         return unregister_callback
+
+    async def discover_services(self) -> dict[str, Any]:
+        """Discover services for development or debugging.
+
+        Call discover_services with this client, ensuring the connection is active first.
+        """
+        self._check_operation_lock()
+        async with self._operation_lock:
+            await self._ensure_connection()
+            return await discover_services(self._client)
 
     async def get_meta(self) -> MugMeta:
         """Fetch Meta info from the mug (Serial number and ID)."""
