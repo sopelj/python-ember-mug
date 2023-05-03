@@ -255,8 +255,8 @@ class EmberMug:
 
     async def set_volume_level(self, volume: int | VolumeLevel) -> None:
         """Set volume_level on Travel Mug."""
-        if volume not in (0, 1, 2):
-            raise ValueError('Volume level must be between 0 and 2 inclusively')
+        if not isinstance(volume, VolumeLevel) and isinstance(volume, int) and volume not in (0, 1, 2):
+            raise ValueError('Volume level value should be 0, 1, 2 or a VolumeLevel enum')
         if self.is_travel_mug is False:
             raise NotImplementedError('The Mug and Cup do not have a volume level attribute')
         volume_level = volume if isinstance(volume, VolumeLevel) else VolumeLevel.from_state(volume)

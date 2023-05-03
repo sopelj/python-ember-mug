@@ -7,7 +7,15 @@ import pytest
 from bleak import BleakError
 from bleak.backends.device import BLEDevice
 
-from ember_mug.consts import EMBER_MUG, EXTRA_ATTRS, INITIAL_ATTRS, UPDATE_ATTRS, MugCharacteristic, TemperatureUnit
+from ember_mug.consts import (
+    EMBER_MUG,
+    EXTRA_ATTRS,
+    INITIAL_ATTRS,
+    UPDATE_ATTRS,
+    MugCharacteristic,
+    TemperatureUnit,
+    VolumeLevel,
+)
 from ember_mug.data import Colour, Model
 from ember_mug.mug import EmberMug
 
@@ -238,6 +246,34 @@ async def test_set_mug_led_colour(ember_mug: AsyncMock):
             MugCharacteristic.LED.uuid,
             bytearray(b'\xf4\x00\xa1\xff'),
         )
+
+
+async def test_set_volume_level_travel_mug(ember_mug: AsyncMock):
+    ember_mug.is_travel_mug = True
+    with patch.object(ember_mug, '_ensure_connection', AsyncMock()):
+        await ember_mug.set_volume_level(VolumeLevel.HIGH)
+        ember_mug._ensure_connection.assert_called_once()
+        ember_mug._client.write_gatt_char.assert_called_once_with(
+            MugCharacteristic.VOLUME.uuid,
+            bytearray(b'\02'),
+        )
+        ember_mug._ensure_connection.reset_mock()
+        ember_mug._client.write_gatt_char.reset_mock()
+
+        await ember_mug.set_volume_level(0)
+        ember_mug._ensure_connection.assert_called_once()
+        ember_mug._client.write_gatt_char.assert_called_once_with(
+            MugCharacteristic.VOLUME.uuid,
+            bytearray(b'\00'),
+        )
+
+
+async def test_set_volume_level_mug(ember_mug: AsyncMock):
+    with patch.object(ember_mug, '_ensure_connection', AsyncMock()):
+        with pytest.raises(NotImplementedError):
+            await ember_mug.set_volume_level(VolumeLevel.HIGH)
+        ember_mug._ensure_connection.assert_not_called()
+        ember_mug._client.write_gatt_char.assert_not_called()
 
 
 async def test_get_mug_target_temp(ember_mug: AsyncMock):
