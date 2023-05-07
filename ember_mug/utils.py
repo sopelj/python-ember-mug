@@ -20,7 +20,7 @@ def decode_byte_string(data: bytes | bytearray) -> str:
     if not data:
         return ''
     with contextlib.suppress(ValueError):
-        b64_as_str = base64.encodebytes(data).decode("utf-8")
+        b64_as_str = base64.encodebytes(data).decode()
         return re.sub("[\r\n]", "", b64_as_str)
     logger.warning('Failed to decode bytes "%s". Forcing to string.', data)
     return str(data)
@@ -28,7 +28,7 @@ def decode_byte_string(data: bytes | bytearray) -> str:
 
 def encode_byte_string(data: str) -> bytes:
     """Encode string from Ember Mug."""
-    return re.sub(b"[\r\n]", b"", base64.encodebytes(data.encode("utf8")))
+    return re.sub(b"[\r\n]", b"", base64.encodebytes(data.encode()))
 
 
 def bytes_to_little_int(data: bytearray | bytes) -> int:

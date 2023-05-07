@@ -19,10 +19,14 @@ def test_battery_info() -> None:
 
 
 def test_colour() -> None:
-    colour = Colour.from_bytes(b'\xf4\x00\xa1\xff')
-    assert colour.as_bytearray() == b'\xf4\x00\xa1'
+    colour = Colour(*bytearray(b'\xf4\x00\xa1\xff'))
+    assert colour.as_bytearray() == b'\xf4\x00\xa1\xff'
+    assert colour.brightness == 255
     assert colour.as_hex() == '#f400a1'
     assert str(colour) == '#f400a1'
+    colour = Colour(100, 100, 100, 100)
+    assert colour.brightness == 100
+    assert colour.as_bytearray() == b'dddd'
 
 
 def test_mug_firmware_info() -> None:

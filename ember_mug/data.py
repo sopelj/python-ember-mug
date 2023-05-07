@@ -40,20 +40,15 @@ class Colour(NamedTuple):
     red: int
     green: int
     blue: int
-    alpha: int | None = None
+    brightness: int = 255
 
     def as_hex(self) -> str:
         """Format colour array as hex string."""
-        return '#' + ''.join(f'{c:02x}' for c in self if c is not None)
+        return '#' + ''.join(f'{c:02x}' for c in self)[:6]
 
     def as_bytearray(self) -> bytearray:
         """Convert to byte array."""
-        return bytearray(c for c in self if c is not None)
-
-    @classmethod
-    def from_bytes(cls, data: bytes) -> Colour:
-        """Initialize from raw bytes."""
-        return cls(*data[:3])
+        return bytearray(c for c in self)
 
     def __str__(self) -> str:
         """For more useful cli output, format as hex."""
@@ -187,7 +182,7 @@ class MugMeta:
         """Initialize from raw bytes."""
         return cls(
             mug_id=decode_byte_string(data[:6]),
-            serial_number=data[7:].decode("utf-8"),
+            serial_number=data[7:].decode(),
         )
 
     def __str__(self) -> str:
@@ -208,14 +203,14 @@ class MugData:
     meta: MugMeta | None = None
     battery: BatteryInfo | None = None
     firmware: MugFirmwareInfo | None = None
-    led_colour: Colour = Colour(255, 255, 255)
+    led_colour: Colour = Colour(255, 255, 255, 255)
     liquid_state: LiquidState = LiquidState.UNKNOWN
     liquid_level: int = 0
     temperature_unit: TemperatureUnit = TemperatureUnit.CELSIUS
     current_temp: float = 0.0
     target_temp: float = 0.0
     dsk: str = ""
-    udsk: str = ""
+    udsk: str | None = ""
     volume_level: VolumeLevel | None = None
     date_time_zone: datetime | None = None
     battery_voltage: int | None = None

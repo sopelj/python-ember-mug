@@ -214,13 +214,13 @@ class EmberMug:
         """Get RGBA colours from mug gatt."""
         if self.is_travel_mug is True:
             raise NotImplementedError('The Travel Mug does not have an LED colour attribute')
-        return Colour.from_bytes(await self._read(MugCharacteristic.LED))
+        colour_data = await self._read(MugCharacteristic.LED)
+        return Colour(*bytearray(colour_data))
 
     async def set_led_colour(self, colour: Colour) -> None:
         """Set new target temp for mug."""
         if self.is_travel_mug is True:
             raise NotImplementedError('The Travel Mug does not have an LED colour attribute')
-        colour = Colour(*colour[:3], 255)  # It always expects 255 for alpha
         await self._write(MugCharacteristic.LED, colour.as_bytearray())
         self.data.led_colour = colour
 
@@ -285,11 +285,14 @@ class EmberMug:
         await self._write(MugCharacteristic.MUG_NAME, bytearray(name.encode("utf8")))
         self.data.name = name
 
-    async def get_udsk(self) -> str:
+    async def get_udsk(self) -> str | None:
         """Get mug udsk from gatt."""
         try:
-            return decode_byte_string(await self._read(MugCharacteristic.UDSK))
-        except BleakError as e:
+            data = await self._read(MugCharacteristic.UDSK)
+            if data == bytearray([0] * 20):
+                return None
+            return decode_byte_string(data)
+        except (BleakError, ValueError) as e:
             logger.debug('Unable to read UDSK: %s', e)
         return ''
 
