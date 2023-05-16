@@ -2,16 +2,18 @@
 
 [![pypi](https://img.shields.io/pypi/v/python-ember-mug.svg)](https://pypi.org/project/python-ember-mug/)
 [![python](https://img.shields.io/pypi/pyversions/python-ember-mug.svg)](https://pypi.org/project/python-ember-mug/)
-[![Build Status](https://github.com/sopelj/python-ember-mug/actions/workflows/dev.yml/badge.svg)](https://github.com/sopelj/python-ember-mug/actions/workflows/dev.yml)
+[![Build Status](https://github.com/sopelj/python-ember-mug/actions/workflows/tests.yml/badge.svg)](https://github.com/sopelj/python-ember-mug/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/sopelj/python-ember-mug/branch/main/graphs/badge.svg)](https://codecov.io/github/sopelj/python-ember-mug)
-![Project Maintenance](https://img.shields.io/maintenance/yes/2023.svg?style=for-the-badge)
+![Project Maintenance](https://img.shields.io/maintenance/yes/2023.svg)
+[![Maintainer](https://img.shields.io/badge/maintainer-%40sopelj-blue.svg)](https://github.com/sopelj)
+[![License](https://img.shields.io/github/license/sopelj/python-ember-mug.svg)](LICENSE.md)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen)](https://github.com/pre-commit/pre-commit)
 
-Python Library for interacting with Ember Mugs over Bluetooth
+Python Library for interacting with Ember Mugs, Cups and Travel Mugs via Bluetooth
 
 * Documentation: <https://sopelj.github.io/python-ember-mug>
 * GitHub: <https://github.com/sopelj/python-ember-mug>
 * PyPI: <https://pypi.org/project/python-ember-mug/>
-* Free software: MIT
 
 ## Summary
 
@@ -29,7 +31,12 @@ but could be useful separately and has a simple CLI interface too.
 * Writing (Desired temp, colour, temperature unit)*
 * Polling for changes
 
-*** Writing only works if the devices has been set up in the app previously
+
+| Command     | Use                                                                            |
+|-------------|--------------------------------------------------------------------------------|
+| `discover`  | Find/List all detected unpaired mugs in pairing mode                           |
+
+*** Writing may only work if the devices has been set up in the app previously
 
 ## Usage
 
