@@ -9,7 +9,7 @@ You can contribute in many ways:
 
 ### Report Bugs
 
-Report bugs at https://github.com/sopelj/python-ember-mug/issues.
+Report bugs at <https://github.com/sopelj/python-ember-mug/issues>.
 
 If you are reporting a bug, please include:
 
@@ -35,7 +35,7 @@ articles, and such.
 
 ### Submit Feedback
 
-The best way to send feedback is to file an issue at https://github.com/sopelj/python-ember-mug/issues.
+The best way to send feedback is to file an issue at <https://github.com/sopelj/python-ember-mug/issues>.
 
 If you are proposing a feature:
 
@@ -44,7 +44,7 @@ If you are proposing a feature:
 * Remember that this is a volunteer-driven project, and that contributions
   are welcome :)
 
-## Get Started!
+## Get Started
 
 Ready to contribute? Here's how to set up `python-ember-mug` for local development.
 
@@ -52,20 +52,20 @@ Ready to contribute? Here's how to set up `python-ember-mug` for local developme
 2. Clone your fork locally
 
     ```
-    $ git clone git@github.com:your_name_here/python-ember-mug.git
+    git clone git@github.com:your_name_here/python-ember-mug.git
     ```
 
 3. Ensure [poetry](https://python-poetry.org/docs/) is installed.
 4. Install dependencies and start your virtualenv:
 
     ```
-    $ poetry install -E test -E doc -E dev
+    poetry install -E test -E doc -E dev
     ```
 
 5. Create a branch for local development:
 
     ```
-    $ git checkout -b name-of-your-bugfix-or-feature
+    git checkout -b name-of-your-bugfix-or-feature
     ```
 
     Now you can make your changes locally.
@@ -74,15 +74,15 @@ Ready to contribute? Here's how to set up `python-ember-mug` for local developme
    tests, including testing other Python versions, with tox:
 
     ```
-    $ poetry run tox
+    poetry run tox
     ```
 
 7. Commit your changes and push your branch to GitHub:
 
     ```
-    $ git add .
-    $ git commit -m "Your detailed description of your changes."
-    $ git push origin name-of-your-bugfix-or-feature
+    git add .
+    git commit -m "Your detailed description of your changes."
+    git push origin name-of-your-bugfix-or-feature
     ```
 
 8. Submit a pull request through the GitHub website.
@@ -96,17 +96,16 @@ Before you submit a pull request, check that it meets these guidelines:
    your new functionality into a function with a docstring, and add the
    feature to the list in README.md.
 3. The pull request should work for Python 3.9, 3.10 and 3.11. Check
-   https://github.com/sopelj/python-ember-mug/actions
+   <https://github.com/sopelj/python-ember-mug/actions>
    and make sure that the tests pass for all supported Python versions.
 
 ## Tips
 
 ```
-$ poetry run pytest tests/test_python_ember_mug.py
+poetry run pytest tests/test_python_ember_mug.py
 ```
 
 To run a subset of tests.
-
 
 ## Deploying
 
@@ -115,9 +114,9 @@ Make sure all your changes are committed (including an entry in CHANGELOG.md).
 Then run:
 
 ```
-$ poetry run bump2version patch # possible: major / minor / patch
-$ git push
-$ git push --tags
+poetry run bump2version patch # possible: major / minor / patch
+git push
+git push --tags
 ```
 
 GitHub Actions will then deploy to PyPI if tests pass.

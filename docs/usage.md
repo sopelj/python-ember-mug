@@ -37,6 +37,7 @@ ember-mug poll  # fetches info and keeps listening for notifications
 ember-mug get name target-temp  # Prints name and target temp of mug
 ember-mug set --name "My mug" --target-temp 56.8  # Sets the name and target temp to specified values
 ```
+
 Basic options:
 
 | Command     | Use                                                                            |

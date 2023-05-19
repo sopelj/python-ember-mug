@@ -53,3 +53,8 @@ repos:
     rev: 'v1.31.0'
     hooks:
       - id: yamllint
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.34.0
+    hooks:
+      - id: markdownlint-fix
+        args: [--disable, MD013]

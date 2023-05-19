@@ -31,7 +31,6 @@ but could be useful separately and has a simple CLI interface too.
 
 **Note**: Untested devices should still work, if you have one, and it works or doesn't please let me know.
 
-
 ## Features
 
 * Finding devices
@@ -104,19 +103,19 @@ Basic options:
 | `get`       | Get the value(s) of one or more attribute(s) by name                              |
 | `set`       | Set one or more values on the device                                              |
 
-
 ![CLI Example](./docs/images/cli-example.png)
 
 ## Caveats
 
-- Since this api is not public, a lot of guesswork and reverse engineering is involved, so it's not perfect.
-- If the device has not been set up in the app since it was reset, writing is not allowed. I don't know what they set in the app, but it changes something, and it doesn't work without it.
-- Once that device has been set up in the app, you should ideally forget the device or at least turn off bluetooth whilst using it here, or you will probably get disconnected often
-- I haven't figured out some attributes like udsk, dsk, location and timezone, but they are not very useful anyway.
+* Since this api is not public, a lot of guesswork and reverse engineering is involved, so it's not perfect.
+* If the device has not been set up in the app since it was reset, writing is not allowed. I don't know what they set in the app, but it changes something, and it doesn't work without it.
+* Once that device has been set up in the app, you should ideally forget the device or at least turn off bluetooth whilst using it here, or you will probably get disconnected often
+* I haven't figured out some attributes like udsk, dsk, location and timezone, but they are not very useful anyway.
 
 ## Troubleshooting
 
 ### 'Operation failed with ATT error: 0x0e' or another connection error
+
 This seems to be caused by the bluetooth adaptor being in some sort of passive mode. I have not yet figured out how to wake it programmatically so sadly, you need to manually open `bluetoothctl` to do so.
 Please ensure the device is in pairing mode (ie the light is flashing blue or says "PAIR") and run the `bluetoothctl` command. You don't need to type anything. run it and wait until the mug connects.
 
