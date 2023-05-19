@@ -21,20 +21,37 @@ This is an *unofficial* library to attempt to interact with Ember Mugs via Bluet
 This was created for use with my [Home Assistant integration](https://github.com/sopelj/hass-ember-mug-component),
 but could be useful separately and has a simple CLI interface too.
 
-**Note**: Confirmed working with the standard Ember Mug (1 and 2), Ember Cup (2) and Travel Mug (1). If you have another device, and it works or doesn't, please let me know.
+| Device       | Tested  |
+|--------------|---------|
+| Mug          | ✓       |
+| Mug 2        | ✓       |
+| Cup          | ✓       |
+| Travel Mug   | ✓       |
+| Travel Mug 2 | ?       |
+
+**Note**: Untested devices should still work, if you have one, and it works or doesn't please let me know.
+
 
 ## Features
 
 * Finding devices
 * Connecting to devices
-* Reading Information (Colour, temp, liquid level, etc.)
-* Writing (Desired temp, colour, temperature unit)*
-* Polling for changes
+* Reading/Writing most values
+* Poll for changes
 
+Attributes by device:
 
-| Command     | Use                                                                            |
-|-------------|--------------------------------------------------------------------------------|
-| `discover`  | Find/List all detected unpaired mugs in pairing mode                           |
+| Attribute           | Mug | Cup | Travel Mug | Description                                   |
+|---------------------|-----|-----|------------|-----------------------------------------------|
+| Name                | R/W | N/A | R          | Name to give device                           |
+| LED Colour          | R/W | R/W | N/A        | Colour of front LED                           |
+| Current Temperature | R   | R   | R          | Current temperature of the liquid in the mug  |
+| Target Temperature  | R/W | R/W | R/W        | Desired temperature for the liquid            |
+| Temperature Unit    | R/W | R/W | R/W        | Internal temperature unit for the app (C/F)   |
+| Liquid Level        | R   | R   | R          | Approximate level of the liquid in the device |
+| Volume level        | N/A | N/A | R/W        | Volume of the button press beep               |
+| Battery Percent     | R   | R   | R          | Current battery level                         |
+| On Charger          | R   | R   | R          | Device is on it's charger                     |
 
 *** Writing may only work if the devices has been set up in the app previously
 
@@ -78,14 +95,14 @@ ember-mug set --name "My mug" --target-temp 56.8  # Sets the name and target tem
 
 Basic options:
 
-| Command     | Use                                                                            |
-|-------------|--------------------------------------------------------------------------------|
-| `discover`  | Find/List all detected unpaired mugs in pairing mode                           |
-| `find`      | Find *one* already paired mugs                                                 |
-| `info`      | Connect to *one* mug and print its current state                               |
-| `poll`      | Connect to *one* mug and print its current state and keep watching for changes |
-| `get`       | Get the value(s) of one or more attribute(s) by name                           |
-| `set`       | Set one or more values on the mug                                              |
+| Command     | Use                                                                               |
+|-------------|-----------------------------------------------------------------------------------|
+| `discover`  | Find/List all detected unpaired devices in pairing mode                           |
+| `find`      | Find *one* already paired devices                                                 |
+| `info`      | Connect to *one* device and print its current state                               |
+| `poll`      | Connect to *one* device and print its current state and keep watching for changes |
+| `get`       | Get the value(s) of one or more attribute(s) by name                              |
+| `set`       | Set one or more values on the device                                              |
 
 
 ![CLI Example](./docs/images/cli-example.png)
@@ -93,18 +110,15 @@ Basic options:
 ## Caveats
 
 - Since this api is not public, a lot of guesswork and reverse engineering is involved, so it's not perfect.
-- If the mug has not been set up in the app since it was reset, writing is not allowed. I don't know what they set in the app, but it changes something, and it doesn't work without it.
-- Once that mug has been set up in the app, you should ideally forget the device or at least turn off bluetooth whilst using it here, or you will probably get disconnected often
-- I haven't figured out some attributes like udsk, dsk, location and timezone.
+- If the device has not been set up in the app since it was reset, writing is not allowed. I don't know what they set in the app, but it changes something, and it doesn't work without it.
+- Once that device has been set up in the app, you should ideally forget the device or at least turn off bluetooth whilst using it here, or you will probably get disconnected often
+- I haven't figured out some attributes like udsk, dsk, location and timezone, but they are not very useful anyway.
 
 ## Troubleshooting
 
 ### 'Operation failed with ATT error: 0x0e' or another connection error
 This seems to be caused by the bluetooth adaptor being in some sort of passive mode. I have not yet figured out how to wake it programmatically so sadly, you need to manually open `bluetoothctl` to do so.
-Please ensure the mug is in pairing mode (ie the light is flashing blue) and run the `bluetoothctl` command. You don,t need to type anything. run it and wait until the mug connects.
-
-## Todo
-- Test with other devices. Please let me know if you have tried it with others.
+Please ensure the device is in pairing mode (ie the light is flashing blue or says "PAIR") and run the `bluetoothctl` command. You don't need to type anything. run it and wait until the mug connects.
 
 ## Credits
 
