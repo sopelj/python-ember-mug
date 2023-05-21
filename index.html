@@ -15,7 +15,7 @@
         <link rel="next" href="installation/">
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.8">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.12">
     
     
       
@@ -23,10 +23,10 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.ded33207.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.85bb2934.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.a0c5b2b5.min.css">
+        <link rel="stylesheet" href="assets/stylesheets/palette.a6bdf11c.min.css">
       
       
 
@@ -322,13 +322,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#todo" class="md-nav__link">
-    Todo
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#credits" class="md-nav__link">
     Credits
   </a>
@@ -516,13 +509,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#todo" class="md-nav__link">
-    Todo
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#credits" class="md-nav__link">
     Credits
   </a>
@@ -565,30 +551,138 @@
 <h2 id="python-ember-mug">Python Ember Mug<a class="headerlink" href="#python-ember-mug" title="Permanent link">&para;</a></h2>
 <p><a href="https://pypi.org/project/python-ember-mug/"><img alt="pypi" src="https://img.shields.io/pypi/v/python-ember-mug.svg" /></a>
 <a href="https://pypi.org/project/python-ember-mug/"><img alt="python" src="https://img.shields.io/pypi/pyversions/python-ember-mug.svg" /></a>
-<a href="https://github.com/sopelj/python-ember-mug/actions/workflows/dev.yml"><img alt="Build Status" src="https://github.com/sopelj/python-ember-mug/actions/workflows/dev.yml/badge.svg" /></a>
+<a href="https://github.com/sopelj/python-ember-mug/actions/workflows/tests.yml"><img alt="Build Status" src="https://github.com/sopelj/python-ember-mug/actions/workflows/tests.yml/badge.svg" /></a>
 <a href="https://codecov.io/github/sopelj/python-ember-mug"><img alt="codecov" src="https://codecov.io/gh/sopelj/python-ember-mug/branch/main/graphs/badge.svg" /></a>
-<img alt="Project Maintenance" src="https://img.shields.io/maintenance/yes/2023.svg?style=for-the-badge" /></p>
-<p>Python Library for interacting with Ember Mugs over Bluetooth</p>
+<img alt="Project Maintenance" src="https://img.shields.io/maintenance/yes/2023.svg" />
+<a href="https://github.com/sopelj"><img alt="Maintainer" src="https://img.shields.io/badge/maintainer-%40sopelj-blue.svg" /></a>
+<a href="../LICENSE.md"><img alt="License" src="https://img.shields.io/github/license/sopelj/python-ember-mug.svg" /></a>
+<a href="https://github.com/pre-commit/pre-commit"><img alt="pre-commit" src="https://img.shields.io/badge/pre--commit-enabled-brightgreen" /></a></p>
+<p>Python Library for interacting with Ember Mugs, Cups and Travel Mugs via Bluetooth</p>
 <ul>
 <li>Documentation: <a href="https://sopelj.github.io/python-ember-mug">https://sopelj.github.io/python-ember-mug</a></li>
 <li>GitHub: <a href="https://github.com/sopelj/python-ember-mug">https://github.com/sopelj/python-ember-mug</a></li>
 <li>PyPI: <a href="https://pypi.org/project/python-ember-mug/">https://pypi.org/project/python-ember-mug/</a></li>
-<li>Free software: MIT</li>
 </ul>
 <h3 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h3>
 <p>This is an <em>unofficial</em> library to attempt to interact with Ember Mugs via Bluetooth.
 This was created for use with my <a href="https://github.com/sopelj/hass-ember-mug-component">Home Assistant integration</a>,
 but could be useful separately and has a simple CLI interface too.</p>
-<p><strong>Note</strong>: Confirmed working with the standard Ember Mug (1 and 2), Ember Cup (2) and Travel Mug (1). If you have another device, and it works or doesn't, please let me know.</p>
+<table>
+<thead>
+<tr>
+<th>Device</th>
+<th>Tested</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mug</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Mug 2</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Cup</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Travel Mug</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Travel Mug 2</td>
+<td>?</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note</strong>: Untested devices should still work, if you have one, and it works or doesn't please let me know.</p>
 <h3 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Finding devices</li>
 <li>Connecting to devices</li>
-<li>Reading Information (Colour, temp, liquid level, etc.)</li>
-<li>Writing (Desired temp, colour, temperature unit)*</li>
-<li>Polling for changes</li>
+<li>Reading/Writing most values</li>
+<li>Poll for changes</li>
 </ul>
-<p>*** Writing only works if the devices has been set up in the app previously</p>
+<p>Attributes by device:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Mug</th>
+<th>Cup</th>
+<th>Travel Mug</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>R/W</td>
+<td>N/A</td>
+<td>R</td>
+<td>Name to give device</td>
+</tr>
+<tr>
+<td>LED Colour</td>
+<td>R/W</td>
+<td>R/W</td>
+<td>N/A</td>
+<td>Colour of front LED</td>
+</tr>
+<tr>
+<td>Current Temperature</td>
+<td>R</td>
+<td>R</td>
+<td>R</td>
+<td>Current temperature of the liquid in the mug</td>
+</tr>
+<tr>
+<td>Target Temperature</td>
+<td>R/W</td>
+<td>R/W</td>
+<td>R/W</td>
+<td>Desired temperature for the liquid</td>
+</tr>
+<tr>
+<td>Temperature Unit</td>
+<td>R/W</td>
+<td>R/W</td>
+<td>R/W</td>
+<td>Internal temperature unit for the app (C/F)</td>
+</tr>
+<tr>
+<td>Liquid Level</td>
+<td>R</td>
+<td>R</td>
+<td>R</td>
+<td>Approximate level of the liquid in the device</td>
+</tr>
+<tr>
+<td>Volume level</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>R/W</td>
+<td>Volume of the button press beep</td>
+</tr>
+<tr>
+<td>Battery Percent</td>
+<td>R</td>
+<td>R</td>
+<td>R</td>
+<td>Current battery level</td>
+</tr>
+<tr>
+<td>On Charger</td>
+<td>R</td>
+<td>R</td>
+<td>R</td>
+<td>Device is on it's charger</td>
+</tr>
+</tbody>
+</table>
+<p>*** Writing may only work if the devices has been set up in the app previously</p>
 <h3 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h3>
 <h4 id="python">Python<a class="headerlink" href="#python" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">ember_mug.scanner</span> <span class="kn">import</span> <span class="n">find_mug</span><span class="p">,</span> <span class="n">discover_mugs</span>
@@ -630,19 +724,19 @@ ember-mug<span class="w"> </span><span class="nb">set</span><span class="w"> </s
 <tbody>
 <tr>
 <td><code>discover</code></td>
-<td>Find/List all detected unpaired mugs in pairing mode</td>
+<td>Find/List all detected unpaired devices in pairing mode</td>
 </tr>
 <tr>
 <td><code>find</code></td>
-<td>Find <em>one</em> already paired mugs</td>
+<td>Find <em>one</em> already paired devices</td>
 </tr>
 <tr>
 <td><code>info</code></td>
-<td>Connect to <em>one</em> mug and print its current state</td>
+<td>Connect to <em>one</em> device and print its current state</td>
 </tr>
 <tr>
 <td><code>poll</code></td>
-<td>Connect to <em>one</em> mug and print its current state and keep watching for changes</td>
+<td>Connect to <em>one</em> device and print its current state and keep watching for changes</td>
 </tr>
 <tr>
 <td><code>get</code></td>
@@ -650,7 +744,7 @@ ember-mug<span class="w"> </span><span class="nb">set</span><span class="w"> </s
 </tr>
 <tr>
 <td><code>set</code></td>
-<td>Set one or more values on the mug</td>
+<td>Set one or more values on the device</td>
 </tr>
 </tbody>
 </table>
@@ -658,18 +752,14 @@ ember-mug<span class="w"> </span><span class="nb">set</span><span class="w"> </s
 <h3 id="caveats">Caveats<a class="headerlink" href="#caveats" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Since this api is not public, a lot of guesswork and reverse engineering is involved, so it's not perfect.</li>
-<li>If the mug has not been set up in the app since it was reset, writing is not allowed. I don't know what they set in the app, but it changes something, and it doesn't work without it.</li>
-<li>Once that mug has been set up in the app, you should ideally forget the device or at least turn off bluetooth whilst using it here, or you will probably get disconnected often</li>
-<li>I haven't figured out some attributes like udsk, dsk, location and timezone.</li>
+<li>If the device has not been set up in the app since it was reset, writing is not allowed. I don't know what they set in the app, but it changes something, and it doesn't work without it.</li>
+<li>Once that device has been set up in the app, you should ideally forget the device or at least turn off bluetooth whilst using it here, or you will probably get disconnected often</li>
+<li>I haven't figured out some attributes like udsk, dsk, location and timezone, but they are not very useful anyway.</li>
 </ul>
 <h3 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h3>
 <h4 id="operation-failed-with-att-error-0x0e-or-another-connection-error">'Operation failed with ATT error: 0x0e' or another connection error<a class="headerlink" href="#operation-failed-with-att-error-0x0e-or-another-connection-error" title="Permanent link">&para;</a></h4>
 <p>This seems to be caused by the bluetooth adaptor being in some sort of passive mode. I have not yet figured out how to wake it programmatically so sadly, you need to manually open <code>bluetoothctl</code> to do so.
-Please ensure the mug is in pairing mode (ie the light is flashing blue) and run the <code>bluetoothctl</code> command. You don,t need to type anything. run it and wait until the mug connects.</p>
-<h3 id="todo">Todo<a class="headerlink" href="#todo" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Test with other devices. Please let me know if you have tried it with others.</li>
-</ul>
+Please ensure the device is in pairing mode (ie the light is flashing blue or says "PAIR") and run the <code>bluetoothctl</code> command. You don't need to type anything. run it and wait until the mug connects.</p>
 <h3 id="credits">Credits<a class="headerlink" href="#credits" title="Permanent link">&para;</a></h3>
 <p>This package was created with <a href="https://github.com/audreyr/cookiecutter">Cookiecutter</a> and the <a href="https://github.com/waynerv/cookiecutter-pypackage">waynerv/cookiecutter-pypackage</a> project template.</p>
 <h3 id="notice-of-non-affiliation-and-disclaimer">Notice of Non-Affiliation and Disclaimer<a class="headerlink" href="#notice-of-non-affiliation-and-disclaimer" title="Permanent link">&para;</a></h3>
@@ -736,7 +826,7 @@ Please ensure the mug is in pairing mode (ie the light is flashing blue) and run
     <script id="__config" type="application/json">{"base": ".", "features": ["navigation.indexes", "navigation.instant", "navigation.tabs.sticky"], "search": "assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="assets/javascripts/bundle.51198bba.min.js"></script>
+      <script src="assets/javascripts/bundle.c2be25ad.min.js"></script>
       
     
   </body>
