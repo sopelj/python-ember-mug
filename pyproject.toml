@@ -1,14 +1,16 @@
 [tool]
-[tool.poetry]
+
+[project]
 name = "python-ember-mug"
-version = "0.7.0"
-homepage = "https://github.com/sopelj/python-ember-mug"
-description = "Python Library for Ember Mugs."
-authors = ["Jesse Sopel <jesse.sopel@gmail.com>"]
 readme = "README.md"
+description = "Python Library for Ember Mugs."
+authors = [
+    { name = "Jesse Sopel", email = "jesse.sopel@gmail.com" },
+]
 license =  "MIT"
+requires-python = ">=3.9"
+dynamic = ["version"]
 classifiers=[
-    'Development Status :: 2 - Pre-Alpha',
     'Intended Audience :: Developers',
     'License :: OSI Approved :: MIT License',
     'Natural Language :: English',
@@ -17,72 +19,67 @@ classifiers=[
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
 ]
-packages = [
-    { include = "ember_mug" },
-    { include = "tests", format = "sdist" },
+dependencies = [
+    "bleak-retry-connector>=2.13.0",
+    "bleak>=0.19.5",
 ]
 
-[tool.poetry.urls]
+[project.optional-dependencies]
+test = [
+  "pytest>=7.2.1",
+  "pytest-cov",
+  "pytest-asyncio",
+]
+docs = [
+  "mkdocs>=1.1.21",
+  "mkdocs-include-markdown-plugin>=3.6.1,<5.0.0",
+  "mkdocs-material>=8.4.1,<10.0.0",
+  "mkdocstrings[python]",
+  "mkdocs-material-extensions",
+  "mkdocs-autorefs",
+]
+
+[project.urls]
+"Documentation" = "https://sopelj.github.io/python-ember-mug/"
+"Source code" = "https://github.com/sopelj/python-ember-mug/"
 "Bug Tracker" = "https://github.com/sopelj/python-ember-mug/issues"
 "Changelog" = "https://github.com/sopelj/python-ember-mug/blob/main/CHANGELOG.md"
 
-[tool.poetry.dependencies]
-python = ">=3.9,<3.12"
-bleak-retry-connector = ">=2.13.0"
-bleak = ">=0.19.5"
+[project.scripts]
+ember-mug = "ember_mug.cli:run_cli"
 
-[tool.poetry.group.dev.dependencies]
-black  = { version = ">=22.6,<24.0" }
-isort  = { version = "^5.8.0" }
-flake8  = { version = ">=5,<7" }
-flake8-docstrings = { version = "^1.6.0" }
-mypy = { version = ">=0.971,<1.4" }
-pytest  = { version = ">=7.2.1" }
-pytest-cov  = { version = ">=3,<5" }
-pytest-asyncio =  { version = ">=0.19,<0.22" }
-tox  = { version = "^3.20.1" }
-virtualenv  = { version = "^20.2.2" }
-mkdocs  = { version = "^1.1.2" }
-mkdocs-include-markdown-plugin  = { version = ">=3.6.1,<5.0.0" }
-mkdocs-material  = { version = ">=8.4.1,<10.0.0" }
-mkdocstrings  = { version = ">=0.19,<0.23",  extras = ["python"]}
-mkdocs-material-extensions  = { version = "^1.0.1" }
-twine  = { version = "^4.0.0" }
-mkdocs-autorefs = {version = "^0.4.1" }
-pre-commit = ">=2.12,<4.0"
-toml = "^0.10.2"
-bump2version = "^1.0.1"
-tox-gh-actions = "^2.9.1"
+[tool.hatch]
 
-[tool.poetry.extras]
-test = [
-    "pytest",
-    "pytest-cov",
-    "pytest-asyncio",
-    "black",
-    "isort",
-    "mypy",
-    "flake8",
-    "flake8-docstrings",
-]
-dev = [
-    "tox",
-    "pre-commit",
-    "virtualenv",
-    "pip",
-    "twine",
-    "toml",
-    "bump2version",
-]
-build = [ "twine" ]
-doc = [
-    "mkdocs",
-    "mkdocs-include-markdown-plugin",
-    "mkdocs-material",
-    "mkdocstrings",
-    "mkdocs-material-extension",
-    "mkdocs-autorefs"
-]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "ember_mug/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+packages = ["ember_mug", "tests"]
+exclude = [".gitignore"]
+
+[tool.hatch.envs.default]
+python = "3.11"
+
+[tool.hatch.envs.test]
+features = ["test"]
+
+[[tool.hatch.envs.test.matrix]]
+python = ["3.9", "3.10", "3.11"]
+
+[tool.hatch.envs.test.scripts]
+cov = "pytest --asyncio-mode=auto --cov=ember_mug --cov-branch --cov-report=xml --cov-report=term-missing tests"
+no-cov = "cov --no-cov"
+
+[tool.hatch.envs.docs]
+features = ["docs"]
+
+[tool.hatch.envs.docs.scripts]
+build = "mkdocs build --clean --strict"
+serve = "mkdocs serve --dev-addr localhost:8000"
 
 [tool.black]
 line-length = 120
@@ -113,9 +110,25 @@ ensure_newline_before_comments = true
 line_length = 120
 skip_gitignore = true
 
-[tool.poetry.scripts]
-ember-mug = "ember_mug.cli:run_cli"
-
-[build-system]
-requires = ["setuptools", "poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.flake8]
+max-line-length = 120
+max-complexity = 18
+ignore = ['E203', 'E266', 'W503']
+docstring-convention = "google"
+per-file-ignores = "__init__.py:F401"
+min-python-version = 3.9
+exclude = [
+    ".git",
+    "__pycache__",
+    "setup.py",
+    "build",
+    "dist",
+    "docs",
+    "releases",
+    ".tox",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".vscode",
+    ".github",
+    "tests/*",
+]

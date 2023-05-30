@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-versions: ['3.10']
+        python-versions: ['3.11']
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -41,12 +41,11 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install poetry
-          poetry install
+          pip install hatch hatchling
 
       - name: build documentation
         run: |
-          poetry run mkdocs build
+          hatch run docs:build
 
       - name: publish documentation
         uses: peaceiris/actions-gh-pages@v3
@@ -56,14 +55,13 @@ jobs:
 
       - name: Build wheels and source tarball
         run: |
-          poetry install -E build --no-dev
-          poetry build
+          hatch build
 
       - name: show temporary files
         run: >-
           ls -l
 
-      - name: create github release
+      - name: Create GitHub release
         id: create_release
         uses: softprops/action-gh-release@v1
         env:
@@ -74,9 +72,8 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
-          skip_existing: true
+      - name: Publish to PyPI
+        run: |
+            hatch publish \
+              --user="__token__" \
+              --auth="${{ secrets.PYPI_API_TOKEN }}"

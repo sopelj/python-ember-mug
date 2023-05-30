@@ -55,11 +55,11 @@ Ready to contribute? Here's how to set up `python-ember-mug` for local developme
     git clone git@github.com:your_name_here/python-ember-mug.git
     ```
 
-3. Ensure [poetry](https://python-poetry.org/docs/) is installed.
-4. Install dependencies and start your virtualenv:
+3. Ensure [hatch](https://hatch.pypa.io/) is installed.
+4. You can directly run the CLI from hatch with:
 
     ```
-    poetry install -E test -E doc -E dev
+    hatch run ember-mug --help
     ```
 
 5. Create a branch for local development:
@@ -71,10 +71,10 @@ Ready to contribute? Here's how to set up `python-ember-mug` for local developme
     Now you can make your changes locally.
 
 6. When you're done making changes, check that your changes pass the
-   tests, including testing other Python versions, with tox:
+   tests, including testing other Python versions, with Hatch:
 
     ```
-    poetry run tox
+    hatch run test:cov
     ```
 
 7. Commit your changes and push your branch to GitHub:
@@ -102,7 +102,7 @@ Before you submit a pull request, check that it meets these guidelines:
 ## Tips
 
 ```
-poetry run pytest tests/test_python_ember_mug.py
+hatch run test:cov tests/test_python_ember_mug.py
 ```
 
 To run a subset of tests.
@@ -114,7 +114,10 @@ Make sure all your changes are committed (including an entry in CHANGELOG.md).
 Then run:
 
 ```
-poetry run bump2version patch # possible: major / minor / patch
+hatch version patch # possible: major / minor / patch
+git add .
+git commit -m "Bump version: v$(hatch version)"
+git tag "v$(hatch version)"
 git push
 git push --tags
 ```

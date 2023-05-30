@@ -6,7 +6,7 @@
 [![codecov](https://codecov.io/gh/sopelj/python-ember-mug/branch/main/graphs/badge.svg)](https://codecov.io/github/sopelj/python-ember-mug)
 ![Project Maintenance](https://img.shields.io/maintenance/yes/2023.svg)
 [![Maintainer](https://img.shields.io/badge/maintainer-%40sopelj-blue.svg)](https://github.com/sopelj)
-[![License](https://img.shields.io/github/license/sopelj/python-ember-mug.svg)](LICENSE.md)
+[![License](https://img.shields.io/github/license/sopelj/python-ember-mug.svg)](LICENSE)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen)](https://github.com/pre-commit/pre-commit)
 
 Python Library for interacting with Ember Mugs, Cups and Travel Mugs via Bluetooth
@@ -118,6 +118,25 @@ Basic options:
 
 This seems to be caused by the bluetooth adaptor being in some sort of passive mode. I have not yet figured out how to wake it programmatically so sadly, you need to manually open `bluetoothctl` to do so.
 Please ensure the device is in pairing mode (ie the light is flashing blue or says "PAIR") and run the `bluetoothctl` command. You don't need to type anything. run it and wait until the mug connects.
+
+
+## Development
+
+Install:
+- [hatch](https://hatch.pypa.io/latest/install/)
+- [pre-commit](https://pre-commit.com/)
+
+```bash
+pip install hatch
+# Use CLI interface
+hatch run ember-mug --help
+# Run Tests
+hatch run test:cov
+# View docs
+hatch docs:serve
+# Lint code
+pre-commit run --all-files
+```
 
 ## Credits
 

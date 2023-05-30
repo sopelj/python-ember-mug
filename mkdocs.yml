@@ -2,6 +2,8 @@ site_name: Python Ember Mug
 site_url: https://sopelj.github.io/python-ember-mug
 repo_url: https://github.com/sopelj/python-ember-mug
 repo_name: sopelj/python-ember-mug
+watch:
+  - ember_mug
 nav:
   - Home: index.md
   - Installation: installation.md
@@ -40,15 +42,12 @@ markdown_extensions:
   - toc:
       baselevel: 2
       permalink: true
-      slugify: !!python/name:pymdownx.slugs.uslugify
+      slugify: !!python/object/apply:pymdownx.slugs.slugify {kwds: {case: lower}}
   - meta
 plugins:
   - include-markdown
   - search:
       lang: en
-  - mkdocstrings:
-      watch:
-        - ember_mug
 extra:
   social:
     - icon: fontawesome/brands/github
