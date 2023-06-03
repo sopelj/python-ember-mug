@@ -4,16 +4,13 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import logging
-from collections.abc import AsyncIterator
 from datetime import datetime, timezone
 from enum import Enum
 from functools import cached_property
 from time import time
-from typing import Any, Callable, Literal
+from typing import TYPE_CHECKING, Any, Callable, Literal
 
 from bleak import BleakClient, BleakError
-from bleak.backends.characteristic import BleakGATTCharacteristic
-from bleak.backends.device import BLEDevice
 from bleak_retry_connector import establish_connection
 
 from .consts import (
@@ -36,6 +33,13 @@ from .utils import (
     temp_from_bytes,
 )
 
+if TYPE_CHECKING:
+    from collections.abc import AsyncIterator
+
+    from bleak.backends.characteristic import BleakGATTCharacteristic
+    from bleak.backends.device import BLEDevice
+
+
 logger = logging.getLogger(__name__)
 
 DISCONNECT_DELAY = 120
@@ -55,7 +59,7 @@ class EmberMug:
         """Initialize connection manager."""
         self.device = ble_device
         self.data = MugData(
-            Model(ble_device.name or 'EMBER', include_extra),
+            Model(ble_device.name or "EMBER", include_extra),
             use_metric=use_metric,
         )
 
@@ -103,7 +107,7 @@ class EmberMug:
                 client = await establish_connection(
                     client_class=BleakClient,
                     device=self.device,
-                    name=f'{self.data.name} ({self.device.address})',
+                    name=f"{self.data.name} ({self.device.address})",
                     use_services_cache=True,
                     disconnected_callback=self._disconnect_callback,  # type: ignore
                     ble_device_callback=lambda: self.device,
@@ -122,14 +126,14 @@ class EmberMug:
             except NotImplementedError:
                 # workaround for Home Assistant ESPHome Proxy backend which does not allow pairing.
                 logger.warning(
-                    'Pairing not implemented. '
-                    'If your mug is still in pairing mode (blinking blue) tap the button on the bottom to exit.',
+                    "Pairing not implemented. "
+                    "If your mug is still in pairing mode (blinking blue) tap the button on the bottom to exit.",
                 )
             self._client = client
             await self.subscribe()
 
     async def _read(self, characteristic: MugCharacteristic) -> bytearray:
-        """Helper to read characteristic from Mug."""
+        """Help read characteristic from Mug."""
         self._check_operation_lock()
         async with self._operation_lock:
             data = await self._client.read_gatt_char(characteristic.uuid)
@@ -137,7 +141,7 @@ class EmberMug:
             return data
 
     async def _write(self, characteristic: MugCharacteristic, data: bytearray) -> None:
-        """Helper to write characteristic to Mug."""
+        """Help write characteristic to Mug."""
         self._check_operation_lock()
         async with self._operation_lock:
             await self._ensure_connection()
@@ -193,7 +197,8 @@ class EmberMug:
         return unregister_callback
 
     async def discover_services(self) -> dict[str, Any]:
-        """Discover services for development or debugging.
+        """
+        Discover services for development or debugging.
 
         Call discover_services with this client, ensuring the connection is active first.
         """
@@ -213,14 +218,16 @@ class EmberMug:
     async def get_led_colour(self) -> Colour:
         """Get RGBA colours from mug gatt."""
         if self.is_travel_mug is True:
-            raise NotImplementedError('The Travel Mug does not have an LED colour attribute')
+            msg = "The Travel Mug does not have an LED colour attribute"
+            raise NotImplementedError(msg)
         colour_data = await self._read(MugCharacteristic.LED)
         return Colour(*bytearray(colour_data))
 
     async def set_led_colour(self, colour: Colour) -> None:
         """Set new target temp for mug."""
         if self.is_travel_mug is True:
-            raise NotImplementedError('The Travel Mug does not have an LED colour attribute')
+            msg = "The Travel Mug does not have an LED colour attribute"
+            raise NotImplementedError(msg)
         await self._write(MugCharacteristic.LED, colour.as_bytearray())
         self.data.led_colour = colour
 
@@ -248,7 +255,8 @@ class EmberMug:
     async def get_volume_level(self) -> VolumeLevel | None:
         """Get volume level from mug gatt."""
         if self.is_travel_mug is False:
-            raise NotImplementedError('The Mug and Cup do not have a volume level attribute')
+            msg = "The Mug and Cup do not have a volume level attribute"
+            raise NotImplementedError(msg)
         volume_bytes = await self._read(MugCharacteristic.VOLUME)
         volume_int = bytes_to_little_int(volume_bytes)
         return VolumeLevel.from_state(volume_int)
@@ -256,9 +264,11 @@ class EmberMug:
     async def set_volume_level(self, volume: int | VolumeLevel) -> None:
         """Set volume_level on Travel Mug."""
         if not isinstance(volume, VolumeLevel) and isinstance(volume, int) and volume not in (0, 1, 2):
-            raise ValueError('Volume level value should be 0, 1, 2 or a VolumeLevel enum')
+            msg = "Volume level value should be 0, 1, 2 or a VolumeLevel enum"
+            raise ValueError(msg)
         if self.is_travel_mug is False:
-            raise NotImplementedError('The Mug and Cup do not have a volume level attribute')
+            msg = "The Mug and Cup do not have a volume level attribute"
+            raise NotImplementedError(msg)
         volume_level = volume if isinstance(volume, VolumeLevel) else VolumeLevel.from_state(volume)
         await self._write(MugCharacteristic.VOLUME, bytearray([volume_level.state]))
         self.data.volume_level = volume_level
@@ -272,16 +282,19 @@ class EmberMug:
     async def get_name(self) -> str:
         """Get mug name from gatt."""
         if self.is_cup is True:
-            raise NotImplementedError('The Cup does not have a name attribute')
+            msg = "The Cup does not have a name attribute"
+            raise NotImplementedError(msg)
         name_bytes: bytearray = await self._read(MugCharacteristic.MUG_NAME)
         return bytes(name_bytes).decode("utf8")
 
     async def set_name(self, name: str) -> None:
         """Assign new name to mug."""
         if MUG_NAME_REGEX.match(name) is None:
-            raise ValueError('Name cannot contain any special characters and must be 16 characters or less')
+            msg = "Name cannot contain any special characters and must be 16 characters or less"
+            raise ValueError(msg)
         if self.is_cup is True:
-            raise NotImplementedError('The Cup does not have a name attribute')
+            msg = "The Cup does not have a name attribute"
+            raise NotImplementedError(msg)
         await self._write(MugCharacteristic.MUG_NAME, bytearray(name.encode("utf8")))
         self.data.name = name
 
@@ -293,8 +306,8 @@ class EmberMug:
                 return None
             return decode_byte_string(data)
         except (BleakError, ValueError) as e:
-            logger.debug('Unable to read UDSK: %s', e)
-        return ''
+            logger.debug("Unable to read UDSK: %s", e)
+        return ""
 
     async def set_udsk(self, udsk: str) -> None:
         """Attempt to write udsk."""
@@ -306,8 +319,8 @@ class EmberMug:
         try:
             return decode_byte_string(await self._read(MugCharacteristic.DSK))
         except BleakError as e:
-            logger.debug('Unable to read DSK: %s', e)
-        return ''
+            logger.debug("Unable to read DSK: %s", e)
+        return ""
 
     async def get_temperature_unit(self) -> TemperatureUnit:
         """Get mug temp unit."""
@@ -338,7 +351,6 @@ class EmberMug:
         """Get date and time zone."""
         date_time_zone_bytes = await self._read(MugCharacteristic.DATE_TIME_AND_ZONE)
         time_value = bytes_to_big_int(date_time_zone_bytes[:4])
-        # offset = bytes_to_big_int(date_time_zone_bytes[4:])
         return datetime.fromtimestamp(time_value, timezone.utc) if time_value > 0 else None
 
     async def get_firmware(self) -> MugFirmwareInfo:
@@ -354,18 +366,18 @@ class EmberMug:
         return await self._update_multiple(self.data.model.update_attributes)
 
     async def _update_multiple(self, attrs: set[str]) -> list[Change]:
-        """Helper to update a list of attributes from the mug."""
-        logger.debug('Updating the following attributes: %s', attrs)
+        """Update a list of attributes from the mug."""
+        logger.debug("Updating the following attributes: %s", attrs)
         await self._ensure_connection()
         changes = self.data.update_info(**{attr: await getattr(self, f"get_{attr}")() for attr in attrs})
         if changes:
             self._fire_callbacks()
-        logger.debug('Attributes updated: %s', changes)
+        logger.debug("Attributes updated: %s", changes)
         return changes
 
     async def update_queued_attributes(self) -> list[Change]:
         """Update all attributes in queue."""
-        logger.debug('Updating queued attributes: %s', self._queued_updates)
+        logger.debug("Updating queued attributes: %s", self._queued_updates)
         if not self._queued_updates:
             return []
         queued_updates = set(self._queued_updates)
@@ -413,7 +425,7 @@ class EmberMug:
         elif event_id == PushEvent.BATTERY_VOLTAGE_STATE_CHANGED:
             self._queued_updates.add("battery_voltage")
         else:
-            logger.debug('Unknown event received %s', event_id)
+            logger.debug("Unknown event received %s", event_id)
 
     async def unsubscribe(self) -> None:
         """Unsubscribe from Mug notifications."""
@@ -433,13 +445,14 @@ class EmberMug:
 
     def set_client_options(self, **kwargs: str) -> None:
         """Update options in case they need to overriden in some cases."""
-        if kwargs.get('adapter') and IS_LINUX is False:
-            raise ValueError('The adapter option is only valid for the Linux BlueZ Backend.')
+        if kwargs.get("adapter") and IS_LINUX is False:
+            msg = "The adapter option is only valid for the Linux BlueZ Backend."
+            raise ValueError(msg)
         self._client_kwargs = {**kwargs}
 
     @contextlib.asynccontextmanager
     async def connection(self, **kwargs: str) -> AsyncIterator[EmberMug]:
-        """Helper for establishing a connection and automatically closing it."""
+        """Establish a connection and close automatically."""
         self.set_client_options(**kwargs)
         # This will happen automatically, but calling it now will give us immediate feedback
         await self._ensure_connection()

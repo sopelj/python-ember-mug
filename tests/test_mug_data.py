@@ -8,12 +8,12 @@ from ember_mug.data import BatteryInfo, Change, Colour, Model, MugData, MugFirmw
 
 
 def test_mug_formatting(mug_data: MugData) -> None:
-    meta = MugMeta('A', 'ABCDEF')
+    meta = MugMeta("A", "ABCDEF")
     battery = BatteryInfo(35.46, False)
     firmware = MugFirmwareInfo(12, 35, 55)
     colour = Colour(244, 0, 161)
     mug_data.update_info(
-        name='Mug Name',
+        name="Mug Name",
         meta=meta,
         battery=battery,
         firmware=firmware,
@@ -22,8 +22,8 @@ def test_mug_formatting(mug_data: MugData) -> None:
         liquid_level=5,
         current_temp=25,
         target_temp=55,
-        dsk='dsk',
-        udsk='udsk',
+        dsk="dsk",
+        udsk="udsk",
         date_time_zone=None,
         battery_voltage=0.1,
     )
@@ -36,23 +36,23 @@ def test_mug_formatting(mug_data: MugData) -> None:
     assert mug_data.current_temp_display == "25.00°C"
     assert mug_data.target_temp_display == "55.00°C"
     basic_info: dict[str, Any] = {
-        'Mug Name': 'Mug Name',
-        'Meta': "Serial Number: ABCDEF",
-        'Battery': battery,
-        'Firmware': firmware,
-        'LED Colour': "#f400a1",
-        'Liquid State': "Heating",
-        'Liquid Level': "16.67%",
-        'Current Temp': "25.00°C",
-        'Target Temp': "55.00°C",
-        'Use Metric': True,
+        "Mug Name": "Mug Name",
+        "Meta": "Serial Number: ABCDEF",
+        "Battery": battery,
+        "Firmware": firmware,
+        "LED Colour": "#f400a1",
+        "Liquid State": "Heating",
+        "Liquid Level": "16.67%",
+        "Current Temp": "25.00°C",
+        "Target Temp": "55.00°C",
+        "Use Metric": True,
     }
     assert mug_data.formatted == {
         **basic_info,
-        'Meta': "Mug ID: A, Serial Number: ABCDEF",
-        'DSK': "dsk",
-        'UDSK': "udsk",
-        'Date Time + Time Zone': None,
+        "Meta": "Mug ID: A, Serial Number: ABCDEF",
+        "DSK": "dsk",
+        "UDSK": "udsk",
+        "Date Time + Time Zone": None,
     }
     mug_data.model = Model(EMBER_MUG, include_extra=False)
     assert mug_data.formatted == basic_info
@@ -68,35 +68,35 @@ def test_update_info(mug_data: MugData) -> None:
         led_colour=Colour(0, 255, 0),
     )
     assert changes == [
-        Change('target_temp', 55, 68),
-        Change('led_colour', Colour(255, 0, 0), Colour(0, 255, 0)),
+        Change("target_temp", 55, 68),
+        Change("led_colour", Colour(255, 0, 0), Colour(0, 255, 0)),
     ]
 
 
 def test_mug_dict(mug_data: MugData) -> None:
-    mug_data.update_info(meta=MugMeta('test_id', 'serial number'))
+    mug_data.update_info(meta=MugMeta("test_id", "serial number"))
     assert mug_data.as_dict() == {
-        'model': {'include_extra': False, 'name': 'Ember Ceramic Mug'},
-        'use_metric': True,
-        'battery': None,
-        'battery_voltage': None,
-        'current_temp': 0.0,
-        'current_temp_display': '0.00°C',
-        'date_time_zone': None,
-        'dsk': '',
-        'firmware': None,
-        'led_colour': Colour(red=255, green=255, blue=255),
-        'led_colour_display': '#ffffff',
-        'liquid_level': 0,
-        'liquid_level_display': '0.00%',
-        'liquid_state': LiquidState.UNKNOWN,
-        'liquid_state_display': 'Unknown',
-        'meta': {'mug_id': 'test_id', 'serial_number': 'serial number'},
-        'meta_display': 'Serial Number: serial number',
-        'name': '',
-        'target_temp': 0.0,
-        'target_temp_display': '0.00°C',
-        'temperature_unit': TemperatureUnit.CELSIUS,
-        'udsk': '',
-        'volume_level': None,
+        "model": {"include_extra": False, "name": "Ember Ceramic Mug"},
+        "use_metric": True,
+        "battery": None,
+        "battery_voltage": None,
+        "current_temp": 0.0,
+        "current_temp_display": "0.00°C",
+        "date_time_zone": None,
+        "dsk": "",
+        "firmware": None,
+        "led_colour": Colour(red=255, green=255, blue=255),
+        "led_colour_display": "#ffffff",
+        "liquid_level": 0,
+        "liquid_level_display": "0.00%",
+        "liquid_state": LiquidState.UNKNOWN,
+        "liquid_state_display": "Unknown",
+        "meta": {"mug_id": "test_id", "serial_number": "serial number"},
+        "meta_display": "Serial Number: serial number",
+        "name": "",
+        "target_temp": 0.0,
+        "target_temp_display": "0.00°C",
+        "temperature_unit": TemperatureUnit.CELSIUS,
+        "udsk": "",
+        "volume_level": None,
     }

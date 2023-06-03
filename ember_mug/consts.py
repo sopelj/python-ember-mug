@@ -47,7 +47,7 @@ class MugCharacteristic(IntEnum):
     TEMPERATURE_UNIT = 4
     # Level (Between 0 -> 30 ?) 30 100% ?
     LIQUID_LEVEL = 5
-    # Date/Time (Read/Write)
+    # Current date and time zone? (Read/Write)
     DATE_TIME_AND_ZONE = 6
     # Battery Info (Read)
     BATTERY = 7
@@ -87,7 +87,7 @@ class MugCharacteristic(IntEnum):
         return UUID(UUID_TEMPLATE.format(self.value))
 
     def __str__(self) -> str:
-        """String representation is the UUID."""
+        """Convert UUID to string value."""
         return str(self.uuid)
 
 
@@ -109,7 +109,7 @@ class LiquidState(IntEnum):
         return LIQUID_STATE_LABELS[self.value]
 
     def __str__(self) -> str:
-        """String is the label."""
+        """Return label for display."""
         return self.label
 
 
@@ -166,21 +166,21 @@ PUSH_EVENT_BATTERY_IDS = [
 
 # Labels for formatting attributes
 ATTR_LABELS = {
-    'name': 'Mug Name',
-    'meta': 'Meta',
-    'battery': 'Battery',
-    'firmware': 'Firmware',
-    'led_colour': 'LED Colour',
-    'liquid_state': 'Liquid State',
-    'liquid_level': 'Liquid Level',
-    'current_temp': 'Current Temp',
-    'target_temp': 'Target Temp',
-    'use_metric': 'Use Metric',
-    'dsk': 'DSK',
-    'udsk': 'UDSK',
-    'date_time_zone': 'Date Time + Time Zone',
-    'battery_voltage': 'Voltage',
-    'volume_level': 'Volume Level',
+    "name": "Mug Name",
+    "meta": "Meta",
+    "battery": "Battery",
+    "firmware": "Firmware",
+    "led_colour": "LED Colour",
+    "liquid_state": "Liquid State",
+    "liquid_level": "Liquid Level",
+    "current_temp": "Current Temp",
+    "target_temp": "Target Temp",
+    "use_metric": "Use Metric",
+    "dsk": "DSK",
+    "udsk": "UDSK",
+    "date_time_zone": "Date Time + Time Zone",
+    "battery_voltage": "Voltage",
+    "volume_level": "Volume Level",
 }
 
 # Attributes
@@ -201,7 +201,7 @@ UPDATE_ATTRS = {
     "liquid_level",
     "liquid_state",
 }
-EXTRA_ATTRS = {'dsk', 'udsk', 'battery_voltage', 'date_time_zone'}
+EXTRA_ATTRS = {"dsk", "udsk", "battery_voltage", "date_time_zone"}
 
 # Validation
 MUG_NAME_REGEX = re.compile(r"^[A-Za-z0-9,.\[\]#()!\"\';:|\-_+<>%= ]{1,16}$")

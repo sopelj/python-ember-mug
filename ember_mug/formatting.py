@@ -9,8 +9,8 @@ if TYPE_CHECKING:
 
 def format_temp(temp: float, metric: bool = True) -> str:
     """Format temperature with the correct unit."""
-    unit = 'C' if metric else 'F'
-    return f'{temp:.2f}°{unit}'
+    unit = "C" if metric else "F"
+    return f"{temp:.2f}°{unit}"
 
 
 def format_led_colour(led_colour: Colour) -> str:
@@ -20,4 +20,4 @@ def format_led_colour(led_colour: Colour) -> str:
 
 def format_liquid_level(liquid_level: int) -> str:
     """Human readable liquid level."""
-    return f'{(liquid_level / 30 * 100):.2f}%'
+    return f"{(liquid_level / 30 * 100):.2f}%"

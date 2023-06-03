@@ -11,7 +11,7 @@ from ember_mug import EmberMug
 from ember_mug.consts import EMBER_MUG
 from ember_mug.data import Model, MugData
 
-TEST_MAC = '32:36:a5:be:88:cb'
+TEST_MAC = "32:36:a5:be:88:cb"
 TEST_MODEL_NAME = EMBER_MUG
 
 
@@ -30,14 +30,14 @@ class AsyncContextManager:
 mock_connection = MagicMock(AsyncContextManager)
 
 
-@pytest.fixture(name='ble_device')
-def ble_device_fixture() -> Generator[BLEDevice, None, None]:
-    yield BLEDevice(address=TEST_MAC, name=TEST_MODEL_NAME, details={}, rssi=1)
+@pytest.fixture(name="ble_device")
+def ble_device_fixture() -> BLEDevice:
+    return BLEDevice(address=TEST_MAC, name=TEST_MODEL_NAME, details={}, rssi=1)
 
 
-@pytest.fixture
-def mug_data(ble_device: BLEDevice) -> Generator[MugData, None, None]:
-    yield MugData(Model(ble_device.name or TEST_MODEL_NAME))
+@pytest.fixture()
+def mug_data(ble_device: BLEDevice) -> MugData:
+    return MugData(Model(ble_device.name or TEST_MODEL_NAME))
 
 
 @pytest_asyncio.fixture

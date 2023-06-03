@@ -1,10 +1,9 @@
 """Classes for representing data from the mug."""
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, is_dataclass
-from datetime import datetime
+from dataclasses import asdict, dataclass, field, is_dataclass
 from functools import cached_property
-from typing import Any, NamedTuple
+from typing import TYPE_CHECKING, Any, NamedTuple
 
 from .consts import (
     ATTR_LABELS,
@@ -20,6 +19,9 @@ from .consts import (
 )
 from .formatting import format_led_colour, format_liquid_level, format_temp
 from .utils import bytes_to_little_int, decode_byte_string
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 
 class Change(NamedTuple):
@@ -44,7 +46,7 @@ class Colour(NamedTuple):
 
     def as_hex(self) -> str:
         """Format colour array as hex string."""
-        return '#' + ''.join(f'{c:02x}' for c in self)[:6]
+        return "#" + "".join(f"{c:02x}" for c in self)[:6]
 
     def as_bytearray(self) -> bytearray:
         """Convert to byte array."""
@@ -71,7 +73,7 @@ class BatteryInfo:
         )
 
     def __str__(self) -> str:
-        """String representation for printing."""
+        """Format nicely for printing."""
         return f'{self.percent}%, {"" if self.on_charging_base else "not "}on charging base'
 
 
@@ -93,12 +95,12 @@ class MugFirmwareInfo:
         )
 
     def __str__(self) -> str:
-        """String representation for printing."""
-        return ', '.join(
+        """Format nicely for printing."""
+        return ", ".join(
             (
-                f'Version: {self.version}',
-                f'Hardware: {self.hardware}',
-                f'Bootloader: {self.bootloader}',
+                f"Version: {self.version}",
+                f"Hardware: {self.hardware}",
+                f"Bootloader: {self.bootloader}",
             ),
         )
 
@@ -129,18 +131,18 @@ class Model:
         return self.name.startswith(EMBER_TRAVEL_MUG_SHORT)
 
     @cached_property
-    def type(self) -> str:
+    def type(self) -> str:  # noqa: A003
         """Model type as short string."""
         if self.is_cup:
             return "cup"
-        elif self.is_travel_mug:
+        if self.is_travel_mug:
             return "travel_mug"
         return "mug"
 
     @cached_property
     def attribute_labels(self) -> dict[str, str]:
         """Calculated labels for includes attributes."""
-        all_attrs = self.initial_attributes | self.update_attributes | {'use_metric'}
+        all_attrs = self.initial_attributes | self.update_attributes | {"use_metric"}
         return {attr: label for attr, label in ATTR_LABELS.items() if attr in all_attrs}
 
     @cached_property
@@ -163,10 +165,10 @@ class Model:
             attributes = attributes - EXTRA_ATTRS
         if self.is_cup:
             # The Cup cannot be named
-            attributes = attributes - {'name'}
+            attributes = attributes - {"name"}
         elif self.is_travel_mug:
             # Tge Travel Mug does not have an LED colour, but has a volume attribute
-            attributes = (attributes - {'led_colour'}) | {'volume_level'}
+            attributes = (attributes - {"led_colour"}) | {"volume_level"}
         return attributes
 
 
@@ -186,8 +188,8 @@ class MugMeta:
         )
 
     def __str__(self) -> str:
-        """String representation for printing."""
-        return f'Mug ID: {self.mug_id}, Serial Number: {self.serial_number}'
+        """Format nicely for printing."""
+        return f"Mug ID: {self.mug_id}, Serial Number: {self.serial_number}"
 
 
 @dataclass
@@ -203,7 +205,7 @@ class MugData:
     meta: MugMeta | None = None
     battery: BatteryInfo | None = None
     firmware: MugFirmwareInfo | None = None
-    led_colour: Colour = Colour(255, 255, 255, 255)
+    led_colour: Colour = field(default_factory=lambda: Colour(255, 255, 255, 255))
     liquid_state: LiquidState = LiquidState.UNKNOWN
     liquid_level: int = 0
     temperature_unit: TemperatureUnit = TemperatureUnit.CELSIUS
@@ -219,7 +221,7 @@ class MugData:
     def meta_display(self) -> str:
         """Return Meta infor based on preference."""
         if self.meta and not self.model.include_extra:
-            return f'Serial Number: {self.meta.serial_number}'
+            return f"Serial Number: {self.meta.serial_number}"
         return str(self.meta)
 
     @property
@@ -265,7 +267,7 @@ class MugData:
 
     def get_formatted_attr(self, attr: str) -> str | None:
         """Get the display value of a given attribute."""
-        if display_value := getattr(self, f'{attr}_display', None):
+        if display_value := getattr(self, f"{attr}_display", None):
             return display_value
         return getattr(self, attr)
 
@@ -279,9 +281,9 @@ class MugData:
         data = {k: asdict(v) if is_dataclass(v) else v for k, v in asdict(self).items()}
         data.update(
             {
-                f'{attr}_display': getattr(self, f'{attr}_display', None)
+                f"{attr}_display": getattr(self, f"{attr}_display", None)
                 for attr in self.model.all_attributes
-                if hasattr(self, f'{attr}_display')
+                if hasattr(self, f"{attr}_display")
             },
         )
         return data

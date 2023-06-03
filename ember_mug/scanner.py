@@ -20,8 +20,9 @@ logger = logging.getLogger(__name__)
 def build_scanner_kwargs(adapter: str | None = None) -> dict[str, Any]:
     """Add Adapter to kwargs for scanner if specified and using BlueZ."""
     if adapter and IS_LINUX is not True:
-        raise ValueError('The adapter option is only valid for the Linux BlueZ Backend.')
-    return {'adapter': adapter} if adapter else {}
+        msg = "The adapter option is only valid for the Linux BlueZ Backend."
+        raise ValueError(msg)
+    return {"adapter": adapter} if adapter else {}
 
 
 async def discover_mugs(mac: str | None = None, adapter: str | None = None, wait: int = 5) -> list[BLEDevice]:

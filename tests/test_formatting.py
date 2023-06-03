@@ -13,5 +13,5 @@ def test_format_liquid_level() -> None:
 
 
 def test_format_temp() -> None:
-    assert format_temp(25.445) == '25.45°C'
-    assert format_temp(36.443, metric=False) == '36.44°F'
+    assert format_temp(25.445) == "25.45°C"
+    assert format_temp(36.443, metric=False) == "36.44°F"

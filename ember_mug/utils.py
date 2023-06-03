@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 def decode_byte_string(data: bytes | bytearray) -> str:
     """Convert bytes to text as Ember expects."""
     if not data:
-        return ''
+        return ""
     with contextlib.suppress(ValueError):
         b64_as_str = base64.encodebytes(data).decode()
         return re.sub("[\r\n]", "", b64_as_str)
@@ -58,8 +58,8 @@ async def discover_services(client: BleakClient) -> dict[str, Any]:
         logger.debug("[Service] %s: %s", service.uuid, service.description)
         characteristics: dict[str, Any] = {}
         services[service.uuid] = {
-            'uuid': service.uuid,
-            'characteristics': characteristics,
+            "uuid": service.uuid,
+            "characteristics": characteristics,
         }
         for characteristic in service.characteristics:
             value: bytes | BleakError | None = None
@@ -77,10 +77,10 @@ async def discover_services(client: BleakClient) -> dict[str, Any]:
             )
             descriptors: list[dict[str, Any]] = []
             characteristics[characteristic.uuid] = {
-                'uuid': characteristic.uuid,
-                'properties': characteristic.properties,
-                'value': value,
-                'descriptors': descriptors,
+                "uuid": characteristic.uuid,
+                "properties": characteristic.properties,
+                "value": value,
+                "descriptors": descriptors,
             }
             for descriptor in characteristic.descriptors:
                 value = bytes(await client.read_gatt_descriptor(descriptor.handle))
@@ -92,9 +92,9 @@ async def discover_services(client: BleakClient) -> dict[str, Any]:
                 )
                 descriptors.append(
                     {
-                        'uuid': descriptor.uuid,
-                        'handle': descriptor.handle,
-                        'value': value,
+                        "uuid": descriptor.uuid,
+                        "handle": descriptor.handle,
+                        "value": value,
                     },
                 )
     return services
