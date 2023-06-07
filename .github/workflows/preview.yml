@@ -31,7 +31,7 @@ jobs:
       - name: Build wheels and source tarball
         run: |
             export VERSION="$(hatch version).dev${GITHUB_RUN_NUMBER}
-            sed -i -re "s/(__version__ = )\".+\"/\1\"$VERSION\"/g" ember_mug/__init__.py
+            sed -i -re "s/\(__version__ = \)\".+\"/\1\"$VERSION\"/g" ember_mug/__init__.py
             hatch build
 
       - name: Publish to Test PyPI
