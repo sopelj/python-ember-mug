@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.7.1] - Unreleased
+
+### Changed
+
+Use Hatch for packaging and development
+
 ## [0.7.0]
 
 ### Added

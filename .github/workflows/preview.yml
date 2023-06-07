@@ -30,7 +30,9 @@ jobs:
           hatch run test:cov
       - name: Build wheels and source tarball
         run: |
-            git rev-list "v$(hatch version)"..  >/dev/null && hatch version patch
+            if git show-ref --tags --verify --quiet "refs/tags/v$(hatch version)"; then
+              hatch version patch
+            fi
             hatch version "$(hatch version).dev$GITHUB_RUN_NUMBER"
             hatch build
 
