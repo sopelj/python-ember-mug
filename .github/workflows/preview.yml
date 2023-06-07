@@ -32,8 +32,12 @@ jobs:
         run: |
             if git show-ref --tags --verify --quiet "refs/tags/v$(hatch version)"; then
               hatch version patch
+              BASE_VERSION=$(hatch version)
+              git checkout ember_mug/__init__.py
+            else
+              BASE_VERSION=$(hatch version)
             fi
-            hatch version "$(hatch version).dev$GITHUB_RUN_NUMBER"
+            hatch version "${BASE_VERSION}.dev${GITHUB_RUN_NUMBER}"
             hatch build
 
       - name: Publish to Test PyPI
