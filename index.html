@@ -15,7 +15,7 @@
         <link rel="next" href="installation/">
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.12">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.18">
     
     
       
@@ -23,10 +23,10 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.85bb2934.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.26e3688c.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.a6bdf11c.min.css">
+        <link rel="stylesheet" href="assets/stylesheets/palette.ecc896b0.min.css">
       
       
 
@@ -41,8 +41,6 @@
         <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="assets/_mkdocstrings.css">
     
     <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -322,6 +320,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#development" class="md-nav__link">
+    Development
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#credits" class="md-nav__link">
     Credits
   </a>
@@ -509,6 +514,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#development" class="md-nav__link">
+    Development
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#credits" class="md-nav__link">
     Credits
   </a>
@@ -555,7 +567,7 @@
 <a href="https://codecov.io/github/sopelj/python-ember-mug"><img alt="codecov" src="https://codecov.io/gh/sopelj/python-ember-mug/branch/main/graphs/badge.svg" /></a>
 <img alt="Project Maintenance" src="https://img.shields.io/maintenance/yes/2023.svg" />
 <a href="https://github.com/sopelj"><img alt="Maintainer" src="https://img.shields.io/badge/maintainer-%40sopelj-blue.svg" /></a>
-<a href="../LICENSE.md"><img alt="License" src="https://img.shields.io/github/license/sopelj/python-ember-mug.svg" /></a>
+<a href="../LICENSE"><img alt="License" src="https://img.shields.io/github/license/sopelj/python-ember-mug.svg" /></a>
 <a href="https://github.com/pre-commit/pre-commit"><img alt="pre-commit" src="https://img.shields.io/badge/pre--commit-enabled-brightgreen" /></a></p>
 <p>Python Library for interacting with Ember Mugs, Cups and Travel Mugs via Bluetooth</p>
 <ul>
@@ -593,11 +605,10 @@ but could be useful separately and has a simple CLI interface too.</p>
 </tr>
 <tr>
 <td>Travel Mug 2</td>
-<td>?</td>
+<td>✓</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Note</strong>: Untested devices should still work, if you have one, and it works or doesn't please let me know.</p>
 <h3 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Finding devices</li>
@@ -760,6 +771,20 @@ ember-mug<span class="w"> </span><span class="nb">set</span><span class="w"> </s
 <h4 id="operation-failed-with-att-error-0x0e-or-another-connection-error">'Operation failed with ATT error: 0x0e' or another connection error<a class="headerlink" href="#operation-failed-with-att-error-0x0e-or-another-connection-error" title="Permanent link">&para;</a></h4>
 <p>This seems to be caused by the bluetooth adaptor being in some sort of passive mode. I have not yet figured out how to wake it programmatically so sadly, you need to manually open <code>bluetoothctl</code> to do so.
 Please ensure the device is in pairing mode (ie the light is flashing blue or says "PAIR") and run the <code>bluetoothctl</code> command. You don't need to type anything. run it and wait until the mug connects.</p>
+<h3 id="development">Development<a class="headerlink" href="#development" title="Permanent link">&para;</a></h3>
+<p>Install:
+- <a href="https://hatch.pypa.io/latest/install/">hatch</a>
+- <a href="https://pre-commit.com/">pre-commit</a></p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>hatch
+<span class="c1"># Use CLI interface</span>
+hatch<span class="w"> </span>run<span class="w"> </span>ember-mug<span class="w"> </span>--help
+<span class="c1"># Run Tests</span>
+hatch<span class="w"> </span>run<span class="w"> </span>test:cov
+<span class="c1"># View docs</span>
+hatch<span class="w"> </span>docs:serve
+<span class="c1"># Lint code</span>
+pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
+</code></pre></div>
 <h3 id="credits">Credits<a class="headerlink" href="#credits" title="Permanent link">&para;</a></h3>
 <p>This package was created with <a href="https://github.com/audreyr/cookiecutter">Cookiecutter</a> and the <a href="https://github.com/waynerv/cookiecutter-pypackage">waynerv/cookiecutter-pypackage</a> project template.</p>
 <h3 id="notice-of-non-affiliation-and-disclaimer">Notice of Non-Affiliation and Disclaimer<a class="headerlink" href="#notice-of-non-affiliation-and-disclaimer" title="Permanent link">&para;</a></h3>
@@ -823,10 +848,10 @@ Please ensure the device is in pairing mode (ie the light is flashing blue or sa
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.indexes", "navigation.instant", "navigation.tabs.sticky"], "search": "assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.indexes", "navigation.instant", "navigation.tabs.sticky"], "search": "assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="assets/javascripts/bundle.c2be25ad.min.js"></script>
+      <script src="assets/javascripts/bundle.220ee61c.min.js"></script>
       
     
   </body>
