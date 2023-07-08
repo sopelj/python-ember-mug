@@ -1,10 +1,18 @@
 # Changelog
 
-## [0.7.1] - Unreleased
+## [0.8.0]
+
+### Added
+
+* Added support for Travel Mug 2
 
 ### Changed
 
-Use Hatch for packaging and development
+* Updated minimal dependencies
+
+### Removed
+
+* Dropped support for Python 3.9 as it is no longer supported by bleak-retry-connector and Home Assistant
 
 ## [0.7.0]
 
