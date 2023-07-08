@@ -27,9 +27,7 @@ but could be useful separately and has a simple CLI interface too.
 | Mug 2        | ✓       |
 | Cup          | ✓       |
 | Travel Mug   | ✓       |
-| Travel Mug 2 | ?       |
-
-**Note**: Untested devices should still work, if you have one, and it works or doesn't please let me know.
+| Travel Mug 2 | ✓       |
 
 ## Features
 

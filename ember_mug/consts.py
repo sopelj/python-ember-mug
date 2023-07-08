@@ -14,6 +14,7 @@ EMBER_CUP = "Ember Cup"
 EMBER_CUP_2 = "Ember Cup 2"
 EMBER_TRAVEL_MUG_SHORT = "Ember Travel M"
 EMBER_TRAVEL_MUG = "Ember Travel Mug"
+EMBER_TRAVEL_MUG_2 = "Ember Travel Mug 2"
 
 EMBER_BLUETOOTH_NAMES: tuple[str, ...] = (
     EMBER_MUG,
@@ -21,6 +22,7 @@ EMBER_BLUETOOTH_NAMES: tuple[str, ...] = (
     EMBER_CUP_2,
     EMBER_TRAVEL_MUG,
     EMBER_TRAVEL_MUG_SHORT,
+    EMBER_TRAVEL_MUG_2,
 )
 
 # Format for all the mug's Bluetooth UUIDs

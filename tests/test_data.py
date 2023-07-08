@@ -1,7 +1,7 @@
 """Tests for `ember_mug.data`."""
 from __future__ import annotations
 
-from ember_mug.consts import EMBER_CUP, EMBER_MUG, EMBER_TRAVEL_MUG
+from ember_mug.consts import EMBER_CUP, EMBER_MUG, EMBER_TRAVEL_MUG, EMBER_TRAVEL_MUG_2
 from ember_mug.data import BatteryInfo, Change, Colour, Model, MugFirmwareInfo, MugMeta
 
 
@@ -55,6 +55,10 @@ def test_mug_model() -> None:
     mug_with_extra = Model(EMBER_MUG, include_extra=True)
     assert "udsk" in mug_with_extra.initial_attributes
     assert "battery_voltage" not in mug.update_attributes
+
+    travel_mug = Model(EMBER_TRAVEL_MUG_2)
+    assert travel_mug.is_travel_mug is True
+    assert travel_mug.is_cup is False
 
     travel_mug = Model(EMBER_TRAVEL_MUG)
     assert travel_mug.is_travel_mug is True
