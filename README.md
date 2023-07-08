@@ -21,6 +21,9 @@ This is an *unofficial* library to attempt to interact with Ember Mugs via Bluet
 This was created for use with my [Home Assistant integration](https://github.com/sopelj/hass-ember-mug-component),
 but could be useful separately and has a simple CLI interface too.
 
+All known Ember Mugs, Cups and Travel Mugs have been tested and work.
+If I missed one, or you have new feature ideas/issues, please let me know.
+
 | Device       | Tested  |
 |--------------|---------|
 | Mug          | ✓       |

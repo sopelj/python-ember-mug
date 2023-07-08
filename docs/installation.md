@@ -17,7 +17,7 @@ can guide you through the process.
 ## From source
 
 The source for Python Ember Mug can be downloaded from
-the [Github repo][https://github.com/sopelj/python-ember-mug].
+the [GitHub repo][https://github.com/sopelj/python-ember-mug].
 
 You can either clone the public repository:
 
