@@ -8,20 +8,19 @@ authors = [
     { name = "Jesse Sopel", email = "jesse.sopel@gmail.com" },
 ]
 license =  "MIT"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dynamic = ["version"]
 classifiers=[
     'Intended Audience :: Developers',
     'License :: OSI Approved :: MIT License',
     'Natural Language :: English',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
 ]
 dependencies = [
-    "bleak-retry-connector>=2.13.0",
-    "bleak>=0.19.5",
+    "bleak-retry-connector>=3.0.0",
+    "bleak>=0.20.2",
 ]
 
 [project.optional-dependencies]
@@ -68,7 +67,7 @@ python = "3.11"
 features = ["test"]
 
 [[tool.hatch.envs.test.matrix]]
-python = ["3.9", "3.10", "3.11"]
+python = ["3.10", "3.11"]
 
 [tool.hatch.envs.test.scripts]
 cov = "pytest --asyncio-mode=auto --cov=ember_mug --cov-branch --cov-report=xml --cov-report=term-missing tests"
@@ -84,7 +83,7 @@ serve = "mkdocs serve --dev-addr localhost:8000"
 [tool.black]
 line-length = 120
 skip-string-normalization = true
-target-version = ['py39', 'py310', 'py311']
+target-version = ['py310', 'py311']
 include = '\.pyi?$'
 exclude = '''
 /(
@@ -115,7 +114,7 @@ exclude_lines = [
 [tool.ruff]
 fix = true
 line-length = 120
-target-version = "py39"
+target-version = "py310"
 select = [
     "A",
     "ASYNC",

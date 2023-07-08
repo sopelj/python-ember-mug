@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from enum import Enum
 from functools import cached_property
 from time import time
-from typing import TYPE_CHECKING, Any, Callable, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 from bleak import BleakClient, BleakError
 from bleak_retry_connector import establish_connection
@@ -34,7 +34,7 @@ from .utils import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncIterator
+    from collections.abc import AsyncIterator, Callable
 
     from bleak.backends.characteristic import BleakGATTCharacteristic
     from bleak.backends.device import BLEDevice

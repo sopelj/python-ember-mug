@@ -5,14 +5,14 @@ import re
 from argparse import ArgumentTypeError
 from collections import defaultdict
 from functools import partial
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from ember_mug.consts import MAC_ADDRESS_REGEX
 from ember_mug.data import Change
 from ember_mug.formatting import format_led_colour, format_liquid_level, format_temp
 
 if TYPE_CHECKING:
-    from collections.abc import Generator
+    from collections.abc import Callable, Generator
 
     from ember_mug.mug import EmberMug
 

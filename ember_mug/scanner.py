@@ -3,13 +3,15 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 from bleak import BleakScanner
 
 from .consts import EMBER_BLUETOOTH_NAMES, IS_LINUX, MugCharacteristic
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from bleak.backends.device import BLEDevice
     from bleak.backends.scanner import AdvertisementData
 
