@@ -38,7 +38,7 @@ async def get_mug(args: Namespace) -> EmberMug:
 async def find_device(args: Namespace) -> BLEDevice:
     """Find a single device that has already been paired."""
     try:
-        device = await find_mug(mac=args.mac, adapter=args.adapter)
+        device = await find_mug(mac=args.mac, adapter=getattr(args, 'adapter', None))
     except BleakError as e:
         print(f"An error occurred trying to find a mug: {e}")
         sys.exit(1)
@@ -72,7 +72,7 @@ async def discover(args: Namespace) -> list[BLEDevice]:
 async def fetch_info(args: Namespace) -> None:
     """Fetch all information from a mug and end."""
     mug = await get_mug(args)
-    async with mug.connection(adapter=args.adapter):
+    async with mug.connection(adapter=getattr(args, 'adapter', None)):
         if not args.raw:
             print("Connected.\nFetching Info")
         await mug.update_all()
@@ -82,7 +82,7 @@ async def fetch_info(args: Namespace) -> None:
 async def poll_mug(args: Namespace) -> None:
     """Fetch all information and keep polling for changes."""
     mug = await get_mug(args)
-    async with mug.connection(adapter=args.adapter):
+    async with mug.connection(adapter=getattr(args, 'adapter', None)):
         if not args.raw:
             print("Connected.\nFetching Info")
         await mug.update_all()
@@ -102,7 +102,7 @@ async def get_mug_value(args: Namespace) -> None:
     mug = await get_mug(args)
     data = {}
     attributes = [a.replace("-", "_") for a in args.attributes]
-    async with mug.connection(adapter=args.adapter):
+    async with mug.connection(adapter=getattr(args, 'adapter', None)):
         for attr in attributes:
             try:
                 value = await getattr(mug, f"get_{attr}")()
@@ -128,7 +128,7 @@ async def set_mug_value(args: Namespace) -> None:
         sys.exit(1)
 
     mug = await get_mug(args)
-    async with mug.connection(adapter=args.adapter):
+    async with mug.connection(adapter=getattr(args, 'adapter', None)):
         for attr, value in values:
             method = getattr(mug, f'set_{attr.replace("-", "_")}')
             print(f"Setting {attr} to {value}")
