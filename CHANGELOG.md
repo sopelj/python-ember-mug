@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.8.1]
+
+### Fixed
+
+* Don't require adapter keyword for other backends
+
 ## [0.8.0]
 
 ### Added

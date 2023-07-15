@@ -1,21 +1,22 @@
 from __future__ import annotations
 
+import sys
 from argparse import Namespace
 from collections.abc import Generator
 from typing import Any
-from unittest.mock import AsyncMock, Mock, patch
+from unittest.mock import AsyncMock, Mock, patch, call
 
 import pytest
 from bleak import BleakError, BLEDevice
 from pytest import CaptureFixture
 
 from ember_mug import EmberMug
-from ember_mug.cli.commands import EmberMugCli, discover, fetch_info, find_device, get_mug, get_mug_value
+from ember_mug.cli.commands import EmberMugCli, discover, fetch_info, find_device, get_mug, get_mug_value, poll_mug
 from ember_mug.data import Model, MugData
 from tests.conftest import TEST_MAC, mock_connection
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_mug_with_connection() -> Generator[AsyncMock, None, None]:
     with patch("ember_mug.cli.commands.get_mug") as mock:
         mock_mug = AsyncMock()
@@ -161,6 +162,33 @@ async def test_fetch_info(
     assert captured.out == ""
 
 
+@patch("asyncio.sleep")
+@patch("ember_mug.cli.commands.print_info")
+@patch("ember_mug.cli.commands.print_changes")
+@patch("ember_mug.cli.commands.CommandLoop", lambda: [1])
+async def test_poll_mug(
+    mock_print_changes: AsyncMock,
+    mock_print_info: AsyncMock,
+    mock_sleep: AsyncMock,
+    mock_mug_with_connection: AsyncMock,
+    capsys: CaptureFixture,
+) -> None:
+    # Test normal
+    args = mock_namespace(mac=TEST_MAC)
+    await poll_mug(args)
+    captured = capsys.readouterr()
+    assert captured.out == "Connected.\nFetching Info\n\nWatching for changes\n"
+    mock_sleep.assert_has_calls([call(1)] * 60)
+
+    # Test with Raw
+    mock_sleep.reset_mock()
+    args = mock_namespace(mac=TEST_MAC, raw=True)
+    await poll_mug(args)
+    mock_sleep.assert_has_calls([call(1)] * 60)
+    captured = capsys.readouterr()
+    assert captured.out == ""
+
+
 @patch("ember_mug.cli.commands.print_table")
 async def test_get_mug_value(
     mocked_print_table: Mock,
@@ -185,6 +213,7 @@ async def test_get_mug_value(
 
 def test_ember_cli():
     cli = EmberMugCli()
+
     args = cli.parser.parse_args(["find"])
     assert args.command == "find"
 
@@ -208,10 +237,51 @@ def test_ember_cli():
     assert args.name == "TEST"
 
 
+@patch('ember_mug.consts.IS_LINUX', False)
+def test_ember_cli_windows():
+    del sys.modules['ember_mug.cli.commands']  # force re-import
+    from ember_mug.cli.commands import EmberMugCli
+
+    cli = EmberMugCli()
+
+    args = cli.parser.parse_args(["find"])
+    assert args.command == "find"
+
+    with pytest.raises(SystemExit):
+        cli.parser.parse_args(["info", "--adapter", "hci0"])
+
+
 @patch("sys.argv", ["file.py", "find", "-m", TEST_MAC])
 async def test_cli_run():
     cli = EmberMugCli()
     mock_find = AsyncMock()
     with patch.object(cli, "_commands", {"find": mock_find}):
         await cli.run()
+
     mock_find.assert_called_once()
+    args = mock_find.mock_calls[0].args[0]
+    assert args.command == 'find'
+    assert args.mac == TEST_MAC
+    assert args.debug is False
+    assert args.raw is False
+    assert args.adapter is None
+
+
+@patch('ember_mug.consts.IS_LINUX', False)
+@patch("sys.argv", ["file.py", "find", "-m", TEST_MAC])
+async def test_cli_run_non_linux():
+    del sys.modules['ember_mug.cli.commands']  # force re-import
+    from ember_mug.cli.commands import EmberMugCli
+
+    cli = EmberMugCli()
+    mock_find = AsyncMock()
+    with patch.object(cli, "_commands", {"find": mock_find}):
+        await cli.run()
+
+    mock_find.assert_called_once()
+    args = mock_find.mock_calls[0].args[0]
+    assert args.command == 'find'
+    assert args.mac == TEST_MAC
+    assert args.debug is False
+    assert args.raw is False
+    assert args.adapter is None

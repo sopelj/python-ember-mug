@@ -4,7 +4,6 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import logging
-import platform
 import re
 import sys
 from argparse import ArgumentParser, ArgumentTypeError, FileType, Namespace
@@ -12,7 +11,7 @@ from typing import TYPE_CHECKING
 
 from bleak import BleakError
 
-from ember_mug.consts import ATTR_LABELS, EXTRA_ATTRS, VolumeLevel
+from ember_mug.consts import ATTR_LABELS, EXTRA_ATTRS, IS_LINUX, VolumeLevel
 from ember_mug.data import Colour
 from ember_mug.mug import EmberMug
 from ember_mug.scanner import discover_mugs, find_mug
@@ -38,7 +37,7 @@ async def get_mug(args: Namespace) -> EmberMug:
 async def find_device(args: Namespace) -> BLEDevice:
     """Find a single device that has already been paired."""
     try:
-        device = await find_mug(mac=args.mac, adapter=getattr(args, 'adapter', None))
+        device = await find_mug(mac=args.mac, adapter=args.adapter)
     except BleakError as e:
         print(f"An error occurred trying to find a mug: {e}")
         sys.exit(1)
@@ -72,7 +71,7 @@ async def discover(args: Namespace) -> list[BLEDevice]:
 async def fetch_info(args: Namespace) -> None:
     """Fetch all information from a mug and end."""
     mug = await get_mug(args)
-    async with mug.connection(adapter=getattr(args, 'adapter', None)):
+    async with mug.connection(adapter=args.adapter):
         if not args.raw:
             print("Connected.\nFetching Info")
         await mug.update_all()
@@ -82,7 +81,7 @@ async def fetch_info(args: Namespace) -> None:
 async def poll_mug(args: Namespace) -> None:
     """Fetch all information and keep polling for changes."""
     mug = await get_mug(args)
-    async with mug.connection(adapter=getattr(args, 'adapter', None)):
+    async with mug.connection(adapter=args.adapter):
         if not args.raw:
             print("Connected.\nFetching Info")
         await mug.update_all()
@@ -102,7 +101,7 @@ async def get_mug_value(args: Namespace) -> None:
     mug = await get_mug(args)
     data = {}
     attributes = [a.replace("-", "_") for a in args.attributes]
-    async with mug.connection(adapter=getattr(args, 'adapter', None)):
+    async with mug.connection(adapter=args.adapter):
         for attr in attributes:
             try:
                 value = await getattr(mug, f"get_{attr}")()
@@ -128,7 +127,7 @@ async def set_mug_value(args: Namespace) -> None:
         sys.exit(1)
 
     mug = await get_mug(args)
-    async with mug.connection(adapter=getattr(args, 'adapter', None)):
+    async with mug.connection(adapter=args.adapter):
         for attr, value in values:
             method = getattr(mug, f'set_{attr.replace("-", "_")}')
             print(f"Setting {attr} to {value}")
@@ -195,7 +194,7 @@ class EmberMugCli:
             help="File to write logs too (Will be overwritten)",
         )
         shared_parser.add_argument("-r", "--raw", help="No formatting. One value per line.", action="store_true")
-        if platform.system() == "Linux":
+        if IS_LINUX is True:
             # Only works on Linux with BlueZ so don't add for others.
             shared_parser.add_argument(
                 "-a",
@@ -228,6 +227,8 @@ class EmberMugCli:
     async def run(self) -> None:
         """Run the specified command based on subparser."""
         args = self.parser.parse_args()
+        if IS_LINUX is False:
+            args.adapter = None  # Set for other platforms
         if args.debug:
             logging.basicConfig(
                 stream=args.log_file,
