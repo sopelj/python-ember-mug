@@ -2,6 +2,10 @@
 
 ## [0.8.1]
 
+### Changed
+
+* Use debug level for disconnect callback instead of warning
+
 ### Fixed
 
 * Don't require adapter keyword for other backends

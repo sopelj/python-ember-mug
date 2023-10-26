@@ -143,7 +143,7 @@ def test_disconnect_callback(mock_logger: Mock, ember_mug: AsyncMock) -> None:
 
     ember_mug._expected_disconnect = False
     ember_mug._disconnect_callback(AsyncMock())
-    mock_logger.warning.assert_called_with("Unexpectedly disconnected")
+    mock_logger.debug.assert_called_with("Unexpectedly disconnected")
 
 
 @patch("ember_mug.mug.logger")

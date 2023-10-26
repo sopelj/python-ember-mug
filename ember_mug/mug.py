@@ -168,7 +168,7 @@ class EmberMug:
         if self._expected_disconnect:
             logger.debug("Disconnect callback called")
         else:
-            logger.warning("Unexpectedly disconnected")
+            logger.debug("Unexpectedly disconnected")
 
     def _fire_callbacks(self) -> None:
         """Fire the callbacks."""
