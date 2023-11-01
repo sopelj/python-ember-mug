@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.8.2]
+
+### Added
+
+* Tests for Python 3.12
+
+### Changed
+
+* Use debug level for connection timeout logger instead or error
+
 ## [0.8.1]
 
 ### Changed

@@ -7,7 +7,7 @@ import logging
 import re
 import sys
 from argparse import ArgumentParser, ArgumentTypeError, FileType, Namespace
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from bleak import BleakError
 
@@ -19,6 +19,8 @@ from ember_mug.scanner import discover_mugs, find_mug
 from .helpers import CommandLoop, print_changes, print_info, print_table, validate_mac
 
 if TYPE_CHECKING:
+    from collections.abc import Awaitable, Callable
+
     from bleak.backends.device import BLEDevice
 
 all_attrs = list(ATTR_LABELS) + list(EXTRA_ATTRS)
@@ -160,7 +162,7 @@ def colour_type(value: str) -> Colour:
 class EmberMugCli:
     """Very simple CLI Interface to interact with a mug."""
 
-    _commands = {
+    _commands: ClassVar[dict[str, Callable[[Namespace], Awaitable]]] = {
         "find": find_device,
         "discover": discover,
         "info": fetch_info,

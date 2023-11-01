@@ -28,6 +28,7 @@ test = [
   "pytest>=7.2.1",
   "pytest-cov",
   "pytest-asyncio",
+  "aiohttp==3.9.0b0",
 ]
 docs = [
   "mkdocs>=1.1.21",
@@ -61,13 +62,13 @@ packages = ["ember_mug", "tests"]
 exclude = [".gitignore"]
 
 [tool.hatch.envs.default]
-python = "3.11"
+python = "3.12"
 
 [tool.hatch.envs.test]
 features = ["test"]
 
 [[tool.hatch.envs.test.matrix]]
-python = ["3.10", "3.11"]
+python = ["3.10", "3.11", "3.12"]
 
 [tool.hatch.envs.test.scripts]
 cov = "pytest --asyncio-mode=auto --cov=ember_mug --cov-branch --cov-report=xml --cov-report=term-missing tests"
@@ -83,7 +84,7 @@ serve = "mkdocs serve --dev-addr localhost:8000"
 [tool.black]
 line-length = 120
 skip-string-normalization = true
-target-version = ['py310', 'py311']
+target-version = ['py310', 'py311', 'py312']
 include = '\.pyi?$'
 exclude = '''
 /(

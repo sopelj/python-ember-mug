@@ -116,7 +116,7 @@ class EmberMug:
                     await discover_services(client)
                 self._expected_disconnect = False
             except (asyncio.TimeoutError, BleakError) as error:
-                logger.error("%s: Failed to connect to the mug: %s", self.device, error)
+                logger.debug("%s: Failed to connect to the mug: %s", self.device, error)
                 raise error
             # Attempt to pair for good measure
             try:

@@ -59,7 +59,7 @@ def print_table(data: list[tuple[str, ...]]) -> None:
 def print_info(mug: EmberMug) -> None:
     """Print all mug data."""
     print("Mug Data")
-    print_table([(k, v) for (k, v) in mug.data.formatted.items()])
+    print_table(list(mug.data.formatted.items()))
 
 
 def print_changes(changes: list[Change], metric: bool = True) -> None:

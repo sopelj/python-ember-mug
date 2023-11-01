@@ -31,7 +31,7 @@ async def test_discover_mugs(mock_scanner: AsyncMock, mock_sleep: AsyncMock) -> 
     mugs = await discover_mugs(mac="32:36:a5:be:88:cb")
     assert len(mugs) == 1
     assert mugs[0].address == "32:36:a5:be:88:cb"
-    assert mock_sleep.called_with(delay=5)
+    mock_sleep.assert_called_with(5)
 
 
 @patch(

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from collections.abc import AsyncGenerator, Generator
-from unittest.mock import AsyncMock, MagicMock
+from collections.abc import AsyncGenerator
+from unittest.mock import AsyncMock, MagicMock, Mock
 
 import pytest
 import pytest_asyncio
@@ -41,7 +41,7 @@ def mug_data(ble_device: BLEDevice) -> MugData:
 
 
 @pytest_asyncio.fixture
-async def ember_mug(ble_device: BLEDevice) -> AsyncGenerator[EmberMug | AsyncMock, None]:
+async def ember_mug(ble_device: BLEDevice) -> AsyncGenerator[EmberMug | Mock, None]:
     mug = EmberMug(ble_device)
     mug._client = AsyncMock()
     yield mug
