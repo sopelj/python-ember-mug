@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.8.3]
+
+### Fixed
+
+* Set proper version and rebuild release
+
 ## [0.8.2]
 
 ### Added
