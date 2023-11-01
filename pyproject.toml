@@ -76,6 +76,7 @@ cov = "pytest --asyncio-mode=auto --cov=ember_mug --cov-branch --cov-report=xml 
 no-cov = "cov --no-cov"
 
 [tool.hatch.envs.docs]
+python = "3.11"
 features = ["docs"]
 
 [tool.hatch.envs.docs.scripts]
