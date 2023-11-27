@@ -29,7 +29,7 @@ test = [
   "pytest>=7.2.1",
   "pytest-cov",
   "pytest-asyncio",
-  "aiohttp==3.9.0b1",
+  "aiohttp==3.9.1",
 ]
 docs = [
   "mkdocs>=1.1.21",
