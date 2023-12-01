@@ -108,8 +108,7 @@ class EmberMug:
                     client_class=BleakClient,
                     device=self.device,
                     name=f"{self.data.name} ({self.device.address})",
-                    use_services_cache=True,
-                    disconnected_callback=self._disconnect_callback,  # type: ignore
+                    disconnected_callback=self._disconnect_callback,
                     ble_device_callback=lambda: self.device,
                 )
                 if self.debug is True:
