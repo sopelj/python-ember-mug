@@ -22,15 +22,18 @@ This was created for use with my [Home Assistant integration](https://github.com
 but could be useful separately and has a simple CLI interface too.
 
 All known Ember Mugs, Cups and Travel Mugs have been tested and work.
+The Tumbler has not yet been tested. If you have one and would like to help, please see [Issue #65]((https://github.com/sopelj/python-ember-mug/issues/56))
 If I missed one, or you have new feature ideas/issues, please let me know.
 
-| Device       | Tested  |
-|--------------|---------|
-| Mug          | ✓       |
-| Mug 2        | ✓       |
-| Cup          | ✓       |
-| Travel Mug   | ✓       |
-| Travel Mug 2 | ✓       |
+| Device       | Tested                                                    |
+|--------------|-----------------------------------------------------------|
+| Mug          | ✓                                                         |
+| Mug 2        | ✓                                                         |
+| Cup          | ✓                                                         |
+| Travel Mug   | ✓                                                         |
+| Travel Mug 2 | ✓                                                         |
+| Tumbler      | [?](https://github.com/sopelj/python-ember-mug/issues/56) |
+
 
 ## Features
 
@@ -114,6 +117,12 @@ Basic options:
 * I haven't figured out some attributes like udsk, dsk, location and timezone, but they are not very useful anyway.
 
 ## Troubleshooting
+
+##### Systematic timeouts or `le-connection-abort-by-local`
+
+If your mug gets stuck in a state where it refuses to connect, you get constant reconnects, timeouts, and/or `le-connection-abort-by-local` messages in the debug logs, you may need to remove
+your mug via `bluetoothctl remove my-mac-address` and factory reset your device. It should reconnect correctly afterward.
+You may also need to re-add it to the app in order to make it writable again as well.
 
 ### 'Operation failed with ATT error: 0x0e' or another connection error
 
