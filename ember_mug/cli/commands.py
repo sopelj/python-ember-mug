@@ -9,13 +9,15 @@ import sys
 from argparse import ArgumentParser, ArgumentTypeError, FileType, Namespace
 from typing import TYPE_CHECKING, ClassVar
 
-from bleak import BleakError
+from bleak import AdvertisementData, BleakError
 
 from ember_mug.consts import ATTR_LABELS, EXTRA_ATTRS, IS_LINUX, VolumeLevel
 from ember_mug.data import Colour
 from ember_mug.mug import EmberMug
 from ember_mug.scanner import discover_mugs, find_mug
 
+from ..formatting import format_capacity
+from ..utils import get_model_info_from_advertiser_data
 from .helpers import CommandLoop, print_changes, print_info, print_table, validate_mac
 
 if TYPE_CHECKING:
@@ -29,29 +31,34 @@ get_attribute_names = [n.replace("_", "-") for n in all_attrs]
 
 async def get_mug(args: Namespace) -> EmberMug:
     """Help to get the mug based on args."""
-    device = await find_device(args)
-    mug = EmberMug(device, use_metric=not args.imperial, include_extra=args.extra, debug=args.debug)
+    device, advertisement = await find_device(args)
+    mug = EmberMug(
+        device,
+        get_model_info_from_advertiser_data(advertisement),
+        use_metric=not args.imperial,
+        debug=args.debug,
+    )
     if not args.raw:
         print("Connecting...")
     return mug
 
 
-async def find_device(args: Namespace) -> BLEDevice:
+async def find_device(args: Namespace) -> tuple[BLEDevice, AdvertisementData]:
     """Find a single device that has already been paired."""
     try:
-        device = await find_mug(mac=args.mac, adapter=args.adapter)
+        device, advertisement = await find_mug(mac=args.mac, adapter=args.adapter)
     except BleakError as e:
         print(f"An error occurred trying to find a mug: {e}")
         sys.exit(1)
-    if not device:
+    if not device or not advertisement:
         print("No mug was found.")
         sys.exit(1)
     if not args.raw:
         print("Found mug:", device)
-    return device
+    return device, advertisement
 
 
-async def discover(args: Namespace) -> list[BLEDevice]:
+async def discover(args: Namespace) -> list[tuple[BLEDevice, AdvertisementData]]:
     """Discover new devices in pairing mode."""
     try:
         mugs = await discover_mugs(mac=args.mac)
@@ -62,11 +69,16 @@ async def discover(args: Namespace) -> list[BLEDevice]:
         print('No mugs were found. Be sure it is in pairing mode. Or use "find" if already paired.')
         sys.exit(1)
 
-    for mug in mugs:
+    for mug, advertisement in mugs:
         if args.raw:
             print(mug.address)
         else:
+            model_info = get_model_info_from_advertiser_data(advertisement)
             print("Found mug:", mug)
+            print("Name:", model_info.name)
+            print("Model:", model_info.model.value if model_info.model else "Unknown")
+            print("Colour:", model_info.colour.value if model_info.colour else "Unknown")
+            print("Capacity:", format_capacity(model_info.capacity))
     return mugs
 
 

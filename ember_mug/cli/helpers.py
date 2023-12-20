@@ -58,7 +58,7 @@ def print_table(data: list[tuple[str, ...]]) -> None:
 
 def print_info(mug: EmberMug) -> None:
     """Print all mug data."""
-    print("Mug Data")
+    print("Device Data")
     print_table(list(mug.data.formatted.items()))
 
 

@@ -20,8 +20,9 @@ classifiers=[
     'Programming Language :: Python :: 3.12',
 ]
 dependencies = [
-    "bleak-retry-connector>=3.1.1",
-    "bleak>=0.20.2",
+    "bleak-retry-connector>=3.1.2",
+    "bleak>=0.21.0",
+    "async-timeout; python_version < '3.11'",
 ]
 
 [project.optional-dependencies]
@@ -29,7 +30,6 @@ test = [
   "pytest>=7.2.1",
   "pytest-cov",
   "pytest-asyncio",
-  "aiohttp==3.9.1",
 ]
 docs = [
   "mkdocs>=1.1.21",
@@ -59,6 +59,10 @@ build-backend = "hatchling.build"
 path = "ember_mug/__init__.py"
 
 [tool.hatch.build.targets.sdist]
+packages = ["ember_mug", "tests"]
+exclude = [".gitignore"]
+
+[tool.hatch.build.targets.wheel]
 packages = ["ember_mug", "tests"]
 exclude = [".gitignore"]
 

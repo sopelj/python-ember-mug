@@ -10,16 +10,16 @@ from bleak import BleakError
 from bleak.backends.device import BLEDevice
 
 from ember_mug.consts import (
-    EMBER_MUG,
-    EXTRA_ATTRS,
+    DEFAULT_NAME,
     INITIAL_ATTRS,
     UPDATE_ATTRS,
     MugCharacteristic,
     TemperatureUnit,
     VolumeLevel,
 )
-from ember_mug.data import Colour, Model
+from ember_mug.data import Colour, ModelInfo
 from ember_mug.mug import EmberMug
+from .conftest import TEST_MUG_BLUETOOTH_NAME
 
 if TYPE_CHECKING:
 
@@ -29,14 +29,14 @@ if TYPE_CHECKING:
 
 @patch("ember_mug.mug.IS_LINUX", True)
 async def test_adapter_with_bluez(ble_device: BLEDevice):
-    mug = EmberMug(ble_device, adapter="hci0")
+    mug = EmberMug(ble_device, ModelInfo(ble_device.name or DEFAULT_NAME), adapter="hci0")
     assert mug._client_kwargs["adapter"] == "hci0"
 
 
 @patch("ember_mug.mug.IS_LINUX", False)
 async def test_adapter_without_bluez(ble_device: BLEDevice):
     with pytest.raises(ValueError):
-        EmberMug(ble_device, adapter="hci0")
+        EmberMug(ble_device, ModelInfo(ble_device.name or DEFAULT_NAME), adapter="hci0")
 
 
 @patch("ember_mug.mug.EmberMug.subscribe")
@@ -435,17 +435,9 @@ async def test_read_firmware(ember_mug: MockMug) -> None:
 
 
 async def test_mug_update_initial(ember_mug: MockMug) -> None:
-    no_extra = INITIAL_ATTRS - EXTRA_ATTRS
-
     mock_update = AsyncMock(return_value={})
     with patch.multiple(ember_mug, _ensure_connection=AsyncMock(), _update_multiple=mock_update):
-        ember_mug.data.model = Model(EMBER_MUG, include_extra=False)
-        assert (await ember_mug.update_initial()) == {}
-        mock_update.assert_called_once_with(no_extra)
-
-        # Try with extra
-        mock_update.reset_mock()
-        ember_mug.data.model = Model(EMBER_MUG, include_extra=True)
+        ember_mug.data.model_info = ModelInfo(TEST_MUG_BLUETOOTH_NAME)
         assert (await ember_mug.update_initial()) == {}
         mock_update.assert_called_once_with(INITIAL_ATTRS)
 
@@ -453,11 +445,6 @@ async def test_mug_update_initial(ember_mug: MockMug) -> None:
 async def test_mug_update_all(ember_mug: MockMug) -> None:
     mock_update = AsyncMock(return_value={})
     with patch.multiple(ember_mug, _ensure_connection=AsyncMock(), _update_multiple=mock_update):
-        assert (await ember_mug.update_all()) == {}
-        mock_update.assert_called_once_with(UPDATE_ATTRS - EXTRA_ATTRS)
-
-        # Try with extras
-        mock_update.reset_mock()
         assert (await ember_mug.update_all()) == {}
         mock_update.assert_called_once_with(UPDATE_ATTRS)
 

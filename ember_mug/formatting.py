@@ -13,6 +13,17 @@ def format_temp(temp: float, metric: bool = True) -> str:
     return f"{temp:.2f}°{unit}"
 
 
+def format_capacity(capacity: int | None, metric: bool = True) -> str:
+    """Format capacity for display."""
+    if capacity is None:
+        return "Unknown"
+    if metric is False:
+        # Convert to fahrenheit
+        capacity = round(capacity * 0.033814)
+        return f"{capacity}oz"
+    return f"{capacity}ml"
+
+
 def format_led_colour(led_colour: Colour) -> str:
     """Return colour as hex value."""
     return led_colour.as_hex()

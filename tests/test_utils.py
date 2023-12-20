@@ -34,6 +34,10 @@ def test_encode_byte_string() -> None:
     assert encode_byte_string("abcd12345") == b"YWJjZDEyMzQ1"
 
 
+def test_get_model_info_from_advertisement_data():
+    pass
+
+
 @patch("ember_mug.utils.logger")
 async def test_discover_services(read_gatt_descriptor: Mock) -> None:
     mock_descriptor = MagicMock(uuid="test-desc", handle=2)

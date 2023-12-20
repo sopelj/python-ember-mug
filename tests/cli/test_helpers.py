@@ -55,13 +55,14 @@ def test_print_table(ember_mug: EmberMug, capsys: CaptureFixture) -> None:
 
 
 def test_print_info(ember_mug: EmberMug, capsys: CaptureFixture) -> None:
+    ember_mug.debug = False
     print_info(ember_mug)
     captured = capsys.readouterr()
     assert captured.out == dedent(
         """\
-        Mug Data
+        Device Data
         +--------------+---------+
-        | Mug Name     |         |
+        | Device Name  |         |
         +--------------+---------+
         | Meta         | None    |
         +--------------+---------+

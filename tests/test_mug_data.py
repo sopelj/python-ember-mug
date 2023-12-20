@@ -3,8 +3,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from ember_mug.consts import EMBER_MUG, LiquidState, TemperatureUnit
-from ember_mug.data import BatteryInfo, Change, Colour, Model, MugData, MugFirmwareInfo, MugMeta
+from ember_mug.consts import LiquidState, TemperatureUnit, DeviceModel
+from ember_mug.data import BatteryInfo, Change, Colour, ModelInfo, MugData, MugFirmwareInfo, MugMeta
+from .conftest import TEST_MUG_BLUETOOTH_NAME
 
 
 def test_mug_formatting(mug_data: MugData) -> None:
@@ -28,7 +29,8 @@ def test_mug_formatting(mug_data: MugData) -> None:
         battery_voltage=0.1,
     )
     assert mug_data.meta_display == "Serial Number: ABCDEF"
-    mug_data.model = Model(EMBER_MUG, include_extra=True)
+    mug_data.model_info = ModelInfo(TEST_MUG_BLUETOOTH_NAME, DeviceModel.MUG_2_14_OZ)
+    mug_data.debug = True
     assert mug_data.meta_display == "Mug ID: A, Serial Number: ABCDEF"
     assert mug_data.led_colour_display == "#f400a1"
     assert mug_data.liquid_state_display == "Heating"
@@ -36,9 +38,9 @@ def test_mug_formatting(mug_data: MugData) -> None:
     assert mug_data.current_temp_display == "25.00°C"
     assert mug_data.target_temp_display == "55.00°C"
     basic_info: dict[str, Any] = {
-        "Mug Name": "Mug Name",
         "Meta": "Serial Number: ABCDEF",
         "Battery": battery,
+        "Device Name": "Mug Name",
         "Firmware": firmware,
         "LED Colour": "#f400a1",
         "Liquid State": "Heating",
@@ -47,14 +49,19 @@ def test_mug_formatting(mug_data: MugData) -> None:
         "Target Temp": "55.00°C",
         "Use Metric": True,
     }
-    assert mug_data.formatted == {
-        **basic_info,
-        "Meta": "Mug ID: A, Serial Number: ABCDEF",
-        "DSK": "dsk",
-        "UDSK": "udsk",
-        "Date Time + Time Zone": None,
-    }
-    mug_data.model = Model(EMBER_MUG, include_extra=False)
+    assert mug_data.formatted == dict(
+        sorted(
+            {
+                **basic_info,
+                "Meta": "Mug ID: A, Serial Number: ABCDEF",
+                "DSK": "dsk",
+                "UDSK": "udsk",
+                "Date Time + Time Zone": None,
+            }.items(),
+        ),
+    )
+    mug_data.model_info = ModelInfo(TEST_MUG_BLUETOOTH_NAME, DeviceModel.MUG_2_10_OZ)
+    mug_data.debug = False
     assert mug_data.formatted == basic_info
 
 
@@ -76,8 +83,9 @@ def test_update_info(mug_data: MugData) -> None:
 def test_mug_dict(mug_data: MugData) -> None:
     mug_data.update_info(meta=MugMeta("test_id", "serial number"))
     assert mug_data.as_dict() == {
-        "model": {"include_extra": False, "name": "Ember Ceramic Mug"},
+        "model_info": {'colour': None, 'model': None, 'name': 'Ember Ceramic Mug'},
         "use_metric": True,
+        "debug": False,
         "battery": None,
         "battery_voltage": None,
         "current_temp": 0.0,

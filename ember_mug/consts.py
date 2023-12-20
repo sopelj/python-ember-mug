@@ -8,25 +8,49 @@ from functools import cached_property
 from typing import Literal
 from uuid import UUID
 
-# Bluetooth names of Ember devices
-EMBER_MUG = "Ember Ceramic Mug"
-EMBER_CUP = "Ember Cup"
-EMBER_CUP_2 = "Ember Cup 2"
-EMBER_TRAVEL_MUG_SHORT = "Ember Travel M"
-EMBER_TRAVEL_MUG = "Ember Travel Mug"
-EMBER_TRAVEL_MUG_2 = "Ember Travel Mug 2"
-
-EMBER_BLUETOOTH_NAMES: tuple[str, ...] = (
-    EMBER_MUG,
-    EMBER_CUP,
-    EMBER_CUP_2,
-    EMBER_TRAVEL_MUG,
-    EMBER_TRAVEL_MUG_SHORT,
-    EMBER_TRAVEL_MUG_2,
-)
-
 # Format for all the mug's Bluetooth UUIDs
 UUID_TEMPLATE = "fc54{:0>4x}-236c-4c94-8fa9-944a3e5353fa"
+
+# Registered SIG for BLE Manufacturer Data
+EMBER_BLE_SIG = 0x03C1
+DEFAULT_NAME = "Ember Device"
+
+
+class DeviceType(str, Enum):
+    """Base device types."""
+
+    CUP = "cup"
+    MUG = "mug"
+    TRAVEL_MUG = "travel_mug"
+    TUMBLER = "tumbler"
+
+
+class DeviceModel(str, Enum):
+    """Know device models."""
+
+    CUP_6_OZ = "CM21S"
+    MUG_1_10_OZ = "CM17"
+    MUG_1_14_OZ = "CM17P"
+    MUG_2_10_OZ = "CM19"  # or CM21M?
+    MUG_2_14_OZ = "CM19P"  # or CM21L?
+    TRAVEL_MUG_12_OZ = "TM19"
+    TUMBLER_16_OZ = "CM21XL"
+
+
+class DeviceColour(str, Enum):
+    """All colours possible found across models."""
+
+    SAGE_GREEN = "Sage Green"
+    SANDSTONE = "Sandstone"
+    BLACK = "Black"
+    WHITE = "White"
+    GREY = "Grey"
+    BLUE = "Blue"
+    RED = "Red"
+    COPPER = "Copper"
+    GOLD = "Gold"
+    STAINLESS_STEEL = "Stainless Steel"
+    ROSE_GOLD = "Rose Gold"
 
 
 class TemperatureUnit(str, Enum):
@@ -80,8 +104,9 @@ class MugCharacteristic(IntEnum):
     # RGBA Colour of LED (Read/Write)
     LED = 20
     # Service
-    TRAVEL_MUG_SERVICE = 13857
     STANDARD_SERVICE = 13858
+    TRAVEL_MUG_SERVICE = 13857
+    TRAVEL_MUG_SERVICE_OTHER = 8609
 
     @cached_property
     def uuid(self) -> UUID:
@@ -91,6 +116,17 @@ class MugCharacteristic(IntEnum):
     def __str__(self) -> str:
         """Convert UUID to string value."""
         return str(self.uuid)
+
+
+TRAVEL_MUG_SERVICE_UUIDS = (
+    str(MugCharacteristic.TRAVEL_MUG_SERVICE),
+    str(MugCharacteristic.TRAVEL_MUG_SERVICE_OTHER),
+)
+
+DEVICE_SERVICE_UUIDS = (
+    str(MugCharacteristic.STANDARD_SERVICE),
+    *TRAVEL_MUG_SERVICE_UUIDS,
+)
 
 
 class LiquidState(IntEnum):
@@ -168,7 +204,7 @@ PUSH_EVENT_BATTERY_IDS = [
 
 # Labels for formatting attributes
 ATTR_LABELS = {
-    "name": "Mug Name",
+    "name": "Device Name",
     "meta": "Meta",
     "battery": "Battery",
     "firmware": "Firmware",
@@ -203,7 +239,7 @@ UPDATE_ATTRS = {
     "liquid_level",
     "liquid_state",
 }
-EXTRA_ATTRS = {"dsk", "udsk", "battery_voltage", "date_time_zone"}
+EXTRA_ATTRS = {"battery_voltage", "date_time_zone", "udsk", "dsk"}
 
 # Validation
 MUG_NAME_REGEX = re.compile(r"^[A-Za-z0-9,.\[\]#()!\"\';:|\-_+<>%= ]{1,16}$")

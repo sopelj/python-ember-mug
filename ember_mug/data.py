@@ -7,12 +7,12 @@ from typing import TYPE_CHECKING, Any, NamedTuple
 
 from .consts import (
     ATTR_LABELS,
-    EMBER_CUP,
-    EMBER_TRAVEL_MUG,
-    EMBER_TRAVEL_MUG_SHORT,
     EXTRA_ATTRS,
     INITIAL_ATTRS,
     UPDATE_ATTRS,
+    DeviceColour,
+    DeviceModel,
+    DeviceType,
     LiquidState,
     TemperatureUnit,
     VolumeLevel,
@@ -105,68 +105,49 @@ class MugFirmwareInfo:
         )
 
 
-@dataclass(init=False)
-class Model:
+@dataclass
+class ModelInfo:
     """Model name and attributes based on mode."""
 
     name: str
-    include_extra: bool = False
-
-    def __init__(self, name: str, include_extra: bool = False) -> None:
-        """Override init to set long name for travel mug."""
-        if name == EMBER_TRAVEL_MUG_SHORT:
-            # Replace with full name for aesthetics
-            name = EMBER_TRAVEL_MUG
-        self.name = name
-        self.include_extra = include_extra
+    model: DeviceModel | None = None
+    colour: DeviceColour | None = None
 
     @cached_property
-    def is_cup(self) -> bool:
-        """Check if the model is a Cup."""
-        return self.name.startswith(EMBER_CUP)
+    def capacity(self) -> int | None:
+        """Determine capacity in mL based on model number."""
+        if self.model == DeviceModel.CUP_6_OZ:
+            return 178  # ml - 6oz
+        if self.model in (DeviceModel.MUG_1_10_OZ, DeviceModel.MUG_2_10_OZ):
+            return 295  # ml - 10oz
+        if self.model == DeviceModel.TRAVEL_MUG_12_OZ:
+            return 355  # ml - 12oz
+        if self.model in (DeviceModel.MUG_1_14_OZ, DeviceModel.MUG_2_14_OZ):
+            return 414  # ml - 14oz
+        if self.model == DeviceModel.TUMBLER_16_OZ:
+            return 473  # ml - 16oz
+        return None
 
     @cached_property
-    def is_travel_mug(self) -> bool:
-        """Check if the model is a Travel mug."""
-        return self.name.startswith(EMBER_TRAVEL_MUG_SHORT)
-
-    @cached_property
-    def type(self) -> str:  # noqa: A003
-        """Model type as short string."""
-        if self.is_cup:
-            return "cup"
-        if self.is_travel_mug:
-            return "travel_mug"
-        return "mug"
-
-    @cached_property
-    def attribute_labels(self) -> dict[str, str]:
-        """Calculated labels for includes attributes."""
-        all_attrs = self.initial_attributes | self.update_attributes | {"use_metric"}
-        return {attr: label for attr, label in ATTR_LABELS.items() if attr in all_attrs}
-
-    @cached_property
-    def initial_attributes(self) -> set[str]:
-        """Initial attributes based on model and extra."""
-        if self.include_extra is False:
-            return INITIAL_ATTRS - EXTRA_ATTRS
-        return INITIAL_ATTRS
-
-    @cached_property
-    def all_attributes(self) -> set[str]:
-        """All attributes."""
-        return self.initial_attributes | self.update_attributes
+    def device_type(self) -> DeviceType:
+        """Basic device type from model number."""
+        if self.model == DeviceModel.TRAVEL_MUG_12_OZ:
+            return DeviceType.TRAVEL_MUG
+        if self.model == DeviceModel.TUMBLER_16_OZ:
+            return DeviceType.TUMBLER
+        if self.model == DeviceModel.CUP_6_OZ:
+            return DeviceType.CUP
+        # This could be an unknown device, but fallback to mug
+        return DeviceType.MUG
 
     @cached_property
     def update_attributes(self) -> set[str]:
         """Attributes to update based on model and extra."""
         attributes = UPDATE_ATTRS
-        if self.include_extra is False:
-            attributes = attributes - EXTRA_ATTRS
-        if self.is_cup:
-            # The Cup cannot be named
+        if not self.model or self.device_type in (DeviceType.CUP, DeviceType.TUMBLER):
+            # The Cup and Tumbler cannot be named
             attributes = attributes - {"name"}
-        elif self.is_travel_mug:
+        elif not self.model or self.device_type == DeviceType.TRAVEL_MUG:
             # Tge Travel Mug does not have an LED colour, but has a volume attribute
             attributes = (attributes - {"led_colour"}) | {"volume_level"}
         return attributes
@@ -176,7 +157,7 @@ class Model:
 class MugMeta:
     """Meta data for mug."""
 
-    mug_id: str
+    mug_id: str  # unsure if this value is properly decoded
     serial_number: str
 
     @classmethod
@@ -197,8 +178,9 @@ class MugData:
     """Class to store/display the state of the mug."""
 
     # Options
-    model: Model
+    model_info: ModelInfo
     use_metric: bool = True
+    debug: bool = False
 
     # Attributes
     name: str = ""
@@ -220,7 +202,7 @@ class MugData:
     @property
     def meta_display(self) -> str:
         """Return Meta infor based on preference."""
-        if self.meta and not self.model.include_extra:
+        if self.meta and not self.debug:
             return f"Serial Number: {self.meta.serial_number}"
         return str(self.meta)
 
@@ -274,15 +256,21 @@ class MugData:
     @property
     def formatted(self) -> dict[str, Any]:
         """Return human-readable names and values for all attributes for display."""
-        return {label: self.get_formatted_attr(attr) for attr, label in self.model.attribute_labels.items()}
+        all_attrs = INITIAL_ATTRS | self.model_info.update_attributes | {"use_metric"}
+        if not self.debug:
+            all_attrs -= EXTRA_ATTRS
+        return {label: self.get_formatted_attr(attr) for attr, label in ATTR_LABELS.items() if attr in all_attrs}
 
     def as_dict(self) -> dict[str, Any]:
         """Dump all attributes as dict for info/debugging."""
         data = {k: asdict(v) if is_dataclass(v) else v for k, v in asdict(self).items()}
+        all_attrs = self.model_info.update_attributes | INITIAL_ATTRS
+        if not self.debug:
+            all_attrs -= EXTRA_ATTRS
         data.update(
             {
                 f"{attr}_display": getattr(self, f"{attr}_display", None)
-                for attr in self.model.all_attributes
+                for attr in all_attrs
                 if hasattr(self, f"{attr}_display")
             },
         )

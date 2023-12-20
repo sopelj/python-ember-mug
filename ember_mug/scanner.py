@@ -2,19 +2,27 @@
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import logging
+import sys
 from typing import TYPE_CHECKING, Any
 
 from bleak import BleakScanner
 
-from .consts import EMBER_BLUETOOTH_NAMES, IS_LINUX, MugCharacteristic
+from .consts import DEVICE_SERVICE_UUIDS, IS_LINUX
+
+if sys.version_info < (3, 11):
+    # library required before Python 3.11
+    import async_timeout
+else:
+    async_timeout = asyncio
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
-
     from bleak.backends.device import BLEDevice
     from bleak.backends.scanner import AdvertisementData
 
+
+DEFAULT_TIMEOUT = 30
 
 logger = logging.getLogger(__name__)
 
@@ -24,37 +32,37 @@ def build_scanner_kwargs(adapter: str | None = None) -> dict[str, Any]:
     if adapter and IS_LINUX is not True:
         msg = "The adapter option is only valid for the Linux BlueZ Backend."
         raise ValueError(msg)
-    return {"adapter": adapter} if adapter else {}
+    kwargs = {"service_uuids": DEVICE_SERVICE_UUIDS}
+    return kwargs | {"adapter": adapter} if adapter else kwargs
 
 
-async def discover_mugs(mac: str | None = None, adapter: str | None = None, wait: int = 5) -> list[BLEDevice]:
+async def discover_mugs(
+    mac: str | None = None,
+    adapter: str | None = None,
+    wait: int = 5,
+) -> list[tuple[BLEDevice, AdvertisementData]]:
     """Discover new mugs in pairing mode."""
-    scanner_kwargs = build_scanner_kwargs(adapter)
-    service_uuids = [str(uuid) for uuid in (MugCharacteristic.STANDARD_SERVICE, MugCharacteristic.TRAVEL_MUG_SERVICE)]
-    async with BleakScanner(service_uuids=service_uuids, **scanner_kwargs) as scanner:
+    async with BleakScanner(**build_scanner_kwargs(adapter)) as scanner:
         await asyncio.sleep(wait)
-        if mac:
-            mac = mac.lower()
-            return [d for d in scanner.discovered_devices if d.address.lower() == mac]
-        return scanner.discovered_devices
+        return [
+            (d, a)
+            for (d, a) in scanner.discovered_devices_and_advertisement_data
+            if mac is None or d.address.lower() == mac.lower()
+        ]
 
 
-def build_find_filter(mac: str | None = None) -> Callable:
-    """Create a filter for finding the mug by name and or mac address."""
-    known_names = [n.lower() for n in EMBER_BLUETOOTH_NAMES]
-
-    def mug_filter(device: BLEDevice, advertisement: AdvertisementData) -> bool:
-        """Filter by mac if specified else just check the name."""
-        if mac is not None and device.address.lower() != mac:
-            return False
-        return bool(device.name and device.name.lower() in known_names)
-
-    return mug_filter
-
-
-async def find_mug(mac: str | None = None, adapter: str | None = None) -> BLEDevice | None:
+async def find_mug(
+    mac: str | None = None,
+    adapter: str | None = None,
+    timeout: int = DEFAULT_TIMEOUT,
+) -> tuple[BLEDevice, AdvertisementData] | tuple[None, None]:
     """Find a mug."""
     if mac is not None:
         mac = mac.lower()
-    scanner_kwargs = build_scanner_kwargs(adapter)
-    return await BleakScanner.find_device_by_filter(build_find_filter(mac), **scanner_kwargs)
+    async with BleakScanner(**build_scanner_kwargs(adapter)) as scanner:
+        with contextlib.suppress(asyncio.TimeoutError):
+            async with async_timeout.timeout(timeout):
+                async for device, advertisement in scanner.advertisement_data():
+                    if (not mac and device.name.startswith("Ember")) or (mac and device.address.lower() == mac):
+                        return device, advertisement
+    return None, None

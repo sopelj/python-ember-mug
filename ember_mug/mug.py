@@ -14,16 +14,18 @@ from bleak import BleakClient, BleakError
 from bleak_retry_connector import establish_connection
 
 from .consts import (
+    INITIAL_ATTRS,
     IS_LINUX,
     MUG_NAME_REGEX,
     PUSH_EVENT_BATTERY_IDS,
+    DeviceType,
     LiquidState,
     MugCharacteristic,
     PushEvent,
     TemperatureUnit,
     VolumeLevel,
 )
-from .data import BatteryInfo, Change, Colour, Model, MugData, MugFirmwareInfo, MugMeta
+from .data import BatteryInfo, Change, Colour, ModelInfo, MugData, MugFirmwareInfo, MugMeta
 from .utils import (
     bytes_to_big_int,
     bytes_to_little_int,
@@ -51,17 +53,14 @@ class EmberMug:
     def __init__(
         self,
         ble_device: BLEDevice,
-        include_extra: bool = False,
+        model_info: ModelInfo,
         use_metric: bool = True,
         debug: bool = False,
         **kwargs: Any,
     ) -> None:
         """Initialize connection manager."""
         self.device = ble_device
-        self.data = MugData(
-            Model(ble_device.name or "EMBER", include_extra),
-            use_metric=use_metric,
-        )
+        self.data = MugData(model_info, use_metric=use_metric, debug=debug)
 
         self.debug = debug
         self._connect_lock = asyncio.Lock()
@@ -74,8 +73,9 @@ class EmberMug:
         self._client_kwargs: dict[str, str] = {}
 
         # Just shortcuts, the value doesn't change once initialized
-        self.is_travel_mug = self.data.model.is_travel_mug
-        self.is_cup = self.data.model.is_cup
+        self.is_tumbler = self.data.model_info.device_type == DeviceType.TUMBLER
+        self.is_travel_mug = self.data.model_info.device_type == DeviceType.TRAVEL_MUG
+        self.is_cup = self.data.model_info.device_type == DeviceType.CUP
 
         logger.debug("New mug connection initialized.")
         self.set_client_options(**kwargs)
@@ -88,7 +88,7 @@ class EmberMug:
     @cached_property
     def model_name(self) -> str:
         """Shortcut to model name."""
-        return self.data.model.name
+        return self.data.model_info.name
 
     async def _ensure_connection(self) -> None:
         """Connect to mug."""
@@ -306,7 +306,7 @@ class EmberMug:
             return decode_byte_string(data)
         except (BleakError, ValueError) as e:
             logger.debug("Unable to read UDSK: %s", e)
-        return ""
+        return None
 
     async def set_udsk(self, udsk: str) -> None:
         """Attempt to write udsk."""
@@ -358,11 +358,11 @@ class EmberMug:
 
     async def update_initial(self) -> list[Change]:
         """Update attributes that don't normally change and don't need to be regularly updated."""
-        return await self._update_multiple(self.data.model.initial_attributes)
+        return await self._update_multiple(INITIAL_ATTRS)
 
     async def update_all(self) -> list[Change]:
         """Update all standard attributes."""
-        return await self._update_multiple(self.data.model.update_attributes)
+        return await self._update_multiple(self.data.model_info.update_attributes)
 
     async def _update_multiple(self, attrs: set[str]) -> list[Change]:
         """Update a list of attributes from the mug."""

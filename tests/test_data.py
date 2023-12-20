@@ -1,8 +1,9 @@
 """Tests for `ember_mug.data`."""
 from __future__ import annotations
 
-from ember_mug.consts import EMBER_CUP, EMBER_MUG, EMBER_TRAVEL_MUG, EMBER_TRAVEL_MUG_2
-from ember_mug.data import BatteryInfo, Change, Colour, Model, MugFirmwareInfo, MugMeta
+from ember_mug.consts import DeviceType, DeviceModel
+from ember_mug.data import BatteryInfo, Change, Colour, ModelInfo, MugFirmwareInfo, MugMeta
+from .conftest import TEST_MUG_BLUETOOTH_NAME
 
 
 def test_change() -> None:
@@ -45,31 +46,33 @@ def test_mug_meta() -> None:
 
 
 def test_mug_model() -> None:
-    mug = Model(EMBER_MUG)
-    assert mug.is_travel_mug is False
-    assert mug.is_travel_mug is False
-    assert "udsk" not in mug.initial_attributes
+    mug = ModelInfo(TEST_MUG_BLUETOOTH_NAME, DeviceModel.MUG_2_10_OZ)
+    assert mug.device_type == DeviceType.MUG
     assert "name" in mug.update_attributes
-    assert "name" in mug.attribute_labels
-    assert "battery_voltage" not in mug.update_attributes
-    mug_with_extra = Model(EMBER_MUG, include_extra=True)
-    assert "udsk" in mug_with_extra.initial_attributes
+    assert "name" in mug.update_attributes
     assert "battery_voltage" not in mug.update_attributes
 
-    travel_mug = Model(EMBER_TRAVEL_MUG_2)
-    assert travel_mug.is_travel_mug is True
-    assert travel_mug.is_cup is False
-
-    travel_mug = Model(EMBER_TRAVEL_MUG)
-    assert travel_mug.is_travel_mug is True
-    assert travel_mug.is_cup is False
+    travel_mug = ModelInfo(TEST_MUG_BLUETOOTH_NAME, DeviceModel.TRAVEL_MUG_12_OZ)
+    assert travel_mug.device_type == DeviceType.TRAVEL_MUG
     assert "name" in travel_mug.update_attributes
-    assert "name" in travel_mug.attribute_labels
-    assert "volume_level" in travel_mug.attribute_labels
+    assert "name" in travel_mug.update_attributes
+    assert "volume_level" in travel_mug.update_attributes
 
-    cup = Model(EMBER_CUP)
-    assert cup.is_cup is True
-    assert cup.is_travel_mug is False
+    tumbler = ModelInfo(TEST_MUG_BLUETOOTH_NAME, DeviceModel.TUMBLER_16_OZ)
+    assert tumbler.device_type == DeviceType.TUMBLER
+    assert "name" not in tumbler.update_attributes
+    assert "name" not in tumbler.update_attributes
+    assert "volume_level" not in tumbler.update_attributes
+
+    cup = ModelInfo(TEST_MUG_BLUETOOTH_NAME, DeviceModel.CUP_6_OZ)
+    assert cup.device_type == DeviceType.CUP
     assert "name" not in cup.update_attributes
-    assert "name" not in cup.attribute_labels
+    assert "name" not in cup.update_attributes
     assert "volume_level" not in cup.update_attributes
+
+    unknown = ModelInfo(TEST_MUG_BLUETOOTH_NAME)
+    assert unknown.model is None
+    assert unknown.device_type == DeviceType.MUG  # fallback value
+    assert "name" not in unknown.update_attributes
+    assert "volume_level" not in unknown.update_attributes
+    assert "battery_voltage" not in unknown.update_attributes

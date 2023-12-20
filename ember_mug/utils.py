@@ -7,10 +7,14 @@ import logging
 import re
 from typing import TYPE_CHECKING, Any
 
-from bleak import BleakError
+from bleak import AdvertisementData, BleakError
+
+from ember_mug.consts import EMBER_BLE_SIG, TRAVEL_MUG_SERVICE_UUIDS, DeviceColour, DeviceModel
 
 if TYPE_CHECKING:
     from bleak import BleakClient
+
+    from ember_mug.data import ModelInfo
 
 logger = logging.getLogger(__name__)
 
@@ -36,9 +40,9 @@ def bytes_to_little_int(data: bytearray | bytes) -> int:
     return int.from_bytes(data, byteorder="little", signed=False)
 
 
-def bytes_to_big_int(data: bytearray | bytes) -> int:
+def bytes_to_big_int(data: bytearray | bytes, signed: bool = False) -> int:
     """Convert bytes to big int."""
-    return int.from_bytes(data, byteorder="big")
+    return int.from_bytes(data, byteorder="big", signed=signed)
 
 
 def temp_from_bytes(temp_bytes: bytearray, metric: bool = True) -> float:
@@ -48,6 +52,85 @@ def temp_from_bytes(temp_bytes: bytearray, metric: bool = True) -> float:
         # Convert to fahrenheit
         temp = (temp * 9 / 5) + 32
     return round(temp, 2)
+
+
+def get_colour_from_int(colour_id: int) -> DeviceColour | None:
+    """Extrapolate device colour from integer in advertiser data."""
+    if colour_id in (-127, -63, 1, 14, 65):
+        return DeviceColour.BLACK
+    if colour_id in (-126, -62, 2):
+        return DeviceColour.WHITE
+    if colour_id in (8, 11, -56, -63, -120, -117, -53):
+        return DeviceColour.RED
+    if colour_id in (-131, -125, -61, 3, 83):
+        return DeviceColour.COPPER
+    if colour_id in (-124, -60):
+        return DeviceColour.ROSE_GOLD
+    return {
+        -51: DeviceColour.SANDSTONE,
+        -52: DeviceColour.SAGE_GREEN,
+        -55: DeviceColour.GREY,
+        -57: DeviceColour.BLUE,
+        -122: DeviceColour.GOLD,
+        -123: DeviceColour.STAINLESS_STEEL,
+    }.get(colour_id)
+
+
+def get_model_from_single_int(model_id: int) -> DeviceModel | None:
+    """Extrapolate device model from integer in advertiser data."""
+    if model_id in (1, 2, 3):
+        return DeviceModel.MUG_1_10_OZ
+    if model_id == 65:
+        return DeviceModel.MUG_1_14_OZ
+    if model_id in (-63, -61, -62):
+        return DeviceModel.MUG_2_14_OZ
+    if model_id == -60:
+        return DeviceModel.CUP_6_OZ
+    if model_id in (-127, -126, -125, -124, -123, -122, -120, -117, -57, -56, -55, -53, -52, -51, 83, 131):
+        return DeviceModel.MUG_2_10_OZ
+    return None
+
+
+def get_model_from_id_and_gen(model_id: int, generation: int) -> DeviceModel | None:
+    """Extract model from identifier in advertiser data."""
+    if model_id == 1:
+        return DeviceModel.MUG_1_10_OZ if generation < 2 else DeviceModel.MUG_2_10_OZ
+    if model_id == 2:
+        return DeviceModel.MUG_1_14_OZ if generation < 2 else DeviceModel.MUG_2_14_OZ
+    if model_id == 3:
+        return DeviceModel.TRAVEL_MUG_12_OZ
+    if model_id == 8:
+        return DeviceModel.CUP_6_OZ
+    if model_id == 9:
+        return DeviceModel.TUMBLER_16_OZ
+    return None
+
+
+def get_model_info_from_advertiser_data(advertisement: AdvertisementData) -> ModelInfo:
+    """Extract model info from manufacturer data in advertiser data."""
+    from ember_mug.data import ModelInfo
+
+    name = advertisement.local_name or "Ember Device"
+    if set(TRAVEL_MUG_SERVICE_UUIDS).intersection(advertisement.service_uuids):
+        # Shortcut since only Travel Mugs should have this Service UUID
+        return ModelInfo(name, DeviceModel.TRAVEL_MUG_12_OZ, DeviceColour.BLACK)
+
+    model_data = advertisement.manufacturer_data.get(EMBER_BLE_SIG, None)
+    if model_data:
+        if len(model_data) < 4:
+            model_id = bytes_to_big_int(model_data, signed=True)
+            return ModelInfo(
+                name,
+                get_model_from_single_int(model_id),
+                get_colour_from_int(model_id),
+            )
+        model_id, generation, colour_id = model_data[1:4]
+        return ModelInfo(
+            name,
+            get_model_from_id_and_gen(model_id, generation),
+            get_colour_from_int(colour_id),
+        )
+    return ModelInfo(name)
 
 
 async def discover_services(client: BleakClient) -> dict[str, Any]:
