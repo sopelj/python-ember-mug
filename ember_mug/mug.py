@@ -88,7 +88,7 @@ class EmberMug:
     @cached_property
     def model_name(self) -> str | None:
         """Shortcut to model name."""
-        return self.data.model_info.name
+        return self.data.model_info.model
 
     async def _ensure_connection(self) -> None:
         """Connect to mug."""

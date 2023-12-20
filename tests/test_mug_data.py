@@ -88,7 +88,6 @@ def test_mug_dict(mug_data: MugData) -> None:
             'colour': None,
             'device_type': DeviceType.MUG,
             'model': None,
-            'name': None,
         },
         "use_metric": True,
         "debug": False,

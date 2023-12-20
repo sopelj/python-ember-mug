@@ -111,7 +111,6 @@ class BaseModelInfo:
 
     model: DeviceModel | None = None
     colour: DeviceColour | None = None
-    name: str | None = field(init=False)
     capacity: int | None = field(init=False)
     device_type: DeviceType = field(init=False)
 
@@ -119,11 +118,6 @@ class BaseModelInfo:
 @dataclass
 class ModelInfo(BaseModelInfo):
     """Model name and attributes based on mode."""
-
-    @cached_property  # type: ignore[misc]
-    def name(self) -> str | None:  # type: ignore[override]
-        """Return model name. Perhaps description in future."""
-        return self.model.value if self.model else None
 
     @cached_property  # type: ignore[misc]
     def capacity(self) -> int | None:  # type: ignore[override]
