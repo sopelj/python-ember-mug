@@ -29,14 +29,14 @@ if TYPE_CHECKING:
 
 @patch("ember_mug.mug.IS_LINUX", True)
 async def test_adapter_with_bluez(ble_device: BLEDevice):
-    mug = EmberMug(ble_device, ModelInfo(ble_device.name or DEFAULT_NAME), adapter="hci0")
+    mug = EmberMug(ble_device, ModelInfo(), adapter="hci0")
     assert mug._client_kwargs["adapter"] == "hci0"
 
 
 @patch("ember_mug.mug.IS_LINUX", False)
 async def test_adapter_without_bluez(ble_device: BLEDevice):
     with pytest.raises(ValueError):
-        EmberMug(ble_device, ModelInfo(ble_device.name or DEFAULT_NAME), adapter="hci0")
+        EmberMug(ble_device, ModelInfo(), adapter="hci0")
 
 
 @patch("ember_mug.mug.EmberMug.subscribe")
@@ -437,7 +437,7 @@ async def test_read_firmware(ember_mug: MockMug) -> None:
 async def test_mug_update_initial(ember_mug: MockMug) -> None:
     mock_update = AsyncMock(return_value={})
     with patch.multiple(ember_mug, _ensure_connection=AsyncMock(), _update_multiple=mock_update):
-        ember_mug.data.model_info = ModelInfo(TEST_MUG_BLUETOOTH_NAME)
+        ember_mug.data.model_info = ModelInfo()
         assert (await ember_mug.update_initial()) == {}
         mock_update.assert_called_once_with(INITIAL_ATTRS)
 

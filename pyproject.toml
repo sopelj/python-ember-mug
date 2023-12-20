@@ -76,7 +76,7 @@ features = ["test"]
 python = ["3.10", "3.11", "3.12"]
 
 [tool.hatch.envs.test.scripts]
-cov = "pytest --asyncio-mode=auto --cov=ember_mug --cov-branch --cov-report=xml --cov-report=term-missing tests"
+cov = "pytest -vvv --asyncio-mode=auto --cov=ember_mug --cov-branch --cov-report=xml --cov-report=term-missing tests"
 no-cov = "cov --no-cov"
 
 [tool.hatch.envs.docs]

@@ -74,14 +74,14 @@ def ble_device_fixture() -> BLEDevice:
 
 @pytest.fixture()
 def mug_data(ble_device: BLEDevice) -> MugData:
-    return MugData(ModelInfo(ble_device.name or DEFAULT_NAME))
+    return MugData(ModelInfo())
 
 
 @pytest_asyncio.fixture
 async def ember_mug(ble_device: BLEDevice) -> AsyncGenerator[EmberMug | Mock, None]:
     mug = EmberMug(
         ble_device,
-        ModelInfo(ble_device.name or DEFAULT_NAME, DeviceModel.MUG_2_10_OZ, DeviceColour.BLACK),
+        ModelInfo(DeviceModel.MUG_2_10_OZ, DeviceColour.BLACK),
     )
     mug._client = AsyncMock()
     yield mug

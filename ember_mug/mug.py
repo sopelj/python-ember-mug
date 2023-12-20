@@ -86,7 +86,7 @@ class EmberMug:
         self.device = ble_device
 
     @cached_property
-    def model_name(self) -> str:
+    def model_name(self) -> str | None:
         """Shortcut to model name."""
         return self.data.model_info.name
 

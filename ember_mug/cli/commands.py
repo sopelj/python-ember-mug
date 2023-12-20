@@ -75,7 +75,7 @@ async def discover(args: Namespace) -> list[tuple[BLEDevice, AdvertisementData]]
         else:
             model_info = get_model_info_from_advertiser_data(advertisement)
             print("Found mug:", mug)
-            print("Name:", model_info.name)
+            print("Name:", advertisement.local_name)
             print("Model:", model_info.model.value if model_info.model else "Unknown")
             print("Colour:", model_info.colour.value if model_info.colour else "Unknown")
             print("Capacity:", format_capacity(model_info.capacity))

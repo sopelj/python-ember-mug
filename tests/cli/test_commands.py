@@ -53,7 +53,7 @@ async def test_get_mug(
     mock_find_device.assert_called_once_with(args)
     mock_ember_mug.assert_called_once_with(
         ble_device,
-        ModelInfo(ble_device.name or DEFAULT_NAME, DeviceModel.MUG_2_10_OZ, DeviceColour.BLACK),
+        ModelInfo(DeviceModel.MUG_2_10_OZ, DeviceColour.BLACK),
         use_metric=True,
         debug=False,
     )
@@ -204,7 +204,7 @@ async def test_get_mug_value(
     mock_mug_with_connection: AsyncMock,
     capsys: CaptureFixture,
 ) -> None:
-    mock_mug_with_connection.data = MugData(ModelInfo("Test"))
+    mock_mug_with_connection.data = MugData(ModelInfo())
     mock_mug_with_connection.data.get_formatted_attr = Mock(return_value="test")  # type: ignore[assignment]
     mock_mug_with_connection.get_target_temp.return_value = 55.5
     mock_mug_with_connection.get_name.return_value = "test"

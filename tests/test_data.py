@@ -46,31 +46,31 @@ def test_mug_meta() -> None:
 
 
 def test_mug_model() -> None:
-    mug = ModelInfo(TEST_MUG_BLUETOOTH_NAME, DeviceModel.MUG_2_10_OZ)
+    mug = ModelInfo(DeviceModel.MUG_2_10_OZ)
     assert mug.device_type == DeviceType.MUG
     assert "name" in mug.update_attributes
     assert "name" in mug.update_attributes
     assert "battery_voltage" not in mug.update_attributes
 
-    travel_mug = ModelInfo(TEST_MUG_BLUETOOTH_NAME, DeviceModel.TRAVEL_MUG_12_OZ)
+    travel_mug = ModelInfo(DeviceModel.TRAVEL_MUG_12_OZ)
     assert travel_mug.device_type == DeviceType.TRAVEL_MUG
     assert "name" in travel_mug.update_attributes
     assert "name" in travel_mug.update_attributes
     assert "volume_level" in travel_mug.update_attributes
 
-    tumbler = ModelInfo(TEST_MUG_BLUETOOTH_NAME, DeviceModel.TUMBLER_16_OZ)
+    tumbler = ModelInfo(DeviceModel.TUMBLER_16_OZ)
     assert tumbler.device_type == DeviceType.TUMBLER
     assert "name" not in tumbler.update_attributes
     assert "name" not in tumbler.update_attributes
     assert "volume_level" not in tumbler.update_attributes
 
-    cup = ModelInfo(TEST_MUG_BLUETOOTH_NAME, DeviceModel.CUP_6_OZ)
+    cup = ModelInfo(DeviceModel.CUP_6_OZ)
     assert cup.device_type == DeviceType.CUP
     assert "name" not in cup.update_attributes
     assert "name" not in cup.update_attributes
     assert "volume_level" not in cup.update_attributes
 
-    unknown = ModelInfo(TEST_MUG_BLUETOOTH_NAME)
+    unknown = ModelInfo()
     assert unknown.model is None
     assert unknown.device_type == DeviceType.MUG  # fallback value
     assert "name" not in unknown.update_attributes

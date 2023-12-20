@@ -29,7 +29,7 @@ def test_mug_formatting(mug_data: MugData) -> None:
         battery_voltage=0.1,
     )
     assert mug_data.meta_display == "Serial Number: ABCDEF"
-    mug_data.model_info = ModelInfo(TEST_MUG_BLUETOOTH_NAME, DeviceModel.MUG_2_14_OZ)
+    mug_data.model_info = ModelInfo(DeviceModel.MUG_2_14_OZ)
     mug_data.debug = True
     assert mug_data.meta_display == "Mug ID: A, Serial Number: ABCDEF"
     assert mug_data.led_colour_display == "#f400a1"
@@ -60,7 +60,7 @@ def test_mug_formatting(mug_data: MugData) -> None:
             }.items(),
         ),
     )
-    mug_data.model_info = ModelInfo(TEST_MUG_BLUETOOTH_NAME, DeviceModel.MUG_2_10_OZ)
+    mug_data.model_info = ModelInfo(DeviceModel.MUG_2_10_OZ)
     mug_data.debug = False
     assert mug_data.formatted == basic_info
 
@@ -88,7 +88,7 @@ def test_mug_dict(mug_data: MugData) -> None:
             'colour': None,
             'device_type': DeviceType.MUG,
             'model': None,
-            'name': 'Ember Ceramic Mug',
+            'name': None,
         },
         "use_metric": True,
         "debug": False,

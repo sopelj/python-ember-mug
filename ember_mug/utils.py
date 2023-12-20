@@ -115,23 +115,20 @@ def get_model_info_from_advertiser_data(advertisement: AdvertisementData) -> Mod
     """Extract model info from manufacturer data in advertiser data."""
     from ember_mug.data import ModelInfo
 
-    name = advertisement.local_name or "Ember Device"
     model_data = advertisement.manufacturer_data.get(EMBER_BLE_SIG, None)
     if model_data is not None:
         if len(model_data) < 4:
             model_id = bytes_to_big_int(model_data, signed=True)
             return ModelInfo(
-                name,
                 get_model_from_single_int_and_services(model_id, advertisement.service_uuids),
                 get_colour_from_int(model_id),
             )
         model_id, generation, colour_id = model_data[1:4]
         return ModelInfo(
-            name,
             get_model_from_id_and_gen(model_id, generation),
             get_colour_from_int(colour_id),
         )
-    return ModelInfo(name)
+    return ModelInfo()
 
 
 async def discover_services(client: BleakClient) -> dict[str, Any]:
