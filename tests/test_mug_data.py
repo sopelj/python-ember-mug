@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ember_mug.consts import LiquidState, TemperatureUnit, DeviceModel
+from ember_mug.consts import LiquidState, TemperatureUnit, DeviceModel, DeviceType
 from ember_mug.data import BatteryInfo, Change, Colour, ModelInfo, MugData, MugFirmwareInfo, MugMeta
 from .conftest import TEST_MUG_BLUETOOTH_NAME
 
@@ -83,7 +83,13 @@ def test_update_info(mug_data: MugData) -> None:
 def test_mug_dict(mug_data: MugData) -> None:
     mug_data.update_info(meta=MugMeta("test_id", "serial number"))
     assert mug_data.as_dict() == {
-        "model_info": {'colour': None, 'model': None, 'name': 'Ember Ceramic Mug'},
+        "model_info": {
+            'capacity': None,
+            'colour': None,
+            'device_type': DeviceType.MUG,
+            'model': None,
+            'name': 'Ember Ceramic Mug',
+        },
         "use_metric": True,
         "debug": False,
         "battery": None,

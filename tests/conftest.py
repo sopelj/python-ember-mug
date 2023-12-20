@@ -34,44 +34,42 @@ mock_connection = MagicMock(AsyncContextManager)
 
 
 class TestManufacturerData(bytes, Enum):
+    UNKNOWN = b''
     MUG_2_BLACK = b'\x81'
     TUMBLER = b'\x01\t\x03\x0e'
+    RED_TRAVEL_MUG = b'\x0b'
 
 
-TEST_MUG_ADVERTISEMENT = AdvertisementData(
-    local_name=TEST_MUG_BLUETOOTH_NAME,
-    manufacturer_data={EMBER_BLE_SIG: TestManufacturerData.MUG_2_BLACK},
-    service_data={},
-    service_uuids=[str(MugCharacteristic.STANDARD_SERVICE)],
-    tx_power=1,
-    rssi=1,
-    platform_data=(),
-)
+def build_advertisement_data(
+    manufacturer_data: TestManufacturerData = TestManufacturerData.UNKNOWN,
+    service_uuids: list[MugCharacteristic] | None = None,
+    name: str = TEST_MUG_BLUETOOTH_NAME,
+) -> AdvertisementData:
+    if service_uuids is None:
+        service_uuids = [MugCharacteristic.STANDARD_SERVICE]
 
-TEST_TUMBLER_ADVERTISEMENT = AdvertisementData(
-    local_name=TEST_MUG_BLUETOOTH_NAME,
-    manufacturer_data={EMBER_BLE_SIG: TestManufacturerData.TUMBLER},
-    service_data={},
-    service_uuids=[str(MugCharacteristic.STANDARD_SERVICE)],
-    tx_power=1,
-    rssi=1,
-    platform_data=(),
+    return AdvertisementData(
+        local_name=name,
+        manufacturer_data={EMBER_BLE_SIG: manufacturer_data},
+        service_data={},
+        service_uuids=[str(service) for service in service_uuids],
+        tx_power=1,
+        rssi=1,
+        platform_data=(),
+    )
+
+
+TEST_MUG_ADVERTISEMENT = build_advertisement_data(TestManufacturerData.MUG_2_BLACK)
+TEST_TUMBLER_ADVERTISEMENT = build_advertisement_data(TestManufacturerData.TUMBLER)
+TEST_TRAVEL_MUG_ADVERTISEMENT = build_advertisement_data(
+    TestManufacturerData.RED_TRAVEL_MUG,
+    [MugCharacteristic.TRAVEL_MUG_SERVICE],
 )
 
 
 @pytest.fixture(name="ble_device")
 def ble_device_fixture() -> BLEDevice:
     return BLEDevice(address=TEST_MAC, name=TEST_MUG_BLUETOOTH_NAME, details={}, rssi=1)
-
-
-@pytest.fixture(name="mug_ble_advertisement")
-def mug_ble_advertisement_fixture() -> AdvertisementData:
-    return TEST_MUG_ADVERTISEMENT
-
-
-@pytest.fixture(name="tumbler_ble_advertisement")
-def tumbler_ble_advertisement_fixture() -> AdvertisementData:
-    return TEST_MUG_ADVERTISEMENT
 
 
 @pytest.fixture()

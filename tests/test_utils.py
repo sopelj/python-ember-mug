@@ -1,6 +1,10 @@
 """Tests for `ember_mug.utils`."""
 from unittest.mock import AsyncMock, MagicMock, Mock, call, patch
 
+import pytest
+from bleak import AdvertisementData
+
+from ember_mug.consts import DeviceModel, DeviceColour, MugCharacteristic
 from ember_mug.utils import (
     bytes_to_big_int,
     bytes_to_little_int,
@@ -8,7 +12,15 @@ from ember_mug.utils import (
     discover_services,
     encode_byte_string,
     temp_from_bytes,
+    get_model_info_from_advertiser_data,
+    get_colour_from_int,
+    get_model_from_single_int_and_services,
+    get_model_from_id_and_gen,
 )
+from tests.conftest import TEST_TUMBLER_ADVERTISEMENT, TEST_MUG_ADVERTISEMENT, TEST_TRAVEL_MUG_ADVERTISEMENT
+
+
+# 131, 147->152, 150-151
 
 
 def test_bytes_to_little_int() -> None:
@@ -34,8 +46,79 @@ def test_encode_byte_string() -> None:
     assert encode_byte_string("abcd12345") == b"YWJjZDEyMzQ1"
 
 
-def test_get_model_info_from_advertisement_data():
-    pass
+@pytest.mark.parametrize(
+    "colour_id,expected_colour",
+    [
+        (-127, DeviceColour.BLACK),
+        (-126, DeviceColour.WHITE),
+        (8, DeviceColour.RED),
+        (3, DeviceColour.COPPER),
+        (-124, DeviceColour.ROSE_GOLD),
+        (-57, DeviceColour.BLUE),
+        (-122, DeviceColour.GOLD),
+        (0, None),
+    ],
+)
+def test_get_colour_from_int(colour_id: int, expected_colour: DeviceColour | None):
+    assert get_colour_from_int(colour_id) == expected_colour
+
+
+@pytest.mark.parametrize(
+    "model_id,service_uuids,expected_model",
+    [
+        (1, [str(MugCharacteristic.TRAVEL_MUG_SERVICE)], DeviceModel.TRAVEL_MUG_12_OZ),
+        (1, [], DeviceModel.MUG_1_10_OZ),
+        (65, [], DeviceModel.MUG_1_14_OZ),
+        (-127, [], DeviceModel.MUG_2_10_OZ),
+        (-63, [], DeviceModel.MUG_2_14_OZ),
+        (0, [], None),
+    ],
+)
+def test_get_model_from_single_int_and_services(
+    model_id: int,
+    service_uuids: list[str],
+    expected_model: DeviceModel,
+) -> None:
+    assert get_model_from_single_int_and_services(model_id, service_uuids) == expected_model
+
+
+@pytest.mark.parametrize(
+    "model_id,generation,expected_model",
+    [
+        (1, 1, DeviceModel.MUG_1_10_OZ),
+        (1, 2, DeviceModel.MUG_2_10_OZ),
+        (2, 1, DeviceModel.MUG_1_14_OZ),
+        (2, 3, DeviceModel.MUG_2_14_OZ),
+        (3, 0, DeviceModel.TRAVEL_MUG_12_OZ),
+        (8, 0, DeviceModel.CUP_6_OZ),
+        (9, 0, DeviceModel.TUMBLER_16_OZ),
+        (0, 0, None),
+    ],
+)
+def test_get_model_from_id_and_gen(
+    model_id: int,
+    generation: int,
+    expected_model: DeviceModel,
+) -> None:
+    assert get_model_from_id_and_gen(model_id, generation) == expected_model
+
+
+@pytest.mark.parametrize(
+    "advertisement,expected_model,expected_colour",
+    [
+        (TEST_MUG_ADVERTISEMENT, DeviceModel.MUG_2_10_OZ, DeviceColour.BLACK),
+        (TEST_TUMBLER_ADVERTISEMENT, DeviceModel.TUMBLER_16_OZ, DeviceColour.BLACK),
+        (TEST_TRAVEL_MUG_ADVERTISEMENT, DeviceModel.TRAVEL_MUG_12_OZ, DeviceColour.RED),
+    ],
+)
+def test_get_mug_model_info_from_advertisement_data(
+    advertisement: AdvertisementData,
+    expected_model: DeviceModel,
+    expected_colour: DeviceColour,
+) -> None:
+    model_info = get_model_info_from_advertiser_data(advertisement)
+    assert model_info.model == expected_model
+    assert model_info.colour == expected_colour
 
 
 @patch("ember_mug.utils.logger")

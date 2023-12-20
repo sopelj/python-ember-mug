@@ -11,6 +11,8 @@
 ### Changed
 
 * Bumped minimum version of bleak to 0.21.0
+* `model` renamed to `model_info`
+* `include_extra` option removed. `debug` has a similar function now.
 
 ## [0.8.3]
 

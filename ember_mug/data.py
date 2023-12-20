@@ -106,15 +106,22 @@ class MugFirmwareInfo:
 
 
 @dataclass
-class ModelInfo:
-    """Model name and attributes based on mode."""
+class BaseModelInfo:
+    """Base class to declare properties as field."""
 
     name: str
     model: DeviceModel | None = None
     colour: DeviceColour | None = None
+    capacity: int | None = field(init=False)
+    device_type: DeviceType = field(init=False)
 
-    @cached_property
-    def capacity(self) -> int | None:
+
+@dataclass
+class ModelInfo(BaseModelInfo):
+    """Model name and attributes based on mode."""
+
+    @cached_property  # type: ignore[misc]
+    def capacity(self) -> int | None:  # type: ignore[override]
         """Determine capacity in mL based on model number."""
         if self.model == DeviceModel.CUP_6_OZ:
             return 178  # ml - 6oz
@@ -128,8 +135,8 @@ class ModelInfo:
             return 473  # ml - 16oz
         return None
 
-    @cached_property
-    def device_type(self) -> DeviceType:
+    @cached_property  # type: ignore[misc]
+    def device_type(self) -> DeviceType:  # type: ignore[override]
         """Basic device type from model number."""
         if self.model == DeviceModel.TRAVEL_MUG_12_OZ:
             return DeviceType.TRAVEL_MUG

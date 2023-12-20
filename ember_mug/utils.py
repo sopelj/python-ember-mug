@@ -76,8 +76,13 @@ def get_colour_from_int(colour_id: int) -> DeviceColour | None:
     }.get(colour_id)
 
 
-def get_model_from_single_int(model_id: int) -> DeviceModel | None:
+def get_model_from_single_int_and_services(  # noqa PLR0911
+    model_id: int,
+    service_uuids: list[str],
+) -> DeviceModel | None:
     """Extrapolate device model from integer in advertiser data."""
+    if set(TRAVEL_MUG_SERVICE_UUIDS).intersection(service_uuids):
+        return DeviceModel.TRAVEL_MUG_12_OZ
     if model_id in (1, 2, 3):
         return DeviceModel.MUG_1_10_OZ
     if model_id == 65:
@@ -111,17 +116,13 @@ def get_model_info_from_advertiser_data(advertisement: AdvertisementData) -> Mod
     from ember_mug.data import ModelInfo
 
     name = advertisement.local_name or "Ember Device"
-    if set(TRAVEL_MUG_SERVICE_UUIDS).intersection(advertisement.service_uuids):
-        # Shortcut since only Travel Mugs should have this Service UUID
-        return ModelInfo(name, DeviceModel.TRAVEL_MUG_12_OZ, DeviceColour.BLACK)
-
     model_data = advertisement.manufacturer_data.get(EMBER_BLE_SIG, None)
-    if model_data:
+    if model_data is not None:
         if len(model_data) < 4:
             model_id = bytes_to_big_int(model_data, signed=True)
             return ModelInfo(
                 name,
-                get_model_from_single_int(model_id),
+                get_model_from_single_int_and_services(model_id, advertisement.service_uuids),
                 get_colour_from_int(model_id),
             )
         model_id, generation, colour_id = model_data[1:4]
