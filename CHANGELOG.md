@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.9.0]
+
+### Added
+
+* (Hopefully) detect model from advertiser data
+* Colour and model numbers
+* Handle Tumbler
+
+### Changed
+
+* Bumped minimum version of bleak to 0.21.0
+
 ## [0.8.3]
 
 ### Fixed
