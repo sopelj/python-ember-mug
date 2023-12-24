@@ -14,7 +14,7 @@ from ember_mug import EmberMug
 from ember_mug.consts import DEFAULT_NAME, DeviceModel, DeviceColour
 from ember_mug.cli.commands import EmberMugCli, discover, fetch_info, find_device, get_mug, get_mug_value, poll_mug
 from ember_mug.data import ModelInfo, MugData
-from tests.conftest import TEST_MAC, mock_connection, TEST_MUG_ADVERTISEMENT
+from ..conftest import TEST_MAC, mock_connection, TEST_MUG_ADVERTISEMENT
 
 
 @pytest.fixture

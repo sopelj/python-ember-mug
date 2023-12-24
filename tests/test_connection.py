@@ -10,16 +10,15 @@ from bleak import BleakError
 from bleak.backends.device import BLEDevice
 
 from ember_mug.consts import (
-    DEFAULT_NAME,
     INITIAL_ATTRS,
     UPDATE_ATTRS,
     MugCharacteristic,
     TemperatureUnit,
     VolumeLevel,
+    DeviceModel,
 )
 from ember_mug.data import Colour, ModelInfo
 from ember_mug.mug import EmberMug
-from .conftest import TEST_MUG_BLUETOOTH_NAME
 
 if TYPE_CHECKING:
 
@@ -159,7 +158,7 @@ async def test_read(
     ember_mug: MockMug,
 ) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
-        ember_mug._client.read_gatt_char.return_value = b"TEST"
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"TEST")
         await ember_mug._read(MugCharacteristic.MUG_NAME)
         ember_mug._client.read_gatt_char.assert_called_with(
             MugCharacteristic.MUG_NAME.uuid,
@@ -175,6 +174,7 @@ async def test_read(
 async def test_write(mock_logger: Mock, ember_mug: MockMug) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
         test_name = bytearray(b"TEST")
+        ember_mug._client.write_gatt_char = AsyncMock()
         await ember_mug._write(
             MugCharacteristic.MUG_NAME,
             test_name,
@@ -190,7 +190,7 @@ async def test_write(mock_logger: Mock, ember_mug: MockMug) -> None:
         )
 
         ember_mug._client = AsyncMock()
-        ember_mug._client.write_gatt_char.side_effect = BleakError
+        ember_mug._client.write_gatt_char = AsyncMock(side_effect=BleakError)
         with pytest.raises(BleakError):
             await ember_mug._write(
                 MugCharacteristic.MUG_NAME,
@@ -219,9 +219,24 @@ def test_set_device(ember_mug: MockMug) -> None:
     assert ember_mug.device.address == new_device.address
 
 
+def test_can_write(ember_mug: MockMug) -> None:
+    ember_mug.data.udsk = "non-empty"
+    assert ember_mug.can_write is True
+
+    ember_mug.data.udsk = None
+    assert ember_mug.can_write is False
+
+
+def test_has_attribute(ember_mug: MockMug) -> None:
+    ember_mug.data.model_info.model = DeviceModel.CUP_6_OZ
+    assert ember_mug.has_attribute("name") is False
+    ember_mug.data.model_info = ModelInfo(DeviceModel.MUG_2_10_OZ)
+    assert ember_mug.has_attribute("name") is True
+
+
 async def test_get_mug_meta(ember_mug: MockMug) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
-        ember_mug._client.read_gatt_char.return_value = b"Yw====-ABCDEFGHIJ"
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"Yw====-ABCDEFGHIJ")
         meta = await ember_mug.get_meta()
         assert meta.mug_id == "WXc9PT09"
         assert meta.serial_number == "ABCDEFGHIJ"
@@ -230,7 +245,7 @@ async def test_get_mug_meta(ember_mug: MockMug) -> None:
 
 async def test_get_mug_battery(ember_mug: MockMug) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
-        ember_mug._client.read_gatt_char.return_value = b"5\x01"
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"5\x01")
         battery = await ember_mug.get_battery()
         assert battery.percent == 53.00
         assert battery.on_charging_base is True
@@ -239,7 +254,7 @@ async def test_get_mug_battery(ember_mug: MockMug) -> None:
 
 async def test_get_mug_led_colour(ember_mug: MockMug) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
-        ember_mug._client.read_gatt_char.return_value = b"\xf4\x00\xa1\xff"
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"\xf4\x00\xa1\xff")
         colour = await ember_mug.get_led_colour()
         assert colour.as_hex() == "#f400a1"
         ember_mug._client.read_gatt_char.assert_called_once_with(MugCharacteristic.LED.uuid)
@@ -247,6 +262,7 @@ async def test_get_mug_led_colour(ember_mug: MockMug) -> None:
 
 async def test_set_mug_led_colour(ember_mug: MockMug) -> None:
     mock_ensure_connection = AsyncMock()
+    ember_mug._client.write_gatt_char = AsyncMock()
     with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
         await ember_mug.set_led_colour(Colour(244, 0, 161))
         mock_ensure_connection.assert_called_once()
@@ -257,8 +273,9 @@ async def test_set_mug_led_colour(ember_mug: MockMug) -> None:
 
 
 async def test_set_volume_level_travel_mug(ember_mug: MockMug) -> None:
-    ember_mug.is_travel_mug = True
+    ember_mug.data.model_info.model = DeviceModel.TRAVEL_MUG_12_OZ
     mock_ensure_connection = AsyncMock()
+    ember_mug._client.write_gatt_char = AsyncMock()
     with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
         await ember_mug.set_volume_level(VolumeLevel.HIGH)
         mock_ensure_connection.assert_called_once()
@@ -288,13 +305,14 @@ async def test_set_volume_level_mug(ember_mug: MockMug) -> None:
 
 async def test_get_mug_target_temp(ember_mug: MockMug) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
-        ember_mug._client.read_gatt_char.return_value = b"\xcd\x15"
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"\xcd\x15")
         assert (await ember_mug.get_target_temp()) == 55.81
         ember_mug._client.read_gatt_char.assert_called_once_with(MugCharacteristic.TARGET_TEMPERATURE.uuid)
 
 
 async def test_set_mug_target_temp(ember_mug: MockMug) -> None:
     mock_ensure_connection = AsyncMock()
+    ember_mug._client.write_gatt_char = AsyncMock()
     with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
         await ember_mug.set_target_temp(55.81)
         mock_ensure_connection.assert_called_once()
@@ -306,30 +324,34 @@ async def test_set_mug_target_temp(ember_mug: MockMug) -> None:
 
 async def test_get_mug_current_temp(ember_mug: MockMug) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
-        ember_mug._client.read_gatt_char.return_value = b"\xcd\x15"
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"\xcd\x15")
         assert (await ember_mug.get_current_temp()) == 55.81
         ember_mug._client.read_gatt_char.assert_called_once_with(MugCharacteristic.CURRENT_TEMPERATURE.uuid)
 
 
 async def test_get_mug_liquid_level(ember_mug: MockMug) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
-        ember_mug._client.read_gatt_char.return_value = b"\n"
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"\n")
         assert (await ember_mug.get_liquid_level()) == 10
         ember_mug._client.read_gatt_char.assert_called_once_with(MugCharacteristic.LIQUID_LEVEL.uuid)
 
 
 async def test_get_mug_liquid_state(ember_mug: MockMug) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
-        ember_mug._client.read_gatt_char.return_value = b"\x06"
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"\x06")
         assert (await ember_mug.get_liquid_state()) == 6
         ember_mug._client.read_gatt_char.assert_called_once_with(MugCharacteristic.LIQUID_STATE.uuid)
 
 
 async def test_get_mug_name(ember_mug: MockMug) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
-        ember_mug._client.read_gatt_char.return_value = b"Mug Name"
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"Mug Name")
         assert (await ember_mug.get_name()) == "Mug Name"
         ember_mug._client.read_gatt_char.assert_called_once_with(MugCharacteristic.MUG_NAME.uuid)
+
+        ember_mug.data.model_info = ModelInfo(DeviceModel.CUP_6_OZ)
+        with pytest.raises(NotImplementedError):
+            await ember_mug.get_name()
 
 
 async def test_set_mug_name(ember_mug: MockMug) -> None:
@@ -337,6 +359,7 @@ async def test_set_mug_name(ember_mug: MockMug) -> None:
         await ember_mug.set_name("Hé!")
 
     mock_ensure_connection = AsyncMock()
+    ember_mug._client.write_gatt_char = AsyncMock()
     with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
         await ember_mug.set_name("Mug name")
         mock_ensure_connection.assert_called()
@@ -345,16 +368,21 @@ async def test_set_mug_name(ember_mug: MockMug) -> None:
             bytearray(b"Mug name"),
         )
 
+        ember_mug.data.model_info = ModelInfo(DeviceModel.CUP_6_OZ)
+        with pytest.raises(NotImplementedError):
+            await ember_mug.set_name("Test")
+
 
 async def test_get_mug_udsk(ember_mug: MockMug) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
-        ember_mug._client.read_gatt_char.return_value = b"abcd12345"
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"abcd12345")
         assert (await ember_mug.get_udsk()) == "YWJjZDEyMzQ1"
         ember_mug._client.read_gatt_char.assert_called_once_with(MugCharacteristic.UDSK.uuid)
 
 
 async def test_set_mug_udsk(ember_mug: MockMug) -> None:
     mock_ensure_connection = AsyncMock()
+    ember_mug._client.write_gatt_char = AsyncMock()
     with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
         await ember_mug.set_udsk("abcd12345")
         mock_ensure_connection.assert_called_once()
@@ -366,26 +394,26 @@ async def test_set_mug_udsk(ember_mug: MockMug) -> None:
 
 async def test_get_mug_dsk(ember_mug: MockMug) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
-        ember_mug._client.read_gatt_char.return_value = b"abcd12345"
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"abcd12345")
         assert (await ember_mug.get_dsk()) == "YWJjZDEyMzQ1"
-        ember_mug._client.read_gatt_char.return_value = b"something else"
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"something else")
         assert (await ember_mug.get_dsk()) == "c29tZXRoaW5nIGVsc2U="
         ember_mug._client.read_gatt_char.assert_called_with(MugCharacteristic.DSK.uuid)
 
 
 async def test_get_mug_temperature_unit(ember_mug: MockMug) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
-        ember_mug._client.read_gatt_char.return_value = b"\x01"
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"\x01")
         assert (await ember_mug.get_temperature_unit()) == TemperatureUnit.FAHRENHEIT
         ember_mug._client.read_gatt_char.assert_called_once_with(MugCharacteristic.TEMPERATURE_UNIT.uuid)
-        ember_mug._client.read_gatt_char.reset_mock()
-        ember_mug._client.read_gatt_char.return_value = b"\x00"
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"\x00")
         assert (await ember_mug.get_temperature_unit()) == TemperatureUnit.CELSIUS
         ember_mug._client.read_gatt_char.assert_called_once_with(MugCharacteristic.TEMPERATURE_UNIT.uuid)
 
 
 async def test_set_mug_temperature_unit(ember_mug: MockMug) -> None:
     mock_ensure_connection = AsyncMock()
+    ember_mug._client.write_gatt_char = AsyncMock()
     with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
         await ember_mug.set_temperature_unit(TemperatureUnit.CELSIUS)
         mock_ensure_connection.assert_called_once()
@@ -400,7 +428,7 @@ async def test_mug_ensure_correct_unit(ember_mug: MockMug) -> None:
         ember_mug.data.temperature_unit = TemperatureUnit.CELSIUS
         ember_mug.data.use_metric = True
         mock_set_temp = AsyncMock(return_value=None)
-        with patch.object(ember_mug, 'set_temperature_unit', mock_set_temp):
+        with patch.object(ember_mug, "set_temperature_unit", mock_set_temp):
             await ember_mug.ensure_correct_unit()
             mock_set_temp.assert_not_called()
             ember_mug.data.temperature_unit = TemperatureUnit.FAHRENHEIT
@@ -410,14 +438,14 @@ async def test_mug_ensure_correct_unit(ember_mug: MockMug) -> None:
 
 async def test_get_mug_battery_voltage(ember_mug: MockMug) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
-        ember_mug._client.read_gatt_char.return_value = b"\x01"
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"\x01")
         assert (await ember_mug.get_battery_voltage()) == 1
         ember_mug._client.read_gatt_char.assert_called_once_with(MugCharacteristic.CONTROL_REGISTER_DATA.uuid)
 
 
 async def test_get_mug_date_time_zone(ember_mug: MockMug) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
-        ember_mug._client.read_gatt_char.return_value = b"c\x0f\xf6\x00"
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"c\x0f\xf6\x00")
         date_time = await ember_mug.get_date_time_zone()
         assert isinstance(date_time, datetime)
         assert date_time.timestamp() == 1661990400.0
@@ -426,7 +454,7 @@ async def test_get_mug_date_time_zone(ember_mug: MockMug) -> None:
 
 async def test_read_firmware(ember_mug: MockMug) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
-        ember_mug._client.read_gatt_char.return_value = b"c\x01\x80\x00\x12\x00"
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"c\x01\x80\x00\x12\x00")
         firmware = await ember_mug.get_firmware()
         assert firmware.version == 355
         assert firmware.hardware == 128
@@ -453,8 +481,8 @@ async def test_mug_update_multiple(ember_mug: MockMug) -> None:
     mock_get_name = AsyncMock(return_value="name")
     mock_update_info = AsyncMock()
 
-    with patch.multiple(ember_mug, _ensure_connection=AsyncMock(), get_name=mock_get_name):
-        with patch.object(ember_mug.data, 'update_info', mock_update_info):
+    with patch.multiple(ember_mug, get_name=mock_get_name):
+        with patch.object(ember_mug.data, "update_info", mock_update_info):
             await ember_mug._update_multiple({"name"})
             mock_get_name.assert_called_once()
             mock_update_info.assert_called_once_with(name="name")
@@ -464,10 +492,10 @@ async def test_mug_update_queued_attributes(ember_mug: MockMug) -> None:
     mock_get_name = AsyncMock(return_value="name")
     mock_update_info = AsyncMock()
 
-    with patch.multiple(ember_mug, _ensure_connection=AsyncMock(), get_name=mock_get_name):
+    with patch.multiple(ember_mug, get_name=mock_get_name):
         ember_mug._queued_updates = set()
         assert (await ember_mug.update_queued_attributes()) == []
-        with patch.object(ember_mug.data, 'update_info', mock_update_info):
+        with patch.object(ember_mug.data, "update_info", mock_update_info):
             ember_mug._queued_updates = {"name"}
             await ember_mug.update_queued_attributes()
             mock_update_info.assert_called_once_with(name="name")

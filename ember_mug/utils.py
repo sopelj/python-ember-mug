@@ -111,6 +111,17 @@ def get_model_from_id_and_gen(model_id: int, generation: int) -> DeviceModel | N
     return None
 
 
+def guess_model_from_name(name: str | None) -> DeviceModel | None:
+    """Guess model from BLE name."""
+    if not name:
+        return None
+    if "Travel" in name:
+        return DeviceModel.TRAVEL_MUG_12_OZ
+    if "Cup" in name:
+        return DeviceModel.CUP_6_OZ
+    return DeviceModel.UNKNOWN_DEVICE
+
+
 def get_model_info_from_advertiser_data(advertisement: AdvertisementData) -> ModelInfo:
     """Extract model info from manufacturer data in advertiser data."""
     from ember_mug.data import ModelInfo
@@ -128,7 +139,10 @@ def get_model_info_from_advertiser_data(advertisement: AdvertisementData) -> Mod
             get_model_from_id_and_gen(model_id, generation),
             get_colour_from_int(colour_id),
         )
-    return ModelInfo()
+    logger.debug(
+        "Unable to reliably determine model info from advertiser data." "Falling back to guessing based on name.",
+    )
+    return ModelInfo(guess_model_from_name(advertisement.local_name))
 
 
 async def discover_services(client: BleakClient) -> dict[str, Any]:

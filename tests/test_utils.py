@@ -1,8 +1,8 @@
 """Tests for `ember_mug.utils`."""
-from unittest.mock import AsyncMock, MagicMock, Mock, call, patch
+from unittest.mock import AsyncMock, MagicMock, Mock, call, patch, PropertyMock
 
 import pytest
-from bleak import AdvertisementData
+from bleak import AdvertisementData, BleakError
 
 from ember_mug.consts import DeviceModel, DeviceColour, MugCharacteristic
 from ember_mug.utils import (
@@ -16,11 +16,14 @@ from ember_mug.utils import (
     get_colour_from_int,
     get_model_from_single_int_and_services,
     get_model_from_id_and_gen,
+    guess_model_from_name,
 )
-from tests.conftest import TEST_TUMBLER_ADVERTISEMENT, TEST_MUG_ADVERTISEMENT, TEST_TRAVEL_MUG_ADVERTISEMENT
-
-
-# 131, 147->152, 150-151
+from tests.conftest import (
+    TEST_TUMBLER_ADVERTISEMENT,
+    TEST_MUG_ADVERTISEMENT,
+    TEST_TRAVEL_MUG_ADVERTISEMENT,
+    TEST_UNKNOWN_ADVERTISEMENT,
+)
 
 
 def test_bytes_to_little_int() -> None:
@@ -71,6 +74,7 @@ def test_get_colour_from_int(colour_id: int, expected_colour: DeviceColour | Non
         (65, [], DeviceModel.MUG_1_14_OZ),
         (-127, [], DeviceModel.MUG_2_10_OZ),
         (-63, [], DeviceModel.MUG_2_14_OZ),
+        (-60, [], DeviceModel.CUP_6_OZ),
         (0, [], None),
     ],
 )
@@ -80,6 +84,23 @@ def test_get_model_from_single_int_and_services(
     expected_model: DeviceModel,
 ) -> None:
     assert get_model_from_single_int_and_services(model_id, service_uuids) == expected_model
+
+
+@pytest.mark.parametrize(
+    "model_name,expected_model",
+    [
+        ("", None),
+        ("Test", DeviceModel.UNKNOWN_DEVICE),
+        ("Ember Ceramic Mug", DeviceModel.UNKNOWN_DEVICE),
+        ("Ember Cup", DeviceModel.CUP_6_OZ),
+        ("Ember Travel Mug", DeviceModel.TRAVEL_MUG_12_OZ),
+    ],
+)
+def test_guess_model_from_name(
+    model_name: str,
+    expected_model: DeviceModel | None,
+) -> None:
+    assert guess_model_from_name(model_name) == expected_model
 
 
 @pytest.mark.parametrize(
@@ -106,6 +127,7 @@ def test_get_model_from_id_and_gen(
 @pytest.mark.parametrize(
     "advertisement,expected_model,expected_colour",
     [
+        (TEST_UNKNOWN_ADVERTISEMENT, DeviceModel.UNKNOWN_DEVICE, None),
         (TEST_MUG_ADVERTISEMENT, DeviceModel.MUG_2_10_OZ, DeviceColour.BLACK),
         (TEST_TUMBLER_ADVERTISEMENT, DeviceModel.TUMBLER_16_OZ, DeviceColour.BLACK),
         (TEST_TRAVEL_MUG_ADVERTISEMENT, DeviceModel.TRAVEL_MUG_12_OZ, DeviceColour.RED),

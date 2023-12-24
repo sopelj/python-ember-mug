@@ -35,6 +35,7 @@ class DeviceModel(str, Enum):
     MUG_2_14_OZ = "CM19P"  # or CM21L?
     TRAVEL_MUG_12_OZ = "TM19"
     TUMBLER_16_OZ = "CM21XL"
+    UNKNOWN_DEVICE = "Unknown Mug or Tumbler"
 
 
 class DeviceColour(str, Enum):

@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from enum import Enum
 from functools import cached_property
 from time import time
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Concatenate, Literal, ParamSpec, TypeVar
 
 from bleak import BleakClient, BleakError
 from bleak_retry_connector import establish_connection
@@ -18,7 +18,6 @@ from .consts import (
     IS_LINUX,
     MUG_NAME_REGEX,
     PUSH_EVENT_BATTERY_IDS,
-    DeviceType,
     LiquidState,
     MugCharacteristic,
     PushEvent,
@@ -36,7 +35,7 @@ from .utils import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncIterator, Callable
+    from collections.abc import AsyncIterator, Awaitable, Callable
 
     from bleak.backends.characteristic import BleakGATTCharacteristic
     from bleak.backends.device import BLEDevice
@@ -45,6 +44,31 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 DISCONNECT_DELAY = 120
+
+P = ParamSpec("P")
+T = TypeVar("T")
+
+
+def require_attribute(
+    attr_name: str,
+) -> Callable[[Callable[Concatenate[EmberMug, P], Awaitable[T]]], Callable[Concatenate[EmberMug, P], Awaitable[T]]]:
+    """Require an attribute to be available on the device."""
+
+    def decorator(
+        func: Callable[Concatenate[EmberMug, P], Awaitable[T]],
+    ) -> Callable[Concatenate[EmberMug, P], Awaitable[T]]:
+        """Inner decorator."""
+
+        async def wrapper(self: EmberMug, *args: P.args, **kwargs: P.kwargs) -> T:
+            if self.has_attribute(attr_name) is False:
+                raise NotImplementedError(
+                    f"The {self.data.model_info.device_type} " "does not have a name attribute",
+                )
+            return await func(self, *args, **kwargs)
+
+        return wrapper
+
+    return decorator
 
 
 class EmberMug:
@@ -72,11 +96,6 @@ class EmberMug:
         self._latest_events: dict[int, float] = {}
         self._client_kwargs: dict[str, str] = {}
 
-        # Just shortcuts, the value doesn't change once initialized
-        self.is_tumbler = self.data.model_info.device_type == DeviceType.TUMBLER
-        self.is_travel_mug = self.data.model_info.device_type == DeviceType.TRAVEL_MUG
-        self.is_cup = self.data.model_info.device_type == DeviceType.CUP
-
         logger.debug("New mug connection initialized.")
         self.set_client_options(**kwargs)
 
@@ -89,6 +108,15 @@ class EmberMug:
     def model_name(self) -> str | None:
         """Shortcut to model name."""
         return self.data.model_info.model
+
+    @property
+    def can_write(self) -> bool:
+        """Check if the mug can support write operations."""
+        return self.data.udsk is not None
+
+    def has_attribute(self, attribute: str) -> bool:
+        """Check whether the device has the given attribute."""
+        return attribute in self.data.model_info.update_attributes
 
     async def _ensure_connection(self) -> None:
         """Connect to mug."""
@@ -214,19 +242,15 @@ class EmberMug:
         """Get Battery percent from mug gatt."""
         return BatteryInfo.from_bytes(await self._read(MugCharacteristic.BATTERY))
 
+    @require_attribute("led_colour")
     async def get_led_colour(self) -> Colour:
         """Get RGBA colours from mug gatt."""
-        if self.is_travel_mug is True:
-            msg = "The Travel Mug does not have an LED colour attribute"
-            raise NotImplementedError(msg)
         colour_data = await self._read(MugCharacteristic.LED)
         return Colour(*bytearray(colour_data))
 
+    @require_attribute("led_colour")
     async def set_led_colour(self, colour: Colour) -> None:
         """Set new target temp for mug."""
-        if self.is_travel_mug is True:
-            msg = "The Travel Mug does not have an LED colour attribute"
-            raise NotImplementedError(msg)
         await self._write(MugCharacteristic.LED, colour.as_bytearray())
         self.data.led_colour = colour
 
@@ -251,23 +275,19 @@ class EmberMug:
         liquid_level_bytes = await self._read(MugCharacteristic.LIQUID_LEVEL)
         return bytes_to_little_int(liquid_level_bytes)
 
+    @require_attribute("volume_level")
     async def get_volume_level(self) -> VolumeLevel | None:
         """Get volume level from mug gatt."""
-        if self.is_travel_mug is False:
-            msg = "The Mug and Cup do not have a volume level attribute"
-            raise NotImplementedError(msg)
         volume_bytes = await self._read(MugCharacteristic.VOLUME)
         volume_int = bytes_to_little_int(volume_bytes)
         return VolumeLevel.from_state(volume_int)
 
+    @require_attribute("volume_level")
     async def set_volume_level(self, volume: int | VolumeLevel) -> None:
         """Set volume_level on Travel Mug."""
         if not isinstance(volume, VolumeLevel) and isinstance(volume, int) and volume not in (0, 1, 2):
             msg = "Volume level value should be 0, 1, 2 or a VolumeLevel enum"
             raise ValueError(msg)
-        if self.is_travel_mug is False:
-            msg = "The Mug and Cup do not have a volume level attribute"
-            raise NotImplementedError(msg)
         volume_level = volume if isinstance(volume, VolumeLevel) else VolumeLevel.from_state(volume)
         await self._write(MugCharacteristic.VOLUME, bytearray([volume_level.state]))
         self.data.volume_level = volume_level
@@ -278,22 +298,18 @@ class EmberMug:
         state = bytes_to_little_int(liquid_state_bytes)
         return LiquidState(state)
 
+    @require_attribute("name")
     async def get_name(self) -> str:
         """Get mug name from gatt."""
-        if self.is_cup is True:
-            msg = "The Cup does not have a name attribute"
-            raise NotImplementedError(msg)
         name_bytes: bytearray = await self._read(MugCharacteristic.MUG_NAME)
         return bytes(name_bytes).decode("utf8")
 
+    @require_attribute("name")
     async def set_name(self, name: str) -> None:
         """Assign new name to mug."""
         if MUG_NAME_REGEX.match(name) is None:
             msg = "Name cannot contain any special characters and must be 16 characters or less"
             raise ValueError(msg)
-        if self.is_cup is True:
-            msg = "The Cup does not have a name attribute"
-            raise NotImplementedError(msg)
         await self._write(MugCharacteristic.MUG_NAME, bytearray(name.encode("utf8")))
         self.data.name = name
 
