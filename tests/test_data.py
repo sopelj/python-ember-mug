@@ -48,31 +48,31 @@ def test_mug_meta() -> None:
 def test_mug_model() -> None:
     mug = ModelInfo(DeviceModel.MUG_2_10_OZ)
     assert mug.device_type == DeviceType.MUG
-    assert "name" in mug.update_attributes
-    assert "name" in mug.update_attributes
-    assert "battery_voltage" not in mug.update_attributes
+    assert "name" in mug.device_attributes
+    assert "name" in mug.device_attributes
+    assert "battery_voltage" not in mug.device_attributes
 
     travel_mug = ModelInfo(DeviceModel.TRAVEL_MUG_12_OZ)
     assert travel_mug.device_type == DeviceType.TRAVEL_MUG
-    assert "name" in travel_mug.update_attributes
-    assert "name" in travel_mug.update_attributes
-    assert "volume_level" in travel_mug.update_attributes
+    assert "name" in travel_mug.device_attributes
+    assert "name" in travel_mug.device_attributes
+    assert "volume_level" in travel_mug.device_attributes
 
     tumbler = ModelInfo(DeviceModel.TUMBLER_16_OZ)
     assert tumbler.device_type == DeviceType.TUMBLER
-    assert "name" not in tumbler.update_attributes
-    assert "name" not in tumbler.update_attributes
-    assert "volume_level" not in tumbler.update_attributes
+    assert "name" not in tumbler.device_attributes
+    assert "name" not in tumbler.device_attributes
+    assert "volume_level" not in tumbler.device_attributes
 
     cup = ModelInfo(DeviceModel.CUP_6_OZ)
     assert cup.device_type == DeviceType.CUP
-    assert "name" not in cup.update_attributes
-    assert "name" not in cup.update_attributes
-    assert "volume_level" not in cup.update_attributes
+    assert "name" not in cup.device_attributes
+    assert "name" not in cup.device_attributes
+    assert "volume_level" not in cup.device_attributes
 
     unknown = ModelInfo()
     assert unknown.model is None
     assert unknown.device_type == DeviceType.MUG  # fallback value
-    assert "name" not in unknown.update_attributes
-    assert "volume_level" not in unknown.update_attributes
-    assert "battery_voltage" not in unknown.update_attributes
+    assert "name" not in unknown.device_attributes
+    assert "volume_level" not in unknown.device_attributes
+    assert "battery_voltage" not in unknown.device_attributes

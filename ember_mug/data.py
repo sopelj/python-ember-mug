@@ -147,15 +147,18 @@ class ModelInfo(BaseModelInfo):
         return DeviceType.MUG
 
     @cached_property
-    def update_attributes(self) -> set[str]:
+    def device_attributes(self) -> set[str]:
         """Attributes to update based on model and extra."""
-        attributes = UPDATE_ATTRS
+        attributes = EXTRA_ATTRS | INITIAL_ATTRS | UPDATE_ATTRS
         if not self.model or self.device_type in (DeviceType.CUP, DeviceType.TUMBLER):
             # The Cup and Tumbler cannot be named
-            attributes = attributes - {"name"}
+            attributes -= {"name"}
         elif not self.model or self.device_type == DeviceType.TRAVEL_MUG:
             # Tge Travel Mug does not have an LED colour, but has a volume attribute
             attributes = (attributes - {"led_colour"}) | {"volume_level"}
+        if self.model != DeviceModel.TRAVEL_MUG_12_OZ:
+            # Only Travel mug has this attribute?
+            attributes -= {"battery_voltage"}
         return attributes
 
 
@@ -262,7 +265,7 @@ class MugData:
     @property
     def formatted(self) -> dict[str, Any]:
         """Return human-readable names and values for all attributes for display."""
-        all_attrs = INITIAL_ATTRS | self.model_info.update_attributes | {"use_metric"}
+        all_attrs = self.model_info.device_attributes | {"use_metric"}
         if not self.debug:
             all_attrs -= EXTRA_ATTRS
         return {label: self.get_formatted_attr(attr) for attr, label in ATTR_LABELS.items() if attr in all_attrs}
@@ -270,7 +273,7 @@ class MugData:
     def as_dict(self) -> dict[str, Any]:
         """Dump all attributes as dict for info/debugging."""
         data = {k: asdict(v) if is_dataclass(v) else v for k, v in asdict(self).items()}
-        all_attrs = self.model_info.update_attributes | INITIAL_ATTRS
+        all_attrs = self.model_info.device_attributes
         if not self.debug:
             all_attrs -= EXTRA_ATTRS
         data.update(

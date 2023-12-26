@@ -116,7 +116,7 @@ class EmberMug:
 
     def has_attribute(self, attribute: str) -> bool:
         """Check whether the device has the given attribute."""
-        return attribute in self.data.model_info.update_attributes
+        return attribute in self.data.model_info.device_attributes
 
     async def _ensure_connection(self) -> None:
         """Connect to mug."""
@@ -378,7 +378,9 @@ class EmberMug:
 
     async def update_all(self) -> list[Change]:
         """Update all standard attributes."""
-        return await self._update_multiple(self.data.model_info.update_attributes)
+        return await self._update_multiple(
+            self.data.model_info.device_attributes - INITIAL_ATTRS,
+        )
 
     async def _update_multiple(self, attrs: set[str]) -> list[Change]:
         """Update a list of attributes from the mug."""
