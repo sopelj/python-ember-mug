@@ -150,10 +150,11 @@ class ModelInfo(BaseModelInfo):
     def device_attributes(self) -> set[str]:
         """Attributes to update based on model and extra."""
         attributes = EXTRA_ATTRS | INITIAL_ATTRS | UPDATE_ATTRS
-        if not self.model or self.device_type in (DeviceType.CUP, DeviceType.TUMBLER):
+        unknown = (None, DeviceModel.UNKNOWN_DEVICE)
+        if self.model in unknown or self.device_type in (DeviceType.CUP, DeviceType.TUMBLER):
             # The Cup and Tumbler cannot be named
             attributes -= {"name"}
-        elif not self.model or self.device_type == DeviceType.TRAVEL_MUG:
+        elif self.model in unknown or self.device_type == DeviceType.TRAVEL_MUG:
             # Tge Travel Mug does not have an LED colour, but has a volume attribute
             attributes = (attributes - {"led_colour"}) | {"volume_level"}
         if self.model != DeviceModel.TRAVEL_MUG_12_OZ:
