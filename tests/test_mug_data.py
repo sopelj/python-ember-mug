@@ -84,10 +84,11 @@ def test_mug_dict(mug_data: MugData) -> None:
     mug_data.update_info(meta=MugMeta("test_id", "serial number"))
     assert mug_data.as_dict() == {
         "model_info": {
-            'capacity': None,
-            'colour': None,
-            'device_type': DeviceType.MUG,
-            'model': None,
+            "capacity": None,
+            "colour": None,
+            "device_type": DeviceType.MUG,
+            "model": None,
+            "name": "Unknown Device",
         },
         "use_metric": True,
         "debug": False,

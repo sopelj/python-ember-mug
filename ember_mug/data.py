@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Any, NamedTuple
 
 from .consts import (
     ATTR_LABELS,
+    DEVICE_MODEL_NAMES,
     EXTRA_ATTRS,
     INITIAL_ATTRS,
     UPDATE_ATTRS,
@@ -111,6 +112,7 @@ class BaseModelInfo:
 
     model: DeviceModel | None = None
     colour: DeviceColour | None = None
+    name: str = field(init=False)
     capacity: int | None = field(init=False)
     device_type: DeviceType = field(init=False)
 
@@ -118,6 +120,14 @@ class BaseModelInfo:
 @dataclass
 class ModelInfo(BaseModelInfo):
     """Model name and attributes based on mode."""
+
+    @cached_property  # type: ignore[misc]
+    def name(self) -> str:  # type: ignore[override]
+        """Get a human-readable name from model number."""
+        return DEVICE_MODEL_NAMES.get(
+            self.model or DeviceModel.UNKNOWN_DEVICE,
+            "Unknown Device",
+        )
 
     @cached_property  # type: ignore[misc]
     def capacity(self) -> int | None:  # type: ignore[override]

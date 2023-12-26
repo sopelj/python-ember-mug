@@ -31,11 +31,22 @@ class DeviceModel(str, Enum):
     CUP_6_OZ = "CM21S"
     MUG_1_10_OZ = "CM17"
     MUG_1_14_OZ = "CM17P"
-    MUG_2_10_OZ = "CM19"  # or CM21M?
-    MUG_2_14_OZ = "CM19P"  # or CM21L?
+    MUG_2_10_OZ = "CM19/CM21M"
+    MUG_2_14_OZ = "CM19P/CM21L"
     TRAVEL_MUG_12_OZ = "TM19"
     TUMBLER_16_OZ = "CM21XL"
-    UNKNOWN_DEVICE = "Unknown Mug or Tumbler"
+    UNKNOWN_DEVICE = "Unknown"
+
+
+DEVICE_MODEL_NAMES: dict[DeviceModel, str] = {
+    DeviceModel.CUP_6_OZ: "Ember Cup",
+    DeviceModel.MUG_1_10_OZ: "Ember Mug (10oz)",
+    DeviceModel.MUG_1_14_OZ: "Ember Mug (14oz)",
+    DeviceModel.MUG_2_10_OZ: "Ember Mug 2 (10oz)",
+    DeviceModel.MUG_2_14_OZ: "Ember Mug 2 (14oz)",
+    DeviceModel.TRAVEL_MUG_12_OZ: "Ember Travel Mug",
+    DeviceModel.TUMBLER_16_OZ: "Ember Tumbler",
+}
 
 
 class DeviceColour(str, Enum):

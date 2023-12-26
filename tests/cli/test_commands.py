@@ -117,7 +117,11 @@ async def test_discover(mock_discover_mugs: AsyncMock, capsys: CaptureFixture, b
     mock_discover_mugs.assert_called_once_with(mac=TEST_MAC)
     captured = capsys.readouterr()
     assert captured.out == (
-        f"Found mug: {ble_device}\n" "Name: Ember Ceramic Mug\n" "Model: CM19\n" "Colour: Black\n" "Capacity: 295ml\n"
+        f"Found mug: {ble_device}\n"
+        "Name: Ember Ceramic Mug\n"
+        "Model: Ember Mug 2 (10oz) [CM19/CM21M]\n"
+        "Colour: Black\n"
+        "Capacity: 295ml\n"
     )
 
     mock_discover_mugs.reset_mock()

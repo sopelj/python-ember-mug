@@ -4,13 +4,14 @@
 
 ### Added
 
-* (Hopefully) detect model from advertiser data
-* Colour and model numbers
+* Detect model from advertiser data (Hopefully correctly)
+* Colour, capacity and model numbers
 * Handle Tumbler
 
 ### Changed
 
 * Bumped minimum version of bleak to 0.21.0
+* Discover method changed to use advertisement information
 * `model` renamed to `model_info`
 * `include_extra` option removed. `debug` has a similar function now.
 
