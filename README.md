@@ -4,7 +4,7 @@
 [![python](https://img.shields.io/pypi/pyversions/python-ember-mug.svg)](https://pypi.org/project/python-ember-mug/)
 [![Build Status](https://github.com/sopelj/python-ember-mug/actions/workflows/tests.yml/badge.svg)](https://github.com/sopelj/python-ember-mug/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/sopelj/python-ember-mug/branch/main/graphs/badge.svg)](https://codecov.io/github/sopelj/python-ember-mug)
-![Project Maintenance](https://img.shields.io/maintenance/yes/2023.svg)
+![Project Maintenance](https://img.shields.io/maintenance/yes/2024.svg)
 [![Maintainer](https://img.shields.io/badge/maintainer-%40sopelj-blue.svg)](https://github.com/sopelj)
 [![License](https://img.shields.io/github/license/sopelj/python-ember-mug.svg)](LICENSE)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen)](https://github.com/pre-commit/pre-commit)
@@ -21,19 +21,17 @@ This is an *unofficial* library to attempt to interact with Ember Mugs via Bluet
 This was created for use with my [Home Assistant integration](https://github.com/sopelj/hass-ember-mug-component),
 but could be useful separately and has a simple CLI interface too.
 
-All known Ember Mugs, Cups and Travel Mugs have been tested and work.
-The Tumbler has not yet been tested. If you have one and would like to help, please see [Issue #65]((https://github.com/sopelj/python-ember-mug/issues/56))
-If I missed one, or you have new feature ideas/issues, please let me know.
+All known Ember Mugs, Cups, Tumblers and Travel Mugs have been tested and seem to work well.
+If I missed one, or you have new feature ideas or issues, please [create an issue](https://github.com/sopelj/python-ember-mug/issues), if it isn't already there, and we'll figure it out.
 
-| Device       | Tested                                                    |
-|--------------|-----------------------------------------------------------|
-| Mug          | ✓                                                         |
-| Mug 2        | ✓                                                         |
-| Cup          | ✓                                                         |
-| Travel Mug   | ✓                                                         |
-| Travel Mug 2 | ✓                                                         |
-| Tumbler      | [?](https://github.com/sopelj/python-ember-mug/issues/56) |
-
+| Device       | Tested |
+|--------------|--------|
+| Mug          | ✓      |
+| Mug 2        | ✓      |
+| Cup          | ✓      |
+| Tumbler      | ✓      |
+| Travel Mug   | ✓      |
+| Travel Mug 2 | ✓      |
 
 ## Features
 
@@ -44,17 +42,17 @@ If I missed one, or you have new feature ideas/issues, please let me know.
 
 Attributes by device:
 
-| Attribute           | Mug | Cup | Travel Mug | Description                                   |
-|---------------------|-----|-----|------------|-----------------------------------------------|
-| Name                | R/W | N/A | R          | Name to give device                           |
-| LED Colour          | R/W | R/W | N/A        | Colour of front LED                           |
-| Current Temperature | R   | R   | R          | Current temperature of the liquid in the mug  |
-| Target Temperature  | R/W | R/W | R/W        | Desired temperature for the liquid            |
-| Temperature Unit    | R/W | R/W | R/W        | Internal temperature unit for the app (C/F)   |
-| Liquid Level        | R   | R   | R          | Approximate level of the liquid in the device |
-| Volume level        | N/A | N/A | R/W        | Volume of the button press beep               |
-| Battery Percent     | R   | R   | R          | Current battery level                         |
-| On Charger          | R   | R   | R          | Device is on it's charger                     |
+| Attribute           | Mug | Cup | Tumbler | Travel Mug | Description                                   |
+|---------------------|-----|-----|---------|------------|-----------------------------------------------|
+| Name                | R/W | N/A | N/A     | R          | Name to give device                           |
+| LED Colour          | R/W | R/W | R/W     | N/A        | Colour of front LED                           |
+| Current Temperature | R   | R   | R       | R          | Current temperature of the liquid in the mug  |
+| Target Temperature  | R/W | R/W | R/W     | R/W        | Desired temperature for the liquid            |
+| Temperature Unit    | R/W | R/W | R/W     | R/W        | Internal temperature unit for the app (C/F)   |
+| Liquid Level        | R   | R   | R       | R          | Approximate level of the liquid in the device |
+| Volume level        | N/A | N/A | N/A     | R/W        | Volume of the button press beep               |
+| Battery Percent     | R   | R   | R       | R          | Current battery level                         |
+| On Charger          | R   | R   | R       | R          | Device is on it's charger                     |
 
 *** Writing may only work if the devices has been set up in the app previously
 
