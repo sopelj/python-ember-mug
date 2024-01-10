@@ -134,10 +134,10 @@ async def get_mug_value(args: Namespace) -> None:
 async def set_mug_value(args: Namespace) -> None:
     """Set one or more values on the mug."""
     attrs = ("name", "target_temp", "temperature_unit", "led_colour", "volume_level")
-    values = [(attr, value) for attr in attrs if (value := getattr(args, attr))]
+    values = [(attr, value) for attr in attrs if (value := getattr(args, attr, None))]
     if not values:
         print("Please specify at least one attribute and value to set.")
-        options = [f"--{a}" for a in attrs]
+        options = [f"--{a.replace('_', '-')}" for a in attrs]
         print(f'Options: {", ".join(options)}')
         sys.exit(1)
 

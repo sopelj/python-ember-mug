@@ -19,6 +19,7 @@ from ember_mug.consts import (
 )
 from ember_mug.data import Colour, ModelInfo
 from ember_mug.mug import EmberMug
+from tests.conftest import TEST_MUG_ADVERTISEMENT
 
 if TYPE_CHECKING:
 
@@ -207,15 +208,17 @@ async def test_write(mock_logger: Mock, ember_mug: MockMug) -> None:
         assert isinstance(exception, BleakError)
 
 
-def test_set_device(ember_mug: MockMug) -> None:
+def test_ble_event_callback(ember_mug: MockMug) -> None:
     new_device = BLEDevice(
         address="BA:36:a5:be:88:cb",
         name="Ember Ceramic Mug",
         details={},
         rssi=1,
     )
+    ember_mug.data.model_info.model = None
     assert ember_mug.device.address != new_device.address
-    ember_mug.set_device(new_device)
+    ember_mug.ble_event_callback(new_device, TEST_MUG_ADVERTISEMENT)
+    assert ember_mug.model_name == DeviceModel.MUG_2_10_OZ
     assert ember_mug.device.address == new_device.address
 
 
@@ -479,10 +482,9 @@ async def test_mug_update_all(ember_mug: MockMug) -> None:
 
 async def test_mug_update_multiple(ember_mug: MockMug) -> None:
     mock_get_name = AsyncMock(return_value="name")
-    mock_update_info = AsyncMock()
 
     with patch.multiple(ember_mug, get_name=mock_get_name):
-        with patch.object(ember_mug.data, "update_info", mock_update_info):
+        with patch.object(ember_mug.data, "update_info") as mock_update_info:
             await ember_mug._update_multiple({"name"})
             mock_get_name.assert_called_once()
             mock_update_info.assert_called_once_with(name="name")
@@ -490,12 +492,11 @@ async def test_mug_update_multiple(ember_mug: MockMug) -> None:
 
 async def test_mug_update_queued_attributes(ember_mug: MockMug) -> None:
     mock_get_name = AsyncMock(return_value="name")
-    mock_update_info = AsyncMock()
 
     with patch.multiple(ember_mug, get_name=mock_get_name):
         ember_mug._queued_updates = set()
         assert (await ember_mug.update_queued_attributes()) == []
-        with patch.object(ember_mug.data, "update_info", mock_update_info):
+        with patch.object(ember_mug.data, "update_info") as mock_update_info:
             ember_mug._queued_updates = {"name"}
             await ember_mug.update_queued_attributes()
             mock_update_info.assert_called_once_with(name="name")

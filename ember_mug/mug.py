@@ -10,7 +10,7 @@ from functools import cached_property
 from time import time
 from typing import TYPE_CHECKING, Any, Concatenate, Literal, ParamSpec, TypeVar
 
-from bleak import BleakClient, BleakError
+from bleak import AdvertisementData, BleakClient, BleakError
 from bleak_retry_connector import establish_connection
 
 from .consts import (
@@ -31,6 +31,7 @@ from .utils import (
     decode_byte_string,
     discover_services,
     encode_byte_string,
+    get_model_info_from_advertiser_data,
     temp_from_bytes,
 )
 
@@ -99,15 +100,26 @@ class EmberMug:
         logger.debug("New mug connection initialized.")
         self.set_client_options(**kwargs)
 
-    def set_device(self, ble_device: BLEDevice) -> None:
-        """Set the ble device."""
-        logger.debug("Set new device from %s to %s", self.device, ble_device)
+    def ble_event_callback(self, ble_device: BLEDevice, advertisement_data: AdvertisementData) -> None:
+        """Update BLE Device and, if needed, model information."""
         self.device = ble_device
+        logger.debug("Set new device from %s to %s", self.device, ble_device)
+        if (
+            not self.data.model_info.model
+            and advertisement_data.manufacturer_data
+            and (model_info := get_model_info_from_advertiser_data(advertisement_data))
+        ):
+            logger.debug(
+                "Updated model info from advertisement data (%s) -> %s",
+                advertisement_data,
+                model_info,
+            )
+            self.data.model_info = model_info
 
     @cached_property
     def model_name(self) -> str | None:
         """Shortcut to model name."""
-        return self.data.model_info.model
+        return self.data.model_info.model.value if self.data.model_info.model else None
 
     @property
     def can_write(self) -> bool:

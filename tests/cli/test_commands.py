@@ -11,8 +11,17 @@ from bleak import BleakError, BLEDevice
 from pytest import CaptureFixture
 
 from ember_mug import EmberMug
-from ember_mug.consts import DEFAULT_NAME, DeviceModel, DeviceColour
-from ember_mug.cli.commands import EmberMugCli, discover, fetch_info, find_device, get_mug, get_mug_value, poll_mug
+from ember_mug.consts import DeviceModel, DeviceColour
+from ember_mug.cli.commands import (
+    EmberMugCli,
+    discover,
+    fetch_info,
+    find_device,
+    get_mug,
+    get_mug_value,
+    poll_mug,
+    set_mug_value,
+)
 from ember_mug.data import ModelInfo, MugData
 from ..conftest import TEST_MAC, mock_connection, TEST_MUG_ADVERTISEMENT
 
@@ -222,6 +231,33 @@ async def test_get_mug_value(
     await get_mug_value(args)
     captured = capsys.readouterr()
     assert captured.out == "55.5\ntest\n"
+
+    mock_mug_with_connection.get_name.side_effect = NotImplementedError
+    with pytest.raises(SystemExit):
+        args = mock_namespace(attributes=["name"], raw=True)
+        await get_mug_value(args)
+
+
+async def test_set_mug_value_no_value(capsys: CaptureFixture) -> None:
+    with pytest.raises(SystemExit):
+        await set_mug_value(Namespace())
+    captured = capsys.readouterr()
+    assert captured.out == (
+        "Please specify at least one attribute and value to set.\n"
+        "Options: --name, --target-temp, --temperature-unit, --led-colour, --volume-level\n"
+    )
+
+
+async def test_set_mug_value(mock_mug_with_connection: AsyncMock, capsys: CaptureFixture) -> None:
+    mock_mug_with_connection.data = MugData(ModelInfo())
+    args = mock_namespace(name="test")
+    await set_mug_value(args)
+    mock_mug_with_connection.set_name.assert_called_once_with("test")
+
+    mock_mug_with_connection.reset_mock()
+    mock_mug_with_connection.set_name.side_effect = NotImplementedError("Unable to set name on Cup")
+    with pytest.raises(SystemExit):
+        await set_mug_value(args)
 
 
 def test_ember_cli():

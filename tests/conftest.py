@@ -78,7 +78,7 @@ def ble_device_fixture() -> BLEDevice:
 
 
 @pytest.fixture()
-def mug_data(ble_device: BLEDevice) -> MugData:
+def mug_data() -> MugData:
     return MugData(ModelInfo())
 
 

@@ -12,6 +12,7 @@
 
 * Bumped minimum version of bleak to 0.21.0
 * Discover method changed to use advertisement information
+* `set_device` method replaced by `ble_event_callback` and it now also updated model info if not yet set.
 * `model` renamed to `model_info`
 * `include_extra` option removed. `debug` has a similar function now.
 
