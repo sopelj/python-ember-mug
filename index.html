@@ -672,7 +672,7 @@
 <a href="https://pypi.org/project/python-ember-mug/"><img alt="python" src="https://img.shields.io/pypi/pyversions/python-ember-mug.svg" /></a>
 <a href="https://github.com/sopelj/python-ember-mug/actions/workflows/tests.yml"><img alt="Build Status" src="https://github.com/sopelj/python-ember-mug/actions/workflows/tests.yml/badge.svg" /></a>
 <a href="https://codecov.io/github/sopelj/python-ember-mug"><img alt="codecov" src="https://codecov.io/gh/sopelj/python-ember-mug/branch/main/graphs/badge.svg" /></a>
-<img alt="Project Maintenance" src="https://img.shields.io/maintenance/yes/2023.svg" />
+<img alt="Project Maintenance" src="https://img.shields.io/maintenance/yes/2024.svg" />
 <a href="https://github.com/sopelj"><img alt="Maintainer" src="https://img.shields.io/badge/maintainer-%40sopelj-blue.svg" /></a>
 <a href="../LICENSE"><img alt="License" src="https://img.shields.io/github/license/sopelj/python-ember-mug.svg" /></a>
 <a href="https://github.com/pre-commit/pre-commit"><img alt="pre-commit" src="https://img.shields.io/badge/pre--commit-enabled-brightgreen" /></a></p>
@@ -686,9 +686,8 @@
 <p>This is an <em>unofficial</em> library to attempt to interact with Ember Mugs via Bluetooth.
 This was created for use with my <a href="https://github.com/sopelj/hass-ember-mug-component">Home Assistant integration</a>,
 but could be useful separately and has a simple CLI interface too.</p>
-<p>All known Ember Mugs, Cups and Travel Mugs have been tested and work.
-The Tumbler has not yet been tested. If you have one and would like to help, please see <a href="../(https:/github.com/sopelj/python-ember-mug/issues/56)">Issue #65</a>
-If I missed one, or you have new feature ideas/issues, please let me know.</p>
+<p>All known Ember Mugs, Cups, Tumblers and Travel Mugs have been tested and seem to work well.
+If I missed one, or you have new feature ideas or issues, please <a href="https://github.com/sopelj/python-ember-mug/issues">create an issue</a>, if it isn't already there, and we'll figure it out.</p>
 <table>
 <thead>
 <tr>
@@ -710,16 +709,16 @@ If I missed one, or you have new feature ideas/issues, please let me know.</p>
 <td>✓</td>
 </tr>
 <tr>
+<td>Tumbler</td>
+<td>✓</td>
+</tr>
+<tr>
 <td>Travel Mug</td>
 <td>✓</td>
 </tr>
 <tr>
 <td>Travel Mug 2</td>
 <td>✓</td>
-</tr>
-<tr>
-<td>Tumbler</td>
-<td><a href="https://github.com/sopelj/python-ember-mug/issues/56">?</a></td>
 </tr>
 </tbody>
 </table>
@@ -737,6 +736,7 @@ If I missed one, or you have new feature ideas/issues, please let me know.</p>
 <th>Attribute</th>
 <th>Mug</th>
 <th>Cup</th>
+<th>Tumbler</th>
 <th>Travel Mug</th>
 <th>Description</th>
 </tr>
@@ -746,11 +746,13 @@ If I missed one, or you have new feature ideas/issues, please let me know.</p>
 <td>Name</td>
 <td>R/W</td>
 <td>N/A</td>
+<td>N/A</td>
 <td>R</td>
 <td>Name to give device</td>
 </tr>
 <tr>
 <td>LED Colour</td>
+<td>R/W</td>
 <td>R/W</td>
 <td>R/W</td>
 <td>N/A</td>
@@ -761,10 +763,12 @@ If I missed one, or you have new feature ideas/issues, please let me know.</p>
 <td>R</td>
 <td>R</td>
 <td>R</td>
+<td>R</td>
 <td>Current temperature of the liquid in the mug</td>
 </tr>
 <tr>
 <td>Target Temperature</td>
+<td>R/W</td>
 <td>R/W</td>
 <td>R/W</td>
 <td>R/W</td>
@@ -775,6 +779,7 @@ If I missed one, or you have new feature ideas/issues, please let me know.</p>
 <td>R/W</td>
 <td>R/W</td>
 <td>R/W</td>
+<td>R/W</td>
 <td>Internal temperature unit for the app (C/F)</td>
 </tr>
 <tr>
@@ -782,10 +787,12 @@ If I missed one, or you have new feature ideas/issues, please let me know.</p>
 <td>R</td>
 <td>R</td>
 <td>R</td>
+<td>R</td>
 <td>Approximate level of the liquid in the device</td>
 </tr>
 <tr>
 <td>Volume level</td>
+<td>N/A</td>
 <td>N/A</td>
 <td>N/A</td>
 <td>R/W</td>
@@ -796,10 +803,12 @@ If I missed one, or you have new feature ideas/issues, please let me know.</p>
 <td>R</td>
 <td>R</td>
 <td>R</td>
+<td>R</td>
 <td>Current battery level</td>
 </tr>
 <tr>
 <td>On Charger</td>
+<td>R</td>
 <td>R</td>
 <td>R</td>
 <td>R</td>
