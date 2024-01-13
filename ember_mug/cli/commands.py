@@ -156,15 +156,19 @@ async def set_mug_value(args: Namespace) -> None:
 def colour_type(value: str) -> Colour:
     """Convert a hex or rgb colour to a Colour object."""
     print(value)
-    if match := re.match(r"#?([0-9a-f]{6})", value, re.IGNORECASE):
-        colour = match.group(1)
-        return Colour(*tuple(int(colour[i : i + 2], 16) for i in (0, 2, 4)))
+    if match := re.match(r"#?([0-9a-f]{6}([0-9a-f]{2})?)", value, re.IGNORECASE):
+        raw_colours = match.group(1)
+        colours = [
+            255 if (colour := raw_colours[i : i + 2]) is None else int(colour, 16)
+            for i in range(0, len(raw_colours), 2)
+        ]
+        return Colour(*colours)
 
     with contextlib.suppress(ValueError, AssertionError):
         colours = [int(v) for v in value.split(",")]
-        if 3 <= len(colours) <= 4:
+        if len(colours) not in (3, 4):
             raise ArgumentTypeError("Three or four values should be specified for colour")
-        if all(0 <= c <= 255 for c in colours):
+        if not all(0 <= c <= 255 for c in colours):
             raise ArgumentTypeError("Colour values must be between 0 and 255")
         return Colour(*colours)
 

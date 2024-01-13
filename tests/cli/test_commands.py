@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import sys
-from argparse import Namespace
+from argparse import Namespace, ArgumentTypeError
 from collections.abc import Generator
 from typing import Any
 from unittest.mock import AsyncMock, Mock, patch, call
@@ -21,8 +21,9 @@ from ember_mug.cli.commands import (
     get_mug_value,
     poll_mug,
     set_mug_value,
+    colour_type,
 )
-from ember_mug.data import ModelInfo, MugData
+from ember_mug.data import ModelInfo, MugData, Colour
 from ..conftest import TEST_MAC, mock_connection, TEST_MUG_ADVERTISEMENT
 
 
@@ -260,6 +261,27 @@ async def test_set_mug_value(mock_mug_with_connection: AsyncMock, capsys: Captur
         await set_mug_value(args)
 
 
+@pytest.mark.parametrize(
+    'value,error',
+    [
+        ("1,2,3,4,5,6", "Three or four values should be specified for colour"),
+        ("260,1,1,1", "Colour values must be between 0 and 255"),
+        ("invalid", '"invalid" is not a valid rgba or hex colour'),
+    ],
+)
+def test_colour_type_raises(value: str, error: str) -> None:
+    with pytest.raises(ArgumentTypeError) as err:
+        colour_type(value)
+    assert str(err.value) == error
+
+
+def test_colour_type() -> None:
+    assert colour_type("#ffffff") == Colour(255, 255, 255, 255)
+    assert colour_type("#ffffffaa") == Colour(255, 255, 255, 170)
+    assert colour_type("1,2,3") == Colour(1, 2, 3, 255)
+    assert colour_type("1,2,3,4") == Colour(1, 2, 3, 4)
+
+
 def test_ember_cli():
     cli = EmberMugCli()
 
@@ -316,8 +338,25 @@ async def test_cli_run():
     assert args.adapter is None
 
 
+@patch("sys.argv", ["file.py", "discover", "--debug"])
+@patch("logging.basicConfig")
+async def test_cli_run_discover_debug(mock_logging_config: Mock):
+    cli = EmberMugCli()
+    mock_discover = AsyncMock()
+    with patch.object(cli, "_commands", {"discover": mock_discover}):
+        await cli.run()
+
+    mock_discover.assert_called_once()
+    mock_logging_config.assert_called_once()
+    args = mock_discover.mock_calls[0].args[0]
+    assert args.command == 'discover'
+    assert args.debug is True
+    assert args.raw is False
+    assert args.adapter is None
+
+
 @patch('ember_mug.consts.IS_LINUX', False)
-@patch("sys.argv", ["file.py", "find", "-m", TEST_MAC])
+@patch("sys.argv", ["file.py", "find", "-m", TEST_MAC, "--raw"])
 async def test_cli_run_non_linux():
     del sys.modules['ember_mug.cli.commands']  # force re-import
     from ember_mug.cli.commands import EmberMugCli
@@ -332,5 +371,5 @@ async def test_cli_run_non_linux():
     assert args.command == 'find'
     assert args.mac == TEST_MAC
     assert args.debug is False
-    assert args.raw is False
+    assert args.raw is True
     assert args.adapter is None
