@@ -39,7 +39,11 @@ jobs:
 
       - name: Set version from tag
         run: |
-          hatch version "${GITHUB_REF#refs/tags/v}"
+          TARGET_VERSION="${GITHUB_REF#refs/tags/v}";
+          CURRENT_VERSION=$(hatch version);
+          if [ "${TARGET_VERSION}" != "${CURRENT_VERSION}" ]; then
+            hatch version "${TARGET_VERSION}"
+          fi
 
       - name: build documentation
         run: |
