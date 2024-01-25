@@ -7,6 +7,7 @@
 * Detect model from advertiser data (Hopefully correctly)
 * Colour, capacity and model numbers
 * Handle Tumbler
+* Rename "Unknown" state to "Standby"
 
 ### Changed
 

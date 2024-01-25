@@ -103,7 +103,7 @@ def test_mug_dict(mug_data: MugData) -> None:
         "led_colour_display": "#ffffff",
         "liquid_level": 0,
         "liquid_level_display": "0.00%",
-        "liquid_state": LiquidState.UNKNOWN,
+        "liquid_state": None,
         "liquid_state_display": "Unknown",
         "meta": {"mug_id": "test_id", "serial_number": "serial number"},
         "meta_display": "Serial Number: serial number",

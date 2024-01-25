@@ -12,7 +12,7 @@ def test_mug_uuids() -> None:
 
 
 def test_liquid_state() -> None:
-    assert LiquidState(0).label == "Unknown"
+    assert LiquidState(0).label == "Standby"
     assert LiquidState(1).label == "Empty"
     assert LiquidState(2).label == "Filling"
     assert LiquidState(3).label == "Cold (No control)"

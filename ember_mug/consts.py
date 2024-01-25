@@ -144,7 +144,7 @@ DEVICE_SERVICE_UUIDS = (
 class LiquidState(IntEnum):
     """Constants for liquid state codes."""
 
-    UNKNOWN = 0
+    STANDBY = 0
     EMPTY = 1
     FILLING = 2
     COLD_NO_TEMP_CONTROL = 3
@@ -197,8 +197,9 @@ class PushEvent(IntEnum):
 
 
 # Labels so liquid states
+LIQUID_STATE_UNKNOWN = "Unknown"
 LIQUID_STATE_LABELS: dict[int, str] = {
-    LiquidState.UNKNOWN: "Unknown",
+    LiquidState.STANDBY: "Standby",
     LiquidState.EMPTY: "Empty",
     LiquidState.FILLING: "Filling",
     LiquidState.COLD_NO_TEMP_CONTROL: "Cold (No control)",

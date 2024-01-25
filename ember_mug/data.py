@@ -10,6 +10,7 @@ from .consts import (
     DEVICE_MODEL_NAMES,
     EXTRA_ATTRS,
     INITIAL_ATTRS,
+    LIQUID_STATE_UNKNOWN,
     UPDATE_ATTRS,
     DeviceColour,
     DeviceModel,
@@ -208,7 +209,7 @@ class MugData:
     battery: BatteryInfo | None = None
     firmware: MugFirmwareInfo | None = None
     led_colour: Colour = field(default_factory=lambda: Colour(255, 255, 255, 255))
-    liquid_state: LiquidState = LiquidState.UNKNOWN
+    liquid_state: LiquidState | None = None
     liquid_level: int = 0
     temperature_unit: TemperatureUnit = TemperatureUnit.CELSIUS
     current_temp: float = 0.0
@@ -234,7 +235,7 @@ class MugData:
     @property
     def liquid_state_display(self) -> str:
         """Human-readable liquid state."""
-        return self.liquid_state.label
+        return self.liquid_state.label if self.liquid_state else LIQUID_STATE_UNKNOWN
 
     @property
     def volume_level_display(self) -> str | None:
