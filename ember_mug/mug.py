@@ -16,6 +16,7 @@ from bleak_retry_connector import establish_connection
 from .consts import (
     INITIAL_ATTRS,
     IS_LINUX,
+    MIN_MAX_TEMPS,
     MUG_NAME_REGEX,
     PUSH_EVENT_BATTERY_IDS,
     LiquidState,
@@ -28,6 +29,7 @@ from .data import BatteryInfo, Change, Colour, ModelInfo, MugData, MugFirmwareIn
 from .utils import (
     bytes_to_big_int,
     bytes_to_little_int,
+    convert_temp_to_celsius,
     decode_byte_string,
     discover_services,
     encode_byte_string,
@@ -273,6 +275,14 @@ class EmberMug:
 
     async def set_target_temp(self, target_temp: float) -> None:
         """Set new target temp for mug."""
+        unit = TemperatureUnit.CELSIUS if self.data.use_metric else TemperatureUnit.FAHRENHEIT
+        min_temp, max_temp = MIN_MAX_TEMPS[unit]
+        if target_temp != 0 and not (min_temp <= target_temp <= max_temp):
+            raise ValueError(f"Temperature should be between {min_temp} and {max_temp} or 0.")
+
+        if self.data.use_metric is False:
+            target_temp = convert_temp_to_celsius(target_temp)
+
         target = bytearray(int(target_temp / 0.01).to_bytes(2, "little"))
         await self._write(MugCharacteristic.TARGET_TEMPERATURE, target)
         self.data.target_temp = target_temp
@@ -425,6 +435,10 @@ class EmberMug:
             return
         self._latest_events[event_id] = now
 
+        if characteristic.uuid == MugCharacteristic.STATISTICS.uuid:
+            logger.info("Statistics received from %s (%s) - Data: %s.", self.model_name, event_id, data)
+            return
+
         logger.debug("Push event received from %s (%s) - Data: %s.", self.model_name, event_id, data)
 
         # Check known IDs
@@ -463,12 +477,16 @@ class EmberMug:
             return
         with contextlib.suppress(BleakError):
             await self._client.stop_notify(MugCharacteristic.PUSH_EVENT.uuid)
+            if self.debug:
+                await self._client.stop_notify(MugCharacteristic.STATISTICS.uuid)
 
     async def subscribe(self) -> None:
         """Subscribe to notifications from the mug."""
         try:
             logger.info("Subscribe to Push Events")
             await self._client.start_notify(MugCharacteristic.PUSH_EVENT.uuid, self._notify_callback)
+            if self.debug:
+                await self._client.start_notify(MugCharacteristic.STATISTICS.uuid, self._notify_callback)
         except Exception as e:
             logger.warning("Failed to subscribe to state attr: %s", e)
 

@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.9.1]
+
+### Added
+
+* Log statistics when debug is selected
+* Min/Max temp (based on advertised values in manual)
+
+### Fixed
+
+* Target temp will expect and handle Fahrenheit if `use_metric` is False
+
 ## [0.9.0]
 
 ### Added

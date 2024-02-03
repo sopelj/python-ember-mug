@@ -313,7 +313,7 @@ async def test_get_mug_target_temp(ember_mug: MockMug) -> None:
         ember_mug._client.read_gatt_char.assert_called_once_with(MugCharacteristic.TARGET_TEMPERATURE.uuid)
 
 
-async def test_set_mug_target_temp(ember_mug: MockMug) -> None:
+async def test_set_mug_target_temp_celsius(ember_mug: MockMug) -> None:
     mock_ensure_connection = AsyncMock()
     ember_mug._client.write_gatt_char = AsyncMock()
     with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
@@ -322,6 +322,19 @@ async def test_set_mug_target_temp(ember_mug: MockMug) -> None:
         ember_mug._client.write_gatt_char.assert_called_once_with(
             MugCharacteristic.TARGET_TEMPERATURE.uuid,
             bytearray(b"\xcd\x15"),
+        )
+
+
+async def test_set_mug_target_temp_fahrenheit(ember_mug: MockMug) -> None:
+    mock_ensure_connection = AsyncMock()
+    ember_mug._client.write_gatt_char = AsyncMock()
+    with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
+        ember_mug.data.use_metric = False
+        await ember_mug.set_target_temp(132.45)
+        mock_ensure_connection.assert_called_once()
+        ember_mug._client.write_gatt_char.assert_called_once_with(
+            MugCharacteristic.TARGET_TEMPERATURE.uuid,
+            bytearray(b"\xcc\x15"),
         )
 
 

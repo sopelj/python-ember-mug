@@ -5,7 +5,7 @@ import platform
 import re
 from enum import Enum, IntEnum
 from functools import cached_property
-from typing import Literal
+from typing import Literal, NamedTuple
 from uuid import UUID
 
 # Format for all the mug's Bluetooth UUIDs
@@ -70,6 +70,19 @@ class TemperatureUnit(str, Enum):
 
     CELSIUS: Literal["°C"] = "°C"
     FAHRENHEIT: Literal["°F"] = "°F"
+
+
+class MinMaxTemp(NamedTuple):
+    """Helper for MinMaxTemp."""
+
+    min_temp: float
+    max_temp: float
+
+
+MIN_MAX_TEMPS = {
+    TemperatureUnit.CELSIUS: MinMaxTemp(49, 63),
+    TemperatureUnit.FAHRENHEIT: MinMaxTemp(120, 145),
+}
 
 
 class MugCharacteristic(IntEnum):
