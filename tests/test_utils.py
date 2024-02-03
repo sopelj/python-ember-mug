@@ -17,6 +17,8 @@ from ember_mug.utils import (
     get_model_from_single_int_and_services,
     get_model_from_id_and_gen,
     guess_model_from_name,
+    convert_temp_to_fahrenheit,
+    convert_temp_to_celsius,
 )
 from tests.conftest import (
     TEST_TUMBLER_ADVERTISEMENT,
@@ -38,6 +40,11 @@ def test_temp_from_bytes() -> None:
     raw_data = bytearray(b"\xcd\x15")  # int: 5581
     assert temp_from_bytes(raw_data) == 55.81
     assert temp_from_bytes(raw_data, metric=False) == 132.46
+
+
+def test_temp_conversions() -> None:
+    assert convert_temp_to_fahrenheit(55.81) == 132.458
+    assert round(convert_temp_to_celsius(132.458), 2) == 55.81
 
 
 def test_decode_byte_string() -> None:

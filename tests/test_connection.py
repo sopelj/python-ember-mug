@@ -316,6 +316,13 @@ async def test_get_mug_target_temp(ember_mug: MockMug) -> None:
 async def test_set_mug_target_temp_celsius(ember_mug: MockMug) -> None:
     mock_ensure_connection = AsyncMock()
     ember_mug._client.write_gatt_char = AsyncMock()
+
+    with pytest.raises(ValueError):
+        await ember_mug.set_target_temp(10)
+
+    with pytest.raises(ValueError):
+        await ember_mug.set_target_temp(100)
+
     with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
         await ember_mug.set_target_temp(55.81)
         mock_ensure_connection.assert_called_once()
@@ -328,8 +335,15 @@ async def test_set_mug_target_temp_celsius(ember_mug: MockMug) -> None:
 async def test_set_mug_target_temp_fahrenheit(ember_mug: MockMug) -> None:
     mock_ensure_connection = AsyncMock()
     ember_mug._client.write_gatt_char = AsyncMock()
+    ember_mug.data.use_metric = False
+
+    with pytest.raises(ValueError):
+        await ember_mug.set_target_temp(50)
+
+    with pytest.raises(ValueError):
+        await ember_mug.set_target_temp(200)
+
     with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
-        ember_mug.data.use_metric = False
         await ember_mug.set_target_temp(132.45)
         mock_ensure_connection.assert_called_once()
         ember_mug._client.write_gatt_char.assert_called_once_with(
