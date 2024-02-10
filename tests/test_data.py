@@ -1,9 +1,8 @@
 """Tests for `ember_mug.data`."""
 from __future__ import annotations
 
-from ember_mug.consts import DeviceType, DeviceModel
+from ember_mug.consts import DeviceModel, DeviceType
 from ember_mug.data import BatteryInfo, Change, Colour, ModelInfo, MugFirmwareInfo, MugMeta
-from .conftest import TEST_MUG_BLUETOOTH_NAME
 
 
 def test_change() -> None:
@@ -76,3 +75,11 @@ def test_mug_model() -> None:
     assert "name" not in unknown.device_attributes
     assert "volume_level" not in unknown.device_attributes
     assert "battery_voltage" not in unknown.device_attributes
+
+    assert unknown.as_dict() == {
+        "model": None,
+        "colour": None,
+        "name": "Unknown Device",
+        "capacity": None,
+        "device_type": DeviceType.MUG,
+    }

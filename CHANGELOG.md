@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.9.2]
+
+### Added
+
+* Add `as_dict` to allow for serialization
+
 ## [0.9.1]
 
 ### Added

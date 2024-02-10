@@ -1,7 +1,7 @@
 """Classes for representing data from the mug."""
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field, is_dataclass
+from dataclasses import asdict, dataclass, field
 from functools import cached_property
 from typing import TYPE_CHECKING, Any, NamedTuple
 
@@ -24,6 +24,8 @@ from .utils import bytes_to_little_int, decode_byte_string
 
 if TYPE_CHECKING:
     from datetime import datetime
+
+    from _typeshed import DataclassInstance
 
 
 class Change(NamedTuple):
@@ -59,8 +61,16 @@ class Colour(NamedTuple):
         return self.as_hex()
 
 
+class AsDict:
+    """Mixin to add as_dict to dataclass for serialization."""
+
+    def as_dict(self: DataclassInstance) -> dict[str, Any]:
+        """Add as_dict to dataclass for serialization."""
+        return asdict(self)
+
+
 @dataclass
-class BatteryInfo:
+class BatteryInfo(AsDict):
     """Battery Information."""
 
     percent: float
@@ -80,7 +90,7 @@ class BatteryInfo:
 
 
 @dataclass
-class MugFirmwareInfo:
+class MugFirmwareInfo(AsDict):
     """Firmware versions."""
 
     version: int
@@ -108,7 +118,7 @@ class MugFirmwareInfo:
 
 
 @dataclass
-class BaseModelInfo:
+class BaseModelInfo(AsDict):
     """Base class to declare properties as field."""
 
     model: DeviceModel | None = None
@@ -175,7 +185,7 @@ class ModelInfo(BaseModelInfo):
 
 
 @dataclass
-class MugMeta:
+class MugMeta(AsDict):
     """Meta data for mug."""
 
     mug_id: str  # unsure if this value is properly decoded
@@ -195,7 +205,7 @@ class MugMeta:
 
 
 @dataclass
-class MugData:
+class MugData(AsDict):
     """Class to store/display the state of the mug."""
 
     # Options
@@ -284,7 +294,7 @@ class MugData:
 
     def as_dict(self) -> dict[str, Any]:
         """Dump all attributes as dict for info/debugging."""
-        data = {k: asdict(v) if is_dataclass(v) else v for k, v in asdict(self).items()}
+        data = asdict(self)
         all_attrs = self.model_info.device_attributes
         if not self.debug:
             all_attrs -= EXTRA_ATTRS
