@@ -1,6 +1,8 @@
 """Tests for `ember_mug.data`."""
 from __future__ import annotations
 
+import pytest
+
 from ember_mug.consts import DeviceModel, DeviceType
 from ember_mug.data import BatteryInfo, Change, Colour, ModelInfo, MugFirmwareInfo, MugMeta
 
@@ -42,6 +44,33 @@ def test_mug_meta() -> None:
     assert meta.mug_id == "WXc9PT09"
     assert meta.serial_number == "ABCDEFGHIJ"
     assert str(meta) == "Mug ID: WXc9PT09, Serial Number: ABCDEFGHIJ"
+    assert meta.as_dict() == {
+        "mug_id": "WXc9PT09",
+        "serial_number": "ABCDEFGHIJ",
+    }
+
+
+@pytest.mark.parametrize(
+    ("model", "device_type", "name", "capacity"),
+    [
+        (DeviceModel.CUP_6_OZ, DeviceType.CUP, "Ember Cup", 178),
+        (DeviceModel.MUG_1_10_OZ, DeviceType.MUG, "Ember Mug (10oz)", 295),
+        (DeviceModel.MUG_2_14_OZ, DeviceType.MUG, "Ember Mug 2 (14oz)", 414),
+        (DeviceModel.TRAVEL_MUG_12_OZ, DeviceType.TRAVEL_MUG, "Ember Travel Mug", 355),
+        (DeviceModel.TUMBLER_16_OZ, DeviceType.TUMBLER, "Ember Tumbler", 473),
+        (DeviceModel.UNKNOWN_DEVICE, DeviceType.MUG, "Unknown Device", None),
+    ],
+)
+def test_mug_model_info(
+    model: DeviceModel,
+    device_type: DeviceType,
+    name: str,
+    capacity: int | None,
+) -> None:
+    model_info = ModelInfo(model)
+    assert model_info.name == name
+    assert model_info.device_type == device_type
+    assert model_info.capacity == capacity
 
 
 def test_mug_model() -> None:

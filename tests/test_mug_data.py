@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ember_mug.consts import DeviceModel, DeviceType, LiquidState, TemperatureUnit
+from ember_mug.consts import DeviceColour, DeviceModel, DeviceType, LiquidState, TemperatureUnit, VolumeLevel
 from ember_mug.data import BatteryInfo, Change, Colour, ModelInfo, MugData, MugFirmwareInfo, MugMeta
 
 
@@ -80,14 +80,18 @@ def test_update_info(mug_data: MugData) -> None:
 
 
 def test_mug_dict(mug_data: MugData) -> None:
-    mug_data.update_info(meta=MugMeta("test_id", "serial number"))
+    mug_data.model_info = ModelInfo(DeviceModel.TRAVEL_MUG_12_OZ, DeviceColour.BLACK)
+    mug_data.update_info(
+        meta=MugMeta("test_id", "serial number"),
+        volume_level=VolumeLevel.HIGH,
+    )
     assert mug_data.as_dict() == {
         "model_info": {
-            "capacity": None,
-            "colour": None,
-            "device_type": DeviceType.MUG,
-            "model": None,
-            "name": "Unknown Device",
+            "capacity": 355,
+            "colour": DeviceColour.BLACK,
+            "device_type": DeviceType.TRAVEL_MUG,
+            "model": DeviceModel.TRAVEL_MUG_12_OZ,
+            "name": "Ember Travel Mug",
         },
         "use_metric": True,
         "debug": False,
@@ -99,7 +103,6 @@ def test_mug_dict(mug_data: MugData) -> None:
         "dsk": "",
         "firmware": None,
         "led_colour": Colour(red=255, green=255, blue=255),
-        "led_colour_display": "#ffffff",
         "liquid_level": 0,
         "liquid_level_display": "0.00%",
         "liquid_state": None,
@@ -111,5 +114,6 @@ def test_mug_dict(mug_data: MugData) -> None:
         "target_temp_display": "0.00°C",
         "temperature_unit": TemperatureUnit.CELSIUS,
         "udsk": "",
-        "volume_level": None,
+        "volume_level": VolumeLevel.HIGH,
+        "volume_level_display": "High",
     }
