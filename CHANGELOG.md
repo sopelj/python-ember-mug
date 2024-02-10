@@ -1,17 +1,12 @@
 # Changelog
 
-## [0.9.2]
-
-### Added
-
-* Add `as_dict` to allow for serialization
-
-## [0.9.1]
+## [1.0.0]
 
 ### Added
 
 * Log statistics when debug is selected
 * Min/Max temp (based on advertised values in manual)
+* Add `as_dict` to allow for serialization
 
 ### Fixed
 
