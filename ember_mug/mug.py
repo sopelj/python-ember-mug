@@ -64,8 +64,9 @@ def require_attribute(
 
         async def wrapper(self: EmberMug, *args: P.args, **kwargs: P.kwargs) -> T:
             if self.has_attribute(attr_name) is False:
+                device_type = self.data.model_info.device_type.value
                 raise NotImplementedError(
-                    f"The {self.data.model_info.device_type} " "does not have a name attribute",
+                    f"The {device_type} does not have the {attr_name} attribute",
                 )
             return await func(self, *args, **kwargs)
 

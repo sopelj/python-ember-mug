@@ -12,10 +12,10 @@ from bleak.backends.device import BLEDevice
 from ember_mug.consts import (
     INITIAL_ATTRS,
     UPDATE_ATTRS,
+    DeviceModel,
     MugCharacteristic,
     TemperatureUnit,
     VolumeLevel,
-    DeviceModel,
 )
 from ember_mug.data import Colour, ModelInfo
 from ember_mug.mug import EmberMug
@@ -24,6 +24,8 @@ from tests.conftest import TEST_MUG_ADVERTISEMENT
 if TYPE_CHECKING:
 
     class MockMug(EmberMug):
+        """For type checking."""
+
         _client: AsyncMock
 
 
@@ -35,7 +37,8 @@ async def test_adapter_with_bluez(ble_device: BLEDevice):
 
 @patch("ember_mug.mug.IS_LINUX", False)
 async def test_adapter_without_bluez(ble_device: BLEDevice):
-    with pytest.raises(ValueError):
+    expected_message = "The adapter option is only valid for the Linux BlueZ Backend."
+    with pytest.raises(ValueError, match=expected_message):
         EmberMug(ble_device, ModelInfo(), adapter="hci0")
 
 
@@ -74,11 +77,10 @@ async def test_connect_error(
     ember_mug: MockMug,
 ) -> None:
     ember_mug._client = None  # type: ignore[assignment]
-    mock_establish_connection.side_effect = BleakError
-    with pytest.raises(BleakError):
+    mock_establish_connection.side_effect = BleakError("bleak-error")
+    with pytest.raises(BleakError, match="bleak-error"):
         await ember_mug._ensure_connection()
-    msg, device, exception = mock_logger.debug.mock_calls[1].args
-    assert msg == "%s: Failed to connect to the mug: %s"
+    device, exception = mock_logger.debug.mock_calls[1].args[1:]
     assert device == ember_mug.device
     assert isinstance(exception, BleakError)
 
@@ -191,8 +193,8 @@ async def test_write(mock_logger: Mock, ember_mug: MockMug) -> None:
         )
 
         ember_mug._client = AsyncMock()
-        ember_mug._client.write_gatt_char = AsyncMock(side_effect=BleakError)
-        with pytest.raises(BleakError):
+        ember_mug._client.write_gatt_char = AsyncMock(side_effect=BleakError("bleak-error"))
+        with pytest.raises(BleakError, match="bleak-error"):
             await ember_mug._write(
                 MugCharacteristic.MUG_NAME,
                 test_name,
@@ -300,7 +302,8 @@ async def test_set_volume_level_travel_mug(ember_mug: MockMug) -> None:
 async def test_set_volume_level_mug(ember_mug: MockMug) -> None:
     mock_ensure_connection = AsyncMock()
     with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
-        with pytest.raises(NotImplementedError):
+        error = "The mug does not have the volume_level attribute"
+        with pytest.raises(NotImplementedError, match=error):
             await ember_mug.set_volume_level(VolumeLevel.HIGH)
         mock_ensure_connection.assert_not_called()
         ember_mug._client.write_gatt_char.assert_not_called()
@@ -316,11 +319,11 @@ async def test_get_mug_target_temp(ember_mug: MockMug) -> None:
 async def test_set_mug_target_temp_celsius(ember_mug: MockMug) -> None:
     mock_ensure_connection = AsyncMock()
     ember_mug._client.write_gatt_char = AsyncMock()
-
-    with pytest.raises(ValueError):
+    error = "Temperature should be between 49 and 63 or 0."
+    with pytest.raises(ValueError, match=error):
         await ember_mug.set_target_temp(10)
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=error):
         await ember_mug.set_target_temp(100)
 
     with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
@@ -336,11 +339,12 @@ async def test_set_mug_target_temp_fahrenheit(ember_mug: MockMug) -> None:
     mock_ensure_connection = AsyncMock()
     ember_mug._client.write_gatt_char = AsyncMock()
     ember_mug.data.use_metric = False
+    error = "Temperature should be between 120 and 145 or 0."
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=error):
         await ember_mug.set_target_temp(50)
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=error):
         await ember_mug.set_target_temp(200)
 
     with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
@@ -385,7 +389,8 @@ async def test_get_mug_name(ember_mug: MockMug) -> None:
 
 
 async def test_set_mug_name(ember_mug: MockMug) -> None:
-    with patch.object(ember_mug, "_ensure_connection", AsyncMock()), pytest.raises(ValueError):
+    invalid_name = "Name cannot contain any special characters and must be 16 characters or less"
+    with patch.object(ember_mug, "_ensure_connection", AsyncMock()), pytest.raises(ValueError, match=invalid_name):
         await ember_mug.set_name("Hé!")
 
     mock_ensure_connection = AsyncMock()
@@ -399,7 +404,8 @@ async def test_set_mug_name(ember_mug: MockMug) -> None:
         )
 
         ember_mug.data.model_info = ModelInfo(DeviceModel.CUP_6_OZ)
-        with pytest.raises(NotImplementedError):
+        error = "The cup does not have the name attribute"
+        with pytest.raises(NotImplementedError, match=error):
             await ember_mug.set_name("Test")
 
 
@@ -510,11 +516,13 @@ async def test_mug_update_all(ember_mug: MockMug) -> None:
 async def test_mug_update_multiple(ember_mug: MockMug) -> None:
     mock_get_name = AsyncMock(return_value="name")
 
-    with patch.multiple(ember_mug, get_name=mock_get_name):
-        with patch.object(ember_mug.data, "update_info") as mock_update_info:
-            await ember_mug._update_multiple({"name"})
-            mock_get_name.assert_called_once()
-            mock_update_info.assert_called_once_with(name="name")
+    with (
+        patch.multiple(ember_mug, get_name=mock_get_name),
+        patch.object(ember_mug.data, "update_info") as mock_update_info,
+    ):
+        await ember_mug._update_multiple({"name"})
+        mock_get_name.assert_called_once()
+        mock_update_info.assert_called_once_with(name="name")
 
 
 async def test_mug_update_queued_attributes(ember_mug: MockMug) -> None:

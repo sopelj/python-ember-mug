@@ -1,19 +1,24 @@
+"""Test the CLI helper functions."""
 from __future__ import annotations
 
 from argparse import ArgumentTypeError
 from textwrap import dedent
+from typing import TYPE_CHECKING
 
 import pytest
-from pytest import CaptureFixture
 
-from ember_mug import EmberMug
 from ember_mug.cli.helpers import build_sub_rows, print_changes, print_info, print_table, validate_mac
 from ember_mug.consts import LiquidState
 from ember_mug.data import Change
 
+if TYPE_CHECKING:
+    from pytest import CaptureFixture  # noqa: PT013
+
+    from ember_mug import EmberMug
+
 
 def test_validate_mac() -> None:
-    with pytest.raises(ArgumentTypeError):
+    with pytest.raises(ArgumentTypeError, match="Invalid MAC Address"):
         validate_mac("potato")
     assert validate_mac("9C:DA:8C:19:27:DA") == "9c:da:8c:19:27:da"
 

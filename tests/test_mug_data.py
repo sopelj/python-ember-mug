@@ -3,9 +3,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from ember_mug.consts import LiquidState, TemperatureUnit, DeviceModel, DeviceType
+from ember_mug.consts import DeviceModel, DeviceType, LiquidState, TemperatureUnit
 from ember_mug.data import BatteryInfo, Change, Colour, ModelInfo, MugData, MugFirmwareInfo, MugMeta
-from .conftest import TEST_MUG_BLUETOOTH_NAME
 
 
 def test_mug_formatting(mug_data: MugData) -> None:

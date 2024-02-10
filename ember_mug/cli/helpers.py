@@ -26,8 +26,7 @@ base_formatters: dict[str, Callable] = {
 def validate_mac(value: str) -> str:
     """Check if specified MAC Address is valid."""
     if not isinstance(value, str) or not re.match(MAC_ADDRESS_REGEX, value):
-        msg = "Invalid MAC Address"
-        raise ArgumentTypeError(msg)
+        raise ArgumentTypeError("Invalid MAC Address")
     return value.lower()
 
 

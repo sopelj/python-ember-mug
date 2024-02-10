@@ -1,9 +1,9 @@
+"""Test utils and fixtures."""
 from __future__ import annotations
 
-from collections.abc import AsyncGenerator
 from enum import Enum
-from types import FrameType
-from unittest.mock import AsyncMock, MagicMock, Mock
+from typing import TYPE_CHECKING
+from unittest.mock import MagicMock, Mock
 
 import pytest
 import pytest_asyncio
@@ -11,8 +11,12 @@ from bleak import AdvertisementData
 from bleak.backends.device import BLEDevice
 
 from ember_mug import EmberMug
+from ember_mug.consts import EMBER_BLE_SIG, DeviceColour, DeviceModel, MugCharacteristic
 from ember_mug.data import ModelInfo, MugData
-from ember_mug.consts import EMBER_BLE_SIG, MugCharacteristic, DeviceModel, DeviceColour
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
+    from types import FrameType
 
 TEST_MAC = "32:36:a5:be:88:cb"
 TEST_MUG_BLUETOOTH_NAME = "Ember Ceramic Mug"
@@ -34,10 +38,12 @@ mock_connection = MagicMock(AsyncContextManager)
 
 
 class TestManufacturerData(bytes, Enum):
-    UNKNOWN = b''
-    MUG_2_BLACK = b'\x81'
-    TUMBLER = b'\x01\t\x03\x0e'
-    RED_TRAVEL_MUG = b'\x0b'
+    """Test values for manufacturer data."""
+
+    UNKNOWN = b""
+    MUG_2_BLACK = b"\x81"
+    TUMBLER = b"\x01\t\x03\x0e"
+    RED_TRAVEL_MUG = b"\x0b"
 
 
 def build_advertisement_data(

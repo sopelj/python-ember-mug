@@ -1,29 +1,29 @@
 """Tests for `ember_mug.utils`."""
-from unittest.mock import AsyncMock, MagicMock, Mock, call, patch, PropertyMock
+from unittest.mock import AsyncMock, MagicMock, Mock, call, patch
 
 import pytest
 from bleak import AdvertisementData, BleakError
 
-from ember_mug.consts import DeviceModel, DeviceColour, MugCharacteristic
+from ember_mug.consts import DeviceColour, DeviceModel, MugCharacteristic
 from ember_mug.utils import (
     bytes_to_big_int,
     bytes_to_little_int,
+    convert_temp_to_celsius,
+    convert_temp_to_fahrenheit,
     decode_byte_string,
     discover_services,
     encode_byte_string,
-    temp_from_bytes,
-    get_model_info_from_advertiser_data,
     get_colour_from_int,
-    get_model_from_single_int_and_services,
     get_model_from_id_and_gen,
+    get_model_from_single_int_and_services,
+    get_model_info_from_advertiser_data,
     guess_model_from_name,
-    convert_temp_to_fahrenheit,
-    convert_temp_to_celsius,
+    temp_from_bytes,
 )
 from tests.conftest import (
-    TEST_TUMBLER_ADVERTISEMENT,
     TEST_MUG_ADVERTISEMENT,
     TEST_TRAVEL_MUG_ADVERTISEMENT,
+    TEST_TUMBLER_ADVERTISEMENT,
     TEST_UNKNOWN_ADVERTISEMENT,
 )
 
@@ -57,7 +57,7 @@ def test_encode_byte_string() -> None:
 
 
 @pytest.mark.parametrize(
-    "colour_id,expected_colour",
+    ("colour_id", "expected_colour"),
     [
         (-127, DeviceColour.BLACK),
         (-126, DeviceColour.WHITE),
@@ -74,7 +74,7 @@ def test_get_colour_from_int(colour_id: int, expected_colour: DeviceColour | Non
 
 
 @pytest.mark.parametrize(
-    "model_id,service_uuids,expected_model",
+    ("model_id", "service_uuids", "expected_model"),
     [
         (1, [str(MugCharacteristic.TRAVEL_MUG_SERVICE)], DeviceModel.TRAVEL_MUG_12_OZ),
         (1, [], DeviceModel.MUG_1_10_OZ),
@@ -94,7 +94,7 @@ def test_get_model_from_single_int_and_services(
 
 
 @pytest.mark.parametrize(
-    "model_name,expected_model",
+    ("model_name", "expected_model"),
     [
         ("", None),
         ("Test", DeviceModel.UNKNOWN_DEVICE),
@@ -111,7 +111,7 @@ def test_guess_model_from_name(
 
 
 @pytest.mark.parametrize(
-    "model_id,generation,expected_model",
+    ("model_id", "generation", "expected_model"),
     [
         (1, 1, DeviceModel.MUG_1_10_OZ),
         (1, 2, DeviceModel.MUG_2_10_OZ),
@@ -132,7 +132,7 @@ def test_get_model_from_id_and_gen(
 
 
 @pytest.mark.parametrize(
-    "advertisement,expected_model,expected_colour",
+    ("advertisement", "expected_model", "expected_colour"),
     [
         (TEST_UNKNOWN_ADVERTISEMENT, DeviceModel.UNKNOWN_DEVICE, None),
         (TEST_MUG_ADVERTISEMENT, DeviceModel.MUG_2_10_OZ, DeviceColour.BLACK),
@@ -159,13 +159,36 @@ async def test_discover_services(read_gatt_descriptor: Mock) -> None:
         properties=["read"],
         descriptors=[mock_descriptor],
     )
+    write_characteristic = MagicMock(
+        uuid="write-char",
+        description="write-char",
+        properties=["write"],
+        descriptors=[],
+    )
+    mock_invalid_characteristic = MagicMock(
+        properties=["read"],
+        uuid="invalid-char",
+        description="invalid-char",
+        descriptors=[],
+    )
     mock_service = MagicMock(
         uuid="service-abc",
         description="test service",
-        characteristics=[mock_characteristic],
+        characteristics=[
+            mock_characteristic,
+            mock_invalid_characteristic,
+            write_characteristic,
+        ],
     )
+    bleak_invalid_exception = BleakError("invalid")
+
+    def mock_read_char(uuid: str) -> bytes:
+        if "invalid" in uuid:
+            raise bleak_invalid_exception
+        return bytearray(b"test char")
+
     client = AsyncMock(services=[mock_service])
-    client.read_gatt_char = AsyncMock(return_value=bytearray(b"test char"))
+    client.read_gatt_char = AsyncMock(side_effect=mock_read_char)
     client.read_gatt_descriptor = AsyncMock(return_value=bytearray(b"test descriptor"))
     await discover_services(client)
     read_gatt_descriptor.assert_has_calls(
@@ -180,7 +203,21 @@ async def test_discover_services(read_gatt_descriptor: Mock) -> None:
                 b"test char",
             ),
             call.debug("\t\t[Descriptor] %s: Handle: %s | Value: '%s'", "test-desc", 2, b"test descriptor"),
+            call.debug(
+                "\t[Characteristic] %s: %s | Description: %s | Value: '%s'",
+                "invalid-char",
+                "read",
+                "invalid-char",
+                bleak_invalid_exception,
+            ),
+            call.debug(
+                "\t[Characteristic] %s: %s | Description: %s | Value: '%s'",
+                "write-char",
+                "write",
+                "write-char",
+                None,
+            ),
         ],
     )
-    client.read_gatt_char.assert_called_once_with("char-abc")
+    client.read_gatt_char.assert_has_calls([call("char-abc"), call("invalid-char")])
     client.read_gatt_descriptor.assert_called_once_with(2)

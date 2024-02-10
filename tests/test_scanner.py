@@ -1,4 +1,5 @@
-from unittest.mock import AsyncMock, patch, Mock, MagicMock
+"""Tests for scanner."""
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from bleak.backends.device import BLEDevice
@@ -21,7 +22,8 @@ def test_build_scanner_kwargs_linux() -> None:
 
 @patch("ember_mug.scanner.IS_LINUX", False)
 def test_build_scanner_kwargs_other() -> None:
-    with pytest.raises(ValueError):
+    error = "The adapter option is only valid for the Linux BlueZ Backend."
+    with pytest.raises(ValueError, match=error):
         assert build_scanner_kwargs(adapter="hci0")
 
 
