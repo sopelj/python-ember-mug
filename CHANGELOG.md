@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.1]
+
+### Fixed
+* discover method - `discovered_devices_and_advertisement_data` is a dict and not a list (#62)
+
 ## [1.0.0]
 
 ### Added

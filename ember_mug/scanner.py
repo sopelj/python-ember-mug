@@ -46,7 +46,7 @@ async def discover_mugs(
         await asyncio.sleep(wait)
         return [
             (d, a)
-            for (d, a) in scanner.discovered_devices_and_advertisement_data
+            for (d, a) in scanner.discovered_devices_and_advertisement_data.values()
             if mac is None or d.address.lower() == mac.lower()
         ]
 

@@ -30,9 +30,9 @@ def test_build_scanner_kwargs_other() -> None:
 @patch("asyncio.sleep")
 @patch("ember_mug.scanner.BleakScanner")
 async def test_discover_mugs(mock_scanner: AsyncMock, mock_sleep: AsyncMock) -> None:
-    mock_scanner.return_value.__aenter__.return_value.discovered_devices_and_advertisement_data = [
-        (m, TEST_MUG_ADVERTISEMENT) for m in EXAMPLE_MUGS
-    ]
+    mock_scanner.return_value.__aenter__.return_value.discovered_devices_and_advertisement_data = {
+        m.address: (m, TEST_MUG_ADVERTISEMENT) for m in EXAMPLE_MUGS
+    }
     mugs = await discover_mugs()
     assert len(mugs) == 2
     mugs = await discover_mugs(mac="32:36:a5:be:88:cb")
