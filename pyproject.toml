@@ -38,6 +38,10 @@ docs = [
   "mkdocstrings[python]",
   "mkdocs-material-extensions",
   "mkdocs-autorefs",
+  "mkdocs-literate-nav",
+  "mkdocs-gen-files",
+  "mkdocstrings-python",
+  "termynal",
 ]
 
 [project.urls]

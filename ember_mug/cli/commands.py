@@ -48,13 +48,13 @@ async def find_device(args: Namespace) -> tuple[BLEDevice, AdvertisementData]:
     try:
         device, advertisement = await find_mug(mac=args.mac, adapter=args.adapter)
     except BleakError as e:
-        print(f"An error occurred trying to find a mug: {e}")
+        print(f"An error occurred trying to find a device: {e}")
         sys.exit(1)
     if not device or not advertisement:
-        print("No mug was found.")
+        print("No device was found.")
         sys.exit(1)
     if not args.raw:
-        print("Found mug:", device)
+        print("Found device:", device)
     return device, advertisement
 
 
@@ -63,10 +63,10 @@ async def discover(args: Namespace) -> list[tuple[BLEDevice, AdvertisementData]]
     try:
         mugs = await discover_mugs(mac=args.mac)
     except BleakError as e:
-        print(f"An error occurred trying to discover mugs: {e}")
+        print(f"An error occurred trying to discover devices: {e}")
         sys.exit(1)
     if not mugs:
-        print('No mugs were found. Be sure it is in pairing mode. Or use "find" if already paired.')
+        print('No devices were found. Be sure it is in pairing mode. Or use "find" if already paired.')
         sys.exit(1)
 
     for mug, advertisement in mugs:
@@ -75,7 +75,7 @@ async def discover(args: Namespace) -> list[tuple[BLEDevice, AdvertisementData]]
         else:
             model_info = get_model_info_from_advertiser_data(advertisement)
             model_number = model_info.model.value if model_info.model else "Unknown Model"
-            print("Found mug:", mug)
+            print(f"Found {model_info.device_type.value}:", mug)
             print("Name:", advertisement.local_name)
             print("Model:", f"{model_info.name} [{model_number}]")
             print("Colour:", model_info.colour.value if model_info.colour else "Unknown")
@@ -228,7 +228,7 @@ class EmberMugCli:
         info_parsers.add_argument("-e", "--extra", help="Show extra info", action="store_true")
         info_parsers.add_argument("--imperial", help="Use Imperial units", action="store_true")
         subparsers.add_parser("info", description="Fetch all info from device", parents=[shared_parser, info_parsers])
-        subparsers.add_parser("poll", description="Poll mug for information", parents=[shared_parser, info_parsers])
+        subparsers.add_parser("poll", description="Poll device for information", parents=[shared_parser, info_parsers])
         get_parser = subparsers.add_parser("get", description="Get mug value", parents=[shared_parser, info_parsers])
         get_parser.add_argument(dest="attributes", metavar="ATTRIBUTE", choices=get_attribute_names, nargs="+")
         set_parser = subparsers.add_parser("set", description="Set mug value", parents=[shared_parser, info_parsers])

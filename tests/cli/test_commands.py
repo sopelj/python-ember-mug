@@ -92,7 +92,7 @@ async def test_find_device(mock_find_mug: AsyncMock, capsys: CaptureFixture, ble
     assert advertisement == TEST_MUG_ADVERTISEMENT
     mock_find_mug.assert_called_once_with(mac=ble_device.address, adapter=None)
     captured = capsys.readouterr()
-    assert captured.out == f"Found mug: {ble_device}\n"
+    assert captured.out == f"Found device: {ble_device}\n"
 
     # Raw prints nothing
     args = Namespace(mac=ble_device.address, adapter=None, raw=True)
@@ -109,7 +109,7 @@ async def test_find_device_no_device(mock_find_mug: AsyncMock, capsys: CaptureFi
         await find_device(args)
     mock_find_mug.assert_called_once_with(mac=TEST_MAC, adapter=None)
     captured = capsys.readouterr()
-    assert captured.out == "No mug was found.\n"
+    assert captured.out == "No device was found.\n"
 
 
 @patch("ember_mug.cli.commands.find_mug")
@@ -120,7 +120,7 @@ async def test_find_device_bleak_error(mock_find_mug: AsyncMock, capsys: Capture
         await find_device(args)
     mock_find_mug.assert_called_once_with(mac=TEST_MAC, adapter=None)
     captured = capsys.readouterr()
-    assert captured.out == "An error occurred trying to find a mug: Test Error\n"
+    assert captured.out == "An error occurred trying to find a device: Test Error\n"
 
 
 @patch("ember_mug.cli.commands.discover_mugs")
@@ -156,7 +156,7 @@ async def test_discover_no_device(mock_discover_mugs: AsyncMock, capsys: Capture
         await discover(args)
     mock_discover_mugs.assert_called_once_with(mac=TEST_MAC)
     captured = capsys.readouterr()
-    assert captured.out == 'No mugs were found. Be sure it is in pairing mode. Or use "find" if already paired.\n'
+    assert captured.out == 'No devices were found. Be sure it is in pairing mode. Or use "find" if already paired.\n'
 
 
 @patch("ember_mug.cli.commands.discover_mugs")
@@ -167,7 +167,7 @@ async def test_discover_bleak_error(mock_discover_mugs: AsyncMock, capsys: Captu
         await discover(args)
     mock_discover_mugs.assert_called_once_with(mac=TEST_MAC)
     captured = capsys.readouterr()
-    assert captured.out == "An error occurred trying to discover mugs: Test Error\n"
+    assert captured.out == "An error occurred trying to discover devices: Test Error\n"
 
 
 @patch("ember_mug.cli.commands.print_info")

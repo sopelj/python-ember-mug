@@ -63,6 +63,8 @@ async def find_mug(
         with contextlib.suppress(asyncio.TimeoutError):
             async with async_timeout.timeout(timeout):
                 async for device, advertisement in scanner.advertisement_data():
-                    if (not mac and device.name.startswith("Ember")) or (mac and device.address.lower() == mac):
+                    if (not mac and device.name and device.name.startswith("Ember")) or (
+                        mac and device.address.lower() == mac
+                    ):
                         return device, advertisement
     return None, None

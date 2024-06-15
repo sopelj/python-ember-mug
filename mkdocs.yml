@@ -1,15 +1,28 @@
 site_name: Python Ember Mug
+site_description: Unofficial Python API for interacting with Ember devices over Bluetooth
 site_url: https://sopelj.github.io/python-ember-mug
 repo_url: https://github.com/sopelj/python-ember-mug
 repo_name: sopelj/python-ember-mug
+
 watch:
   - ember_mug
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+
 nav:
   - Home: index.md
-  - Installation: installation.md
-  - Usage: usage.md
+  - Usage:
+      - Installation: usage/installation.md
+      - CLI: usage/cli.md
+      - Python: usage/python.md
+  - API Reference:
+      - ember_mug: api/
   - Contributing: contributing.md
   - Changelog: changelog.md
+
 theme:
   name: material
   language: en
@@ -22,21 +35,15 @@ theme:
     - navigation.instant
     - navigation.tabs.sticky
 markdown_extensions:
-  - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
   - pymdownx.critic
   - pymdownx.caret
   - pymdownx.mark
   - pymdownx.tilde
   - pymdownx.tabbed
   - attr_list
-  - pymdownx.arithmatex:
-      generic: true
   - pymdownx.highlight:
       linenums: false
   - pymdownx.superfences
-  - pymdownx.inlinehilite
   - pymdownx.details
   - admonition
   - toc:
@@ -46,16 +53,48 @@ markdown_extensions:
   - meta
 plugins:
   - include-markdown
+  - autorefs
+  - termynal
+  - gen-files:
+      scripts:
+        - docs/gen_api_docs.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [ember_mug]
+          options:
+            docstring_options:
+              ignore_init_summary: true
+              docstring_section_style: table
+            allow_inspection: true
+            annotation_path: full
+            docstring_section_style: table
+            filters: ["!^_"]
+            find_stubs_package: true
+            inherited_members: true
+            member_order: alphabetical
+            modernize_annotations: true
+            group_by_category: true
+            separate_signature: true
+            show_category_heading: true
+            show_if_no_docstring: true
+            show_labels: true
+            show_root_heading: true
+            show_root_toc_entry: true
+            show_root_full_path: true
+            show_signature: true
+            show_signature_annotations: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            signature_crossrefs: true
   - search:
       lang: en
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/sopelj/python-ember-mug
+      link: https://github.com/sopelj
       name: Github
     - icon: material/email
       link: "mailto:jesse.sopel@gmail.com"
-# uncomment the following and put your google tracking id below to enable GA
-# google_analytics:
-#   - UA-xxx
-#   - auto

@@ -42,6 +42,7 @@ repos:
           - bleak
           - bleak-retry-connector
           - pytest-asyncio
+          - mkdocs-gen-files
   - repo: https://github.com/adrienverge/yamllint
     rev: 'v1.32.0'
     hooks:
