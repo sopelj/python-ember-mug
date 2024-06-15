@@ -5,7 +5,7 @@ import pytest
 from bleak.backends.device import BLEDevice
 
 from ember_mug.consts import DEVICE_SERVICE_UUIDS
-from ember_mug.scanner import build_scanner_kwargs, discover_mugs, find_mug
+from ember_mug.scanner import build_scanner_kwargs, discover_devices, find_device
 
 from .conftest import TEST_MUG_ADVERTISEMENT
 
@@ -29,34 +29,34 @@ def test_build_scanner_kwargs_other() -> None:
 
 @patch("asyncio.sleep")
 @patch("ember_mug.scanner.BleakScanner")
-async def test_discover_mugs(mock_scanner: AsyncMock, mock_sleep: AsyncMock) -> None:
+async def test_discover_devices(mock_scanner: AsyncMock, mock_sleep: AsyncMock) -> None:
     mock_scanner.return_value.__aenter__.return_value.discovered_devices_and_advertisement_data = {
         m.address: (m, TEST_MUG_ADVERTISEMENT) for m in EXAMPLE_MUGS
     }
-    mugs = await discover_mugs()
-    assert len(mugs) == 2
-    mugs = await discover_mugs(mac="32:36:a5:be:88:cb")
-    assert len(mugs) == 1
-    device_1, advertisement_1 = mugs[0]
+    devices = await discover_devices()
+    assert len(devices) == 2
+    devices = await discover_devices(mac="32:36:a5:be:88:cb")
+    assert len(devices) == 1
+    device_1, advertisement_1 = devices[0]
     assert device_1.address == "32:36:a5:be:88:cb"
     mock_sleep.assert_called_with(5)
 
 
 @patch("asyncio.sleep")
 @patch("ember_mug.scanner.BleakScanner")
-async def test_find_mug(mock_scanner: AsyncMock, mock_sleep: AsyncMock) -> None:
+async def test_find_device(mock_scanner: AsyncMock, mock_sleep: AsyncMock) -> None:
     mock_data_iterator = MagicMock()
     mock_data_iterator().__aiter__.return_value = [(m, TEST_MUG_ADVERTISEMENT) for m in EXAMPLE_MUGS]
     mock_scanner.return_value.__aenter__.return_value.advertisement_data = mock_data_iterator
 
     # Without filter
-    mug, advertisement = await find_mug()
-    assert mug is not None
-    assert mug.name == "Ember Ceramic Mug"
-    assert mug.address == MUG_1.address
+    device, advertisement = await find_device()
+    assert device is not None
+    assert device.name == "Ember Ceramic Mug"
+    assert device.address == MUG_1.address
 
     # With Filter
-    mug, advertisement = await find_mug(mac=MUG_2.address)
-    assert mug is not None
-    assert mug.name == "Ember Ceramic Mug"
-    assert mug.address == MUG_2.address
+    device, advertisement = await find_device(mac=MUG_2.address)
+    assert device is not None
+    assert device.name == "Ember Ceramic Mug"
+    assert device.address == MUG_2.address

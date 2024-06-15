@@ -13,13 +13,13 @@ from ember_mug import EmberMug
 from ember_mug.cli.commands import (
     EmberMugCli,
     colour_type,
-    discover,
-    fetch_info,
-    find_device,
-    get_mug,
-    get_mug_value,
-    poll_mug,
-    set_mug_value,
+    discover_cmd,
+    fetch_info_cmd,
+    find_device_cmd,
+    get_device,
+    get_device_value_cmd,
+    poll_device_cmd,
+    set_device_value_cmd,
 )
 from ember_mug.consts import DeviceColour, DeviceModel
 from ember_mug.data import Colour, ModelInfo, MugData
@@ -34,7 +34,7 @@ if TYPE_CHECKING:
 
 @pytest.fixture()
 def mock_mug_with_connection() -> Generator[AsyncMock, None, None]:
-    with patch("ember_mug.cli.commands.get_mug") as mock:
+    with patch("ember_mug.cli.commands.get_device") as mock:
         mock_mug = AsyncMock()
         mock_mug.connection = Mock(return_value=mock_connection)
         mock.return_value = mock_mug
@@ -54,18 +54,18 @@ def mock_namespace(**kwargs: Any) -> Namespace:
 
 
 @patch("ember_mug.cli.commands.EmberMug", spec=EmberMug)
-@patch("ember_mug.cli.commands.find_device")
-async def test_get_mug(
-    mock_find_device: AsyncMock,
+@patch("ember_mug.cli.commands.find_device_cmd")
+async def test_get_device(
+    mock_find_device_cmd: AsyncMock,
     mock_ember_mug: AsyncMock,
     capsys: CaptureFixture,
     ble_device: BLEDevice,
 ) -> None:
-    mock_find_device.return_value = ble_device, TEST_MUG_ADVERTISEMENT
+    mock_find_device_cmd.return_value = ble_device, TEST_MUG_ADVERTISEMENT
     args = mock_namespace(extra=True)
-    mug = await get_mug(args)
+    mug = await get_device(args)
     assert mug is not None
-    mock_find_device.assert_called_once_with(args)
+    mock_find_device_cmd.assert_called_once_with(args)
     mock_ember_mug.assert_called_once_with(
         ble_device,
         ModelInfo(DeviceModel.MUG_2_10_OZ, DeviceColour.BLACK),
@@ -77,17 +77,17 @@ async def test_get_mug(
 
     # Raw prints nothing
     args = mock_namespace(extra=True, raw=True)
-    mug = await get_mug(args)
+    mug = await get_device(args)
     assert mug is not None
     captured = capsys.readouterr()
     assert captured.out == ""
 
 
-@patch("ember_mug.cli.commands.find_mug")
+@patch("ember_mug.cli.commands.find_device")
 async def test_find_device(mock_find_mug: AsyncMock, capsys: CaptureFixture, ble_device: BLEDevice) -> None:
     mock_find_mug.return_value = (ble_device, TEST_MUG_ADVERTISEMENT)
     args = mock_namespace(mac=ble_device.address)
-    device, advertisement = await find_device(args)
+    device, advertisement = await find_device_cmd(args)
     assert device == ble_device
     assert advertisement == TEST_MUG_ADVERTISEMENT
     mock_find_mug.assert_called_once_with(mac=ble_device.address, adapter=None)
@@ -96,38 +96,38 @@ async def test_find_device(mock_find_mug: AsyncMock, capsys: CaptureFixture, ble
 
     # Raw prints nothing
     args = Namespace(mac=ble_device.address, adapter=None, raw=True)
-    await find_device(args)
+    await find_device_cmd(args)
     captured = capsys.readouterr()
     assert captured.out == ""
 
 
-@patch("ember_mug.cli.commands.find_mug")
+@patch("ember_mug.cli.commands.find_device")
 async def test_find_device_no_device(mock_find_mug: AsyncMock, capsys: CaptureFixture) -> None:
     mock_find_mug.return_value = (None, None)
     args = mock_namespace(mac=TEST_MAC)
     with pytest.raises(SystemExit, match="1"):
-        await find_device(args)
+        await find_device_cmd(args)
     mock_find_mug.assert_called_once_with(mac=TEST_MAC, adapter=None)
     captured = capsys.readouterr()
     assert captured.out == "No device was found.\n"
 
 
-@patch("ember_mug.cli.commands.find_mug")
+@patch("ember_mug.cli.commands.find_device")
 async def test_find_device_bleak_error(mock_find_mug: AsyncMock, capsys: CaptureFixture) -> None:
     mock_find_mug.side_effect = BleakError("Test Error")
     args = mock_namespace(mac=TEST_MAC)
     with pytest.raises(SystemExit, match="1"):
-        await find_device(args)
+        await find_device_cmd(args)
     mock_find_mug.assert_called_once_with(mac=TEST_MAC, adapter=None)
     captured = capsys.readouterr()
     assert captured.out == "An error occurred trying to find a device: Test Error\n"
 
 
-@patch("ember_mug.cli.commands.discover_mugs")
+@patch("ember_mug.cli.commands.discover_devices")
 async def test_discover(mock_discover_mugs: AsyncMock, capsys: CaptureFixture, ble_device: BLEDevice) -> None:
     mock_discover_mugs.return_value = [(ble_device, TEST_MUG_ADVERTISEMENT)]
     args = mock_namespace(mac=TEST_MAC)
-    mugs = await discover(args)
+    mugs = await discover_cmd(args)
     assert mugs == [(ble_device, TEST_MUG_ADVERTISEMENT)]
     mock_discover_mugs.assert_called_once_with(mac=TEST_MAC)
     captured = capsys.readouterr()
@@ -141,30 +141,30 @@ async def test_discover(mock_discover_mugs: AsyncMock, capsys: CaptureFixture, b
 
     mock_discover_mugs.reset_mock()
     args = mock_namespace(mac=TEST_MAC, raw=True)
-    mugs = await discover(args)
+    mugs = await discover_cmd(args)
     assert mugs == [(ble_device, TEST_MUG_ADVERTISEMENT)]
     mock_discover_mugs.assert_called_once_with(mac=TEST_MAC)
     captured = capsys.readouterr()
     assert captured.out == f"{TEST_MAC}\n"
 
 
-@patch("ember_mug.cli.commands.discover_mugs")
+@patch("ember_mug.cli.commands.discover_devices")
 async def test_discover_no_device(mock_discover_mugs: AsyncMock, capsys: CaptureFixture) -> None:
     mock_discover_mugs.return_value = []
     args = mock_namespace(mac=TEST_MAC)
     with pytest.raises(SystemExit, match="1"):
-        await discover(args)
+        await discover_cmd(args)
     mock_discover_mugs.assert_called_once_with(mac=TEST_MAC)
     captured = capsys.readouterr()
     assert captured.out == 'No devices were found. Be sure it is in pairing mode. Or use "find" if already paired.\n'
 
 
-@patch("ember_mug.cli.commands.discover_mugs")
+@patch("ember_mug.cli.commands.discover_devices")
 async def test_discover_bleak_error(mock_discover_mugs: AsyncMock, capsys: CaptureFixture) -> None:
     mock_discover_mugs.side_effect = BleakError("Test Error")
     args = mock_namespace(mac=TEST_MAC)
     with pytest.raises(SystemExit, match="1"):
-        await discover(args)
+        await discover_cmd(args)
     mock_discover_mugs.assert_called_once_with(mac=TEST_MAC)
     captured = capsys.readouterr()
     assert captured.out == "An error occurred trying to discover devices: Test Error\n"
@@ -178,14 +178,14 @@ async def test_fetch_info(
 ) -> None:
     # Test normal
     args = mock_namespace(mac=TEST_MAC)
-    await fetch_info(args)
+    await fetch_info_cmd(args)
     captured = capsys.readouterr()
     assert captured.out == "Connected.\nFetching Info\n"
     mock_print_info.assert_called_once_with(mock_mug_with_connection)
 
     # Test with Raw
     args = mock_namespace(mac=TEST_MAC, raw=True)
-    await fetch_info(args)
+    await fetch_info_cmd(args)
     captured = capsys.readouterr()
     assert captured.out == ""
 
@@ -194,7 +194,7 @@ async def test_fetch_info(
 @patch("ember_mug.cli.commands.print_info")
 @patch("ember_mug.cli.commands.print_changes")
 @patch("ember_mug.cli.commands.CommandLoop", lambda: [1])
-async def test_poll_mug(
+async def test_poll_device_cmd(
     mock_print_changes: AsyncMock,
     mock_print_info: AsyncMock,
     mock_sleep: AsyncMock,
@@ -203,7 +203,7 @@ async def test_poll_mug(
 ) -> None:
     # Test normal
     args = mock_namespace(mac=TEST_MAC)
-    await poll_mug(args)
+    await poll_device_cmd(args)
     captured = capsys.readouterr()
     assert captured.out == "Connected.\nFetching Info\n\nWatching for changes\n"
     mock_sleep.assert_has_calls([call(1)] * 60)
@@ -211,14 +211,14 @@ async def test_poll_mug(
     # Test with Raw
     mock_sleep.reset_mock()
     args = mock_namespace(mac=TEST_MAC, raw=True)
-    await poll_mug(args)
+    await poll_device_cmd(args)
     mock_sleep.assert_has_calls([call(1)] * 60)
     captured = capsys.readouterr()
     assert captured.out == ""
 
 
 @patch("ember_mug.cli.commands.print_table")
-async def test_get_mug_value(
+async def test_get_device_value_cmd(
     mocked_print_table: Mock,
     mock_mug_with_connection: AsyncMock,
     capsys: CaptureFixture,
@@ -228,25 +228,25 @@ async def test_get_mug_value(
     mock_mug_with_connection.get_target_temp.return_value = 55.5
     mock_mug_with_connection.get_name.return_value = "test"
     args = mock_namespace(attributes=["target_temp", "name"])
-    await get_mug_value(args)
+    await get_device_value_cmd(args)
     mock_mug_with_connection.get_target_temp.assert_called_once()
     mocked_print_table.assert_called_once_with([("Target Temp", "test"), ("Device Name", "test")])
 
     mock_mug_with_connection.get_led_colour.return_value = 55.5
     args = mock_namespace(attributes=["led_colour", "name"], raw=True)
-    await get_mug_value(args)
+    await get_device_value_cmd(args)
     captured = capsys.readouterr()
     assert captured.out == "55.5\ntest\n"
 
     mock_mug_with_connection.get_name.side_effect = NotImplementedError
     args = mock_namespace(attributes=["name"], raw=True)
     with pytest.raises(SystemExit, match="1"):
-        await get_mug_value(args)
+        await get_device_value_cmd(args)
 
 
-async def test_set_mug_value_no_value(capsys: CaptureFixture) -> None:
+async def test_set_device_value_cmd_no_value(capsys: CaptureFixture) -> None:
     with pytest.raises(SystemExit, match="1"):
-        await set_mug_value(Namespace())
+        await set_device_value_cmd(Namespace())
     captured = capsys.readouterr()
     assert captured.out == (
         "Please specify at least one attribute and value to set.\n"
@@ -254,16 +254,16 @@ async def test_set_mug_value_no_value(capsys: CaptureFixture) -> None:
     )
 
 
-async def test_set_mug_value(mock_mug_with_connection: AsyncMock) -> None:
+async def test_set_device_value_cmd(mock_mug_with_connection: AsyncMock) -> None:
     mock_mug_with_connection.data = MugData(ModelInfo())
     args = mock_namespace(name="test")
-    await set_mug_value(args)
+    await set_device_value_cmd(args)
     mock_mug_with_connection.set_name.assert_called_once_with("test")
 
     mock_mug_with_connection.reset_mock()
     mock_mug_with_connection.set_name.side_effect = NotImplementedError("Unable to set name on Cup")
     with pytest.raises(SystemExit, match="1"):
-        await set_mug_value(args)
+        await set_device_value_cmd(args)
 
 
 @pytest.mark.parametrize(

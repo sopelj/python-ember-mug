@@ -14,7 +14,7 @@ from bleak import AdvertisementData, BleakError
 from ember_mug.consts import ATTR_LABELS, EXTRA_ATTRS, IS_LINUX, VolumeLevel
 from ember_mug.data import Colour
 from ember_mug.mug import EmberMug
-from ember_mug.scanner import discover_mugs, find_mug
+from ember_mug.scanner import discover_devices, find_device
 
 from ..formatting import format_capacity
 from ..utils import get_model_info_from_advertiser_data
@@ -29,9 +29,9 @@ all_attrs = list(ATTR_LABELS) + list(EXTRA_ATTRS)
 get_attribute_names = [n.replace("_", "-") for n in all_attrs]
 
 
-async def get_mug(args: Namespace) -> EmberMug:
-    """Help to get the mug based on args."""
-    device, advertisement = await find_device(args)
+async def get_device(args: Namespace) -> EmberMug:
+    """Help to get the devices based on command args."""
+    device, advertisement = await find_device_cmd(args)
     mug = EmberMug(
         device,
         get_model_info_from_advertiser_data(advertisement),
@@ -43,10 +43,10 @@ async def get_mug(args: Namespace) -> EmberMug:
     return mug
 
 
-async def find_device(args: Namespace) -> tuple[BLEDevice, AdvertisementData]:
+async def find_device_cmd(args: Namespace) -> tuple[BLEDevice, AdvertisementData]:
     """Find a single device that has already been paired."""
     try:
-        device, advertisement = await find_mug(mac=args.mac, adapter=args.adapter)
+        device, advertisement = await find_device(mac=args.mac, adapter=args.adapter)
     except BleakError as e:
         print(f"An error occurred trying to find a device: {e}")
         sys.exit(1)
@@ -58,10 +58,10 @@ async def find_device(args: Namespace) -> tuple[BLEDevice, AdvertisementData]:
     return device, advertisement
 
 
-async def discover(args: Namespace) -> list[tuple[BLEDevice, AdvertisementData]]:
+async def discover_cmd(args: Namespace) -> list[tuple[BLEDevice, AdvertisementData]]:
     """Discover new devices in pairing mode."""
     try:
-        mugs = await discover_mugs(mac=args.mac)
+        mugs = await discover_devices(mac=args.mac)
     except BleakError as e:
         print(f"An error occurred trying to discover devices: {e}")
         sys.exit(1)
@@ -83,9 +83,9 @@ async def discover(args: Namespace) -> list[tuple[BLEDevice, AdvertisementData]]
     return mugs
 
 
-async def fetch_info(args: Namespace) -> None:
+async def fetch_info_cmd(args: Namespace) -> None:
     """Fetch all information from a mug and end."""
-    mug = await get_mug(args)
+    mug = await get_device(args)
     async with mug.connection(adapter=args.adapter):
         if not args.raw:
             print("Connected.\nFetching Info")
@@ -93,9 +93,9 @@ async def fetch_info(args: Namespace) -> None:
     print_info(mug)
 
 
-async def poll_mug(args: Namespace) -> None:
+async def poll_device_cmd(args: Namespace) -> None:
     """Fetch all information and keep polling for changes."""
-    mug = await get_mug(args)
+    mug = await get_device(args)
     async with mug.connection(adapter=args.adapter):
         if not args.raw:
             print("Connected.\nFetching Info")
@@ -111,9 +111,9 @@ async def poll_mug(args: Namespace) -> None:
             print_changes(await mug.update_all(), mug.data.use_metric)
 
 
-async def get_mug_value(args: Namespace) -> None:
+async def get_device_value_cmd(args: Namespace) -> None:
     """Get values from the mug and print them."""
-    mug = await get_mug(args)
+    mug = await get_device(args)
     data = {}
     attributes = [a.replace("-", "_") for a in args.attributes]
     async with mug.connection(adapter=args.adapter):
@@ -131,8 +131,8 @@ async def get_mug_value(args: Namespace) -> None:
         print_table([(ATTR_LABELS.get(attr, attr), str(mug.data.get_formatted_attr(attr))) for attr in data])
 
 
-async def set_mug_value(args: Namespace) -> None:
-    """Set one or more values on the mug."""
+async def set_device_value_cmd(args: Namespace) -> None:
+    """Set one or more values on the device."""
     attrs = ("name", "target_temp", "temperature_unit", "led_colour", "volume_level")
     values = [(attr, value) for attr in attrs if (value := getattr(args, attr, None))]
     if not values:
@@ -141,7 +141,7 @@ async def set_mug_value(args: Namespace) -> None:
         print(f'Options: {", ".join(options)}')
         sys.exit(1)
 
-    mug = await get_mug(args)
+    mug = await get_device(args)
     async with mug.connection(adapter=args.adapter):
         for attr, value in values:
             method = getattr(mug, f'set_{attr.replace("-", "_")}')
@@ -180,12 +180,12 @@ class EmberMugCli:
     """Very simple CLI Interface to interact with a mug."""
 
     _commands: ClassVar[dict[str, Callable[[Namespace], Awaitable]]] = {
-        "find": find_device,
-        "discover": discover,
-        "info": fetch_info,
-        "poll": poll_mug,
-        "get": get_mug_value,
-        "set": set_mug_value,
+        "find": find_device_cmd,
+        "discover": discover_cmd,
+        "info": fetch_info_cmd,
+        "poll": poll_device_cmd,
+        "get": get_device_value_cmd,
+        "set": set_device_value_cmd,
     }
 
     def __init__(self) -> None:

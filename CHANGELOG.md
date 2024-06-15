@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0]
+
+### Changed
+
+* Rename `find_mug` and `discover_mugs` to `find_device` and `discover_devices` respectively
+* Improved documentation
+
 ## [1.0.1]
 
 ### Fixed

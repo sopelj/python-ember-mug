@@ -36,12 +36,22 @@ def build_scanner_kwargs(adapter: str | None = None) -> dict[str, Any]:
     return kwargs | {"adapter": adapter} if adapter else kwargs
 
 
-async def discover_mugs(
+async def discover_devices(
     mac: str | None = None,
     adapter: str | None = None,
     wait: int = 5,
 ) -> list[tuple[BLEDevice, AdvertisementData]]:
-    """Discover new mugs in pairing mode."""
+    """
+    Discover new devices in pairing mode.
+
+    Example:
+    -------
+        ```python
+        devices = await discover_devices()
+        for device, advertisement in devices:
+            print(device.address, advertisement)
+        ```
+    """
     async with BleakScanner(**build_scanner_kwargs(adapter)) as scanner:
         await asyncio.sleep(wait)
         return [
@@ -51,12 +61,20 @@ async def discover_mugs(
         ]
 
 
-async def find_mug(
+async def find_device(
     mac: str | None = None,
     adapter: str | None = None,
     timeout: int = DEFAULT_TIMEOUT,
 ) -> tuple[BLEDevice, AdvertisementData] | tuple[None, None]:
-    """Find a mug."""
+    """
+    Find a device that has previously been discovered.
+
+    Example:
+    -------
+        ```python
+        device = await find_device("my:mac:addr")
+        ```
+    """
     if mac is not None:
         mac = mac.lower()
     async with BleakScanner(**build_scanner_kwargs(adapter)) as scanner:
