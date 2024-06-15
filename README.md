@@ -6,7 +6,7 @@
 [![codecov](https://codecov.io/gh/sopelj/python-ember-mug/graph/badge.svg?token=2Lw2iVjKsG)](https://codecov.io/gh/sopelj/python-ember-mug)
 ![Project Maintenance](https://img.shields.io/maintenance/yes/2024.svg)
 [![Maintainer](https://img.shields.io/badge/maintainer-%40sopelj-blue.svg)](https://github.com/sopelj)
-[![License](https://img.shields.io/github/license/sopelj/python-ember-mug.svg)](LICENSE)
+[![License](https://img.shields.io/github/license/sopelj/python-ember-mug.svg)](https://github.com/sopelj/python-ember-mug/blob/main/LICENSE)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen)](https://github.com/pre-commit/pre-commit)
 
 Python Library for interacting with Ember Mugs, Cups, and Travel Mugs via Bluetooth
@@ -54,7 +54,8 @@ Attributes by device:
 | Battery Percent     | R   | R   | R       | R          | Current battery level                         |
 | On Charger          | R   | R   | R       | R          | Device is on it's charger                     |
 
-*** Writing may only work if the devices has been set up in the app previously
+> **Note**
+> Writing may only work if the devices has been set up in the app previously
 
 ## Usage
 
@@ -62,14 +63,16 @@ Attributes by device:
 
 ```python
 from ember_mug.scanner import find_mug, discover_mugs
+from ember_mug.utils import get_model_info_from_advertiser_data
 from ember_mug.mug import EmberMug
 
 # if first time with mug in pairing
 mugs = await discover_mugs()
-device = mugs[0]
+
 # after paired you can simply use
-device = await find_mug()
-mug = EmberMug(device)
+device, advertisement = await find_mug()
+model_info = get_model_info_from_advertiser_data(advertisement)
+mug = EmberMug(device, model_info)
 await mug.update_all()
 print(mug.data.formatted)
 await mug.disconnect()
@@ -105,7 +108,43 @@ Basic options:
 | `get`       | Get the value(s) of one or more attribute(s) by name                              |
 | `set`       | Set one or more values on the device                                              |
 
-![CLI Example](./docs/images/cli-example.png)
+Example:
+<!-- termynal -->
+```
+$ ember-mug poll
+Found device: C9:0F:59:D6:33:F9: Ember Ceramic Mug
+Connecting...
+Connected.
+Fetching Info
+Device Data
++--------------+----------------------+
+| Device Name  | Jesse's Mug          |
++--------------+----------------------+
+| Meta         | None                 |
++--------------+----------------------+
+| Battery      | 64.0%                |
+|              | not on charging base |
++--------------+----------------------+
+| Firmware     | None                 |
++--------------+----------------------+
+| LED Colour   | #ff0fbb              |
++--------------+----------------------+
+| Liquid State | Empty                |
++--------------+----------------------+
+| Liquid Level | 0.00%                |
++--------------+----------------------+
+| Current Temp | 24.50°C              |
++--------------+----------------------+
+| Target Temp  | 55.00°C              |
++--------------+----------------------+
+| Use Metric   | True                 |
++--------------+----------------------+
+
+Watching for changes
+Current Temp changed from "24.50°C" to "25.50°"
+Battery changed from "64.0%, on charging base" to "65.5%, on charging base"
+```
+
 
 ## Caveats
 

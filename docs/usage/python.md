@@ -1,13 +1,17 @@
+## In order to
+
 ```python
-from ember_mug.scanner import find_mug, discover_mugs
+from ember_mug.scanner import find_device, discover_devices
+from ember_mug.utils import get_model_info_from_advertiser_data
 from ember_mug.mug import EmberMug
 
 # if first time with mug in pairing
-mugs = await discover_mugs()
-device = mugs[0]
+devices = await discover_devices()
+
 # after paired you can simply use
-device = await find_mug()
-mug = EmberMug(device)
+device, advertisement = await find_device()
+model_info = get_model_info_from_advertiser_data(advertisement)
+mug = EmberMug(device, model_info)
 await mug.update_all()
 print(mug.data.formatted)
 await mug.disconnect()

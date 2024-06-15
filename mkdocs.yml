@@ -41,6 +41,7 @@ markdown_extensions:
   - pymdownx.tilde
   - pymdownx.tabbed
   - attr_list
+  - admonition
   - pymdownx.highlight:
       linenums: false
   - pymdownx.superfences
