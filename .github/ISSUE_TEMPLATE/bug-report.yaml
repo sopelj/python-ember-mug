@@ -1,0 +1,64 @@
+name: Bug Report
+description: File a bug report.
+title: "Bug: "
+labels: ["bug"]
+assignees: ["sopelj"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Sorry you're having troubles.
+        Please provide a bit of context to help resolve it.
+        Also, did you check the Troubleshooting section of the README?"
+  - type: textarea
+    id: unexpected-behaviour
+    attributes:
+      label: Unexpected behaviour
+      description: What happened that you did not expect/want?
+      placeholder: I tried to do X, but got Y result
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behaviour
+    attributes:
+      label: Expected behaviour
+      description: What did you expect to happen?
+      placeholder: I expected Z result
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        - Install locally
+        - Run X command
+        - Get error
+      value: |
+        -
+  - type: input
+    id: python-version
+    attributes:
+      label: Python Version
+      description: What version of Python are you using?
+      placeholder: "3.11"
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      multiple: true
+      options:
+        - Linux
+        - macOS
+        - Windows
+    validations:
+      required: true
+  - type: textarea
+    id: errors
+    attributes:
+      label: Errors/Logs
+      description: |
+        Please copy and paste any relevant errors or log messages.
+        > [!NOTE]
+        > This will be automatically formatted as code. No need to format.
+      render: shell
