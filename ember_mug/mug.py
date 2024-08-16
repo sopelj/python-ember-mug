@@ -4,7 +4,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from functools import cached_property
 from time import time
@@ -389,7 +389,7 @@ class EmberMug:
         """Get date and time zone."""
         date_time_zone_bytes = await self._read(MugCharacteristic.DATE_TIME_AND_ZONE)
         time_value = bytes_to_big_int(date_time_zone_bytes[:4])
-        return datetime.fromtimestamp(time_value, timezone.utc) if time_value > 0 else None
+        return datetime.fromtimestamp(time_value, UTC) if time_value > 0 else None
 
     async def get_firmware(self) -> MugFirmwareInfo:
         """Get firmware info."""

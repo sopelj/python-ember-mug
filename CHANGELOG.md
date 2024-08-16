@@ -6,6 +6,11 @@
 
 * Rename `find_mug` and `discover_mugs` to `find_device` and `discover_devices` respectively
 * Improved documentation
+* Bumped Bleak to 0.22.2
+
+### Removed
+
+* Dropped support for Python 3.10
 
 ## [1.0.1]
 

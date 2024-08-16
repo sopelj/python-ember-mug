@@ -5,4 +5,4 @@ __all__ = ("EmberMug",)
 
 __author__ = """Jesse Sopel"""
 __email__ = "jesse.sopel@gmail.com"
-__version__ = "1.0.1"
+__version__ = "1.1.0"
