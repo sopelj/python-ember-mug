@@ -32,24 +32,23 @@ test = [
   "pytest-asyncio",
 ]
 docs = [
-  "mkdocs>=1.1.21",
-  "mkdocs-include-markdown-plugin>=3.6.1,<8.0.0",
-  "mkdocs-material>=8.4.1,<10.0.0",
-  "mkdocstrings[python]",
+  "mkdocs>=1.6.1",
+  "mkdocs-include-markdown-plugin>=7.0.0,<8.0.0",
+  "mkdocs-material>=9.5.44,<10.0.0",
   "mkdocs-material-extensions",
+  "mkdocstrings-python>=1.12.0",
   "mkdocs-autorefs",
   "mkdocs-literate-nav",
   "mkdocs-gen-files",
-  "mkdocstrings-python",
   "black",
   "termynal",
 ]
 
 [project.urls]
+"Changelog" = "https://sopelj.github.io/python-ember-mug/changelog/"
 "Documentation" = "https://sopelj.github.io/python-ember-mug/"
 "Source code" = "https://github.com/sopelj/python-ember-mug/"
 "Bug Tracker" = "https://github.com/sopelj/python-ember-mug/issues"
-"Changelog" = "https://github.com/sopelj/python-ember-mug/blob/main/CHANGELOG.md"
 
 [project.scripts]
 ember-mug = "ember_mug.cli:run_cli"
@@ -85,7 +84,7 @@ cov = "pytest -vvv --asyncio-mode=auto --cov=ember_mug --cov-branch --cov-report
 no-cov = "cov --no-cov"
 
 [tool.hatch.envs.docs]
-python = "3.11"
+python = "3.12"
 features = ["docs"]
 
 [tool.hatch.envs.docs.scripts]

@@ -3,6 +3,7 @@ site_description: Unofficial Python API for interacting with Ember devices over 
 site_url: https://sopelj.github.io/python-ember-mug
 repo_url: https://github.com/sopelj/python-ember-mug
 repo_name: sopelj/python-ember-mug
+edit_uri: edit/main/docs/
 
 watch:
   - ember_mug
@@ -25,15 +26,34 @@ nav:
 
 theme:
   name: material
+  icon:
+    logo: material/coffee
   language: en
   palette:
-    scheme: preference
-    primary: indigo
-    accent: indigo
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: brown
+      accent: brown
+      toggle:
+        icon: material/weather-night
+        name: Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: brown
+      accent: brown
+      toggle:
+        icon: material/weather-sunny
+        name: Light mode
   features:
+    - content.tooltips
+    - navigation.expand
     - navigation.indexes
     - navigation.instant
+    - navigation.sections
+    - navigation.tabs
     - navigation.tabs.sticky
+    - content.code.copy
+
 markdown_extensions:
   - pymdownx.critic
   - pymdownx.caret
@@ -46,6 +66,8 @@ markdown_extensions:
       linenums: false
   - pymdownx.superfences
   - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
   - admonition
   - toc:
       baselevel: 2

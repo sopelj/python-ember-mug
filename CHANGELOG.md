@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.1.0]
+## [1.1.0] - 2024-11-02
 
 ### Changed
 
@@ -12,12 +12,12 @@
 
 * Dropped support for Python 3.10
 
-## [1.0.1]
+## [1.0.1] - 2024-06-15
 
 ### Fixed
 * discover method - `discovered_devices_and_advertisement_data` is a dict and not a list (#62)
 
-## [1.0.0]
+## [1.0.0] - 2024-02-25
 
 ### Added
 
@@ -29,7 +29,7 @@
 
 * Target temp will expect and handle Fahrenheit if `use_metric` is False
 
-## [0.9.0]
+## [0.9.0] - 2024-01-25
 
 ### Added
 
@@ -46,13 +46,13 @@
 * `model` renamed to `model_info`
 * `include_extra` option removed. `debug` has a similar function now.
 
-## [0.8.3]
+## [0.8.3] - 2023-10-31
 
 ### Fixed
 
 * Set proper version and rebuild release
 
-## [0.8.2]
+## [0.8.2] - 2023-10-31
 
 ### Added
 
@@ -62,7 +62,7 @@
 
 * Use debug level for connection timeout logger instead or error
 
-## [0.8.1]
+## [0.8.1] - 2023-10-25
 
 ### Changed
 
@@ -72,7 +72,7 @@
 
 * Don't require adapter keyword for other backends
 
-## [0.8.0]
+## [0.8.0] - 2023-10-25
 
 ### Added
 
@@ -86,7 +86,7 @@
 
 * Dropped support for Python 3.9 as it is no longer supported by bleak-retry-connector and Home Assistant
 
-## [0.7.0]
+## [0.7.0] - 2023-05-21
 
 ### Added
 
@@ -100,7 +100,7 @@
 * Add volume_level attribute for Travel Mug
 * Make terms more generic as all devices are not Mugs
 
-## [0.6.2]
+## [0.6.2] - 2023-04-14
 
 ### Added
 
@@ -112,14 +112,14 @@
 
 * The model attribute of the data is now a Model class that provides attributes based on model
 
-## [0.6.1]
+## [0.6.1] - 2023-04-13
 
 ### Added
 
 * Discover Cups and Travel Mugs, but they are still not fully supported
 * Debug option to print services and characteristics for debugging
 
-## [0.6.0]
+## [0.6.0] - 2023-02-18
 
 ### Changed
 
@@ -138,7 +138,7 @@
 * Changed condition that caused connections to be constantly reestablished because is_connected is not a bool.
 * Don't call disconnect in disconnect callback
 
-## [0.5.6]
+## [0.5.6] - 2023-02-08
 
 ### Fixed
 
@@ -149,14 +149,14 @@
 * Update pre-commit, pytest and add dependabot
 * register callback stores a dict to avoid duplicate registrations
 
-## [0.5.5]
+## [0.5.5] - 2023-02-03
 
 ### Changed
 
 * Set values on mug immediately after setting them
 * Only add/remove callback if not already done
 
-## [0.5.4]
+## [0.5.4] - 2023-02-02
 
 ### Added
 
@@ -168,7 +168,7 @@
 * Catch exceptions on querying DSK and UDSK and return empty strings
 * No longer query "extra" attributes unless `include_extra=True` was passed to mug
 
-## [0.5.3]
+## [0.5.3] - 2023-01-18
 
 ### Changed
 
@@ -179,13 +179,13 @@
 
 * Added _read and_write helper methods with logging
 
-## [0.5.2]
+## [0.5.2] - 2023-01-17
 
 ### Fixed
 
 * Fixed logging
 
-## [0.5.1]
+## [0.5.1] - 2023-01-14
 
 ### Added
 
@@ -201,7 +201,7 @@
 
 * Fixed `_device` attribute which would not be updated on callback
 
-## [0.5.0]
+## [0.5.0] - 2023-01-11
 
 ### Added
 
@@ -218,19 +218,19 @@
 * Update documentation
 * Updated linting and CI tools
 
-## [0.4.2]
+## [0.4.2] - 2022-11-23
 
 ### Changed
 
 * Also catch NotImplementedError when trying to pair. (Affects Home Assistant ESPHome proxies)
 
-## [0.4.1]
+## [0.4.1] - 2022-11-04
 
 ### Fixed
 
 * Format Colour as hex when printed (for CLI)
 
-## [0.4.0]
+## [0.4.0] - 2022-11-03
 
 ### Changed
 
@@ -246,7 +246,7 @@
 
 * Column number calculation
 
-## [0.3.7]
+## [0.3.7] - 2022-11-01
 
 ### Fix
 
@@ -256,43 +256,43 @@
 
 * Update docs to document procedure for writing attributes
 
-## [0.3.6]
+## [0.3.6] - 2022-10-19
 
 ### Fix
 
 * Remove retry_bluetooth_connection_error...
 
-## [0.3.5]
+## [0.3.5] - 2022-10-17
 
 ### Fix
 
 * Add fallback method for retry_bluetooth_connection_error to not break on patch.
 
-## [0.3.4]
+## [0.3.4] - 2022-10-17
 
 ### Added
 
 * Use retry_bluetooth_connection_error on update methods
 
-## [0.3.3]
+## [0.3.3] - 2022-10-17
 
 ### Fix
 
 * Try to fetch services on initial connection to wake device
 
-## [0.3.2]
+## [0.3.2] - 2022-10-12
 
 ### Fix
 
 * Try to fix, but also always catch encoding errors
 
-## [0.3.1]
+## [0.3.1] - 2022-10-10
 
 ### Fix
 
 * Catch error decoding UDSK and log warning to avoid error setting up
 
-## [0.3.0]
+## [0.3.0] - 2022-10-08
 
 ### Added
 
@@ -307,13 +307,13 @@
 * Update bleak to 0.17.0
 * Renamed connect to ensure_connection
 
-## [0.2.5]
+## [0.2.5] - 2022-09-18
 
 ### Fixed
 
 * Catch EOFError during pair, which is not caught in bleak/dbus-next currently
 
-## [0.2.4]
+## [0.2.4] - 2022-09-09
 
 ### Added
 
@@ -325,7 +325,7 @@
 * Fix Name validation rules
 * set_temperature_unit method name
 
-## [0.2.3]
+## [0.2.3] - 2022-09-09
 
 ### Added
 
@@ -336,13 +336,13 @@
 
 * Incorrect name for imperial CLI flag
 
-## [0.2.2]
+## [0.2.2] - 2022-09-08
 
 ### Fixed
 
 * Only try to disconnect if client is present
 
-## [0.2.1]
+## [0.2.1] - 2022-09-08
 
 ### Added
 
@@ -355,7 +355,7 @@
 * target_temp returned current_temp
 * extra flag was not applied to polling
 
-## [0.2.0]
+## [0.2.0] - 2022-09-06
 
 ### Added
 

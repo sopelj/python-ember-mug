@@ -11,9 +11,9 @@
 
 Python Library for interacting with Ember Mugs, Cups, and Travel Mugs via Bluetooth
 
-* [Documentation](https://sopelj.github.io/python-ember-mug)
-* [GitHub](https://github.com/sopelj/python-ember-mug)
-* [PyPI](https://pypi.org/project/python-ember-mug/)
+* [📘 Documentation](https://sopelj.github.io/python-ember-mug)
+* [💻 GitHub](https://github.com/sopelj/python-ember-mug)
+* [🐍 PyPI](https://pypi.org/project/python-ember-mug/)
 
 ## Summary
 
