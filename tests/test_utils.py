@@ -1,4 +1,5 @@
 """Tests for `ember_mug.utils`."""
+
 from unittest.mock import AsyncMock, MagicMock, Mock, call, patch
 
 import pytest

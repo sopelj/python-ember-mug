@@ -4,7 +4,7 @@
 [![python](https://img.shields.io/pypi/pyversions/python-ember-mug.svg)](https://pypi.org/project/python-ember-mug/)
 [![Build Status](https://github.com/sopelj/python-ember-mug/actions/workflows/tests.yml/badge.svg)](https://github.com/sopelj/python-ember-mug/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/sopelj/python-ember-mug/graph/badge.svg?token=2Lw2iVjKsG)](https://codecov.io/gh/sopelj/python-ember-mug)
-![Project Maintenance](https://img.shields.io/maintenance/yes/2024.svg)
+![Project Maintenance](https://img.shields.io/maintenance/yes/2025.svg)
 [![Maintainer](https://img.shields.io/badge/maintainer-%40sopelj-blue.svg)](https://github.com/sopelj)
 [![License](https://img.shields.io/github/license/sopelj/python-ember-mug.svg)](https://github.com/sopelj/python-ember-mug/blob/main/LICENSE)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen)](https://github.com/pre-commit/pre-commit)

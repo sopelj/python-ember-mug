@@ -1,4 +1,5 @@
 """Test the CLI commands."""
+
 from __future__ import annotations
 
 import sys
@@ -32,7 +33,7 @@ if TYPE_CHECKING:
     from pytest import CaptureFixture  # noqa: PT013
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_mug_with_connection() -> Generator[AsyncMock, None, None]:
     with patch("ember_mug.cli.commands.get_device") as mock:
         mock_mug = AsyncMock()

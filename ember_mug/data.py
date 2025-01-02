@@ -1,4 +1,5 @@
 """Classes for representing data from the mug."""
+
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field

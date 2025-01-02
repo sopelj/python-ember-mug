@@ -1,4 +1,5 @@
 """Test utils and fixtures."""
+
 from __future__ import annotations
 
 from enum import Enum
@@ -83,7 +84,7 @@ def ble_device_fixture() -> BLEDevice:
     return BLEDevice(address=TEST_MAC, name=TEST_MUG_BLUETOOTH_NAME, details={}, rssi=1)
 
 
-@pytest.fixture()
+@pytest.fixture
 def mug_data() -> MugData:
     return MugData(ModelInfo())
 

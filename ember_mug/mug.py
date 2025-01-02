@@ -1,4 +1,5 @@
 """Objects and methods related to connection to the mug."""
+
 from __future__ import annotations
 
 import asyncio
@@ -157,7 +158,7 @@ class EmberMug:
                 if self.debug is True:
                     await discover_services(client)
                 self._expected_disconnect = False
-            except (asyncio.TimeoutError, BleakError) as error:
+            except (TimeoutError, BleakError) as error:
                 logger.debug("%s: Failed to connect to the mug: %s", self.device, error)
                 raise error
             # Attempt to pair for good measure

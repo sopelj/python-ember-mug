@@ -1,4 +1,5 @@
 """Tests for `ember_mug.formatting`."""
+
 from ember_mug.data import Colour
 from ember_mug.formatting import format_capacity, format_led_colour, format_liquid_level, format_temp
 

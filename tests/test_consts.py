@@ -1,4 +1,5 @@
 """Tests for `ember_mug.consts`."""
+
 from __future__ import annotations
 
 from uuid import UUID

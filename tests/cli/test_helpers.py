@@ -1,4 +1,5 @@
 """Test the CLI helper functions."""
+
 from __future__ import annotations
 
 from argparse import ArgumentTypeError

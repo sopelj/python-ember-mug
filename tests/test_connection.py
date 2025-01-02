@@ -1,4 +1,5 @@
 """Tests for `ember_mug.mug connections`."""
+
 from __future__ import annotations
 
 from datetime import datetime

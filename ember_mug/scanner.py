@@ -1,4 +1,5 @@
 """Scanning tools for finding mugs."""
+
 from __future__ import annotations
 
 import asyncio
@@ -44,6 +45,7 @@ async def discover_devices(
         for device, advertisement in devices:
             print(device.address, advertisement)
         ```
+
     """
     async with BleakScanner(**build_scanner_kwargs(adapter)) as scanner:
         await asyncio.sleep(wait)
@@ -57,7 +59,7 @@ async def discover_devices(
 async def find_device(
     mac: str | None = None,
     adapter: str | None = None,
-    timeout: int = DEFAULT_TIMEOUT,
+    timeout: int = DEFAULT_TIMEOUT,  # noqa: ASYNC109
 ) -> tuple[BLEDevice, AdvertisementData] | tuple[None, None]:
     """
     Find a device that has previously been discovered.
@@ -67,6 +69,7 @@ async def find_device(
         ```python
         device = await find_device("my:mac:addr")
         ```
+
     """
     if mac is not None:
         mac = mac.lower()

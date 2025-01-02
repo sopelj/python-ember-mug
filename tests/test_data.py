@@ -1,4 +1,5 @@
 """Tests for `ember_mug.data`."""
+
 from __future__ import annotations
 
 import pytest

@@ -1,11 +1,12 @@
 """Bluetooth UUIDs and other constants used for communicating with the mug."""
+
 from __future__ import annotations
 
 import platform
 import re
 from enum import Enum, IntEnum
 from functools import cached_property
-from typing import Literal, NamedTuple
+from typing import NamedTuple
 from uuid import UUID
 
 # Format for all the mug's Bluetooth UUIDs
@@ -68,8 +69,8 @@ class DeviceColour(str, Enum):
 class TemperatureUnit(str, Enum):
     """Temperature Units."""
 
-    CELSIUS: Literal["°C"] = "°C"
-    FAHRENHEIT: Literal["°F"] = "°F"
+    CELSIUS = "°C"
+    FAHRENHEIT = "°F"
 
 
 class MinMaxTemp(NamedTuple):

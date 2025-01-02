@@ -1,4 +1,5 @@
 """CLI Interface."""
+
 import asyncio
 
 from .commands import EmberMugCli
