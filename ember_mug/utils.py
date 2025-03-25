@@ -97,11 +97,11 @@ def get_model_from_single_int_and_services(  # noqa PLR0911
         return DeviceModel.MUG_1_10_OZ
     if model_id == 65:
         return DeviceModel.MUG_1_14_OZ
-    if model_id in (-63, -61, -62):
+    if model_id in (-51, -63, -61, -62):
         return DeviceModel.MUG_2_14_OZ
     if model_id == -60:
         return DeviceModel.CUP_6_OZ
-    if model_id in (-127, -126, -125, -124, -123, -122, -120, -117, -57, -56, -55, -53, -52, -51, 83, 131):
+    if model_id in (-127, -126, -125, -124, -123, -122, -120, -117, -57, -56, -55, -53, -52, 83, 131):
         return DeviceModel.MUG_2_10_OZ
     return None
 
