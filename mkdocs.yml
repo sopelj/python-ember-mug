@@ -90,14 +90,13 @@ plugins:
           options:
             docstring_options:
               ignore_init_summary: true
-              docstring_section_style: table
             allow_inspection: true
-            annotation_path: full
+            annotations_path: full
             docstring_section_style: table
             filters: ["!^_"]
             find_stubs_package: true
             inherited_members: true
-            member_order: alphabetical
+            members_order: alphabetical
             modernize_annotations: true
             group_by_category: true
             separate_signature: true

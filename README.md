@@ -85,7 +85,7 @@ async with mug.connection():
     print(mug.data.formatted)
 ```
 
-### CLI
+### CLI Mode
 
 It can also be run via command line either directly with `ember-mug --help` or as a module with `python -m ember_mug --help`
 There are four options with different subsections. You can see them by specifying them before help. eg `ember-mug poll --help`
