@@ -1,4 +1,5 @@
 """Build a markdown file and summary for all Python files in the module."""
+
 from pathlib import Path
 
 import mkdocs_gen_files
