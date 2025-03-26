@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.1] - 2025-03-25
+
+### Changed
+
+* Change -51 to represent 14oz Ember Mug 2 (by [@Flight-Lab](https://github.com/Flight-Lab))
+
 ## [1.1.0] - 2024-11-02
 
 ### Changed
