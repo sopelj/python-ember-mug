@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.0] - 2025-08-19
+
+### Changed
+
+* Remove `service_uuids` filtering for `find_mug` method
+
 ## [1.1.1] - 2025-03-25
 
 ### Changed

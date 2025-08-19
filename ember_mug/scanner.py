@@ -5,15 +5,23 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, cast
 
 from bleak import BleakScanner
 
 from .consts import DEVICE_SERVICE_UUIDS, IS_LINUX
 
 if TYPE_CHECKING:
+    from typing import NotRequired, TypedDict
+
     from bleak.backends.device import BLEDevice
     from bleak.backends.scanner import AdvertisementData
+
+    class ScannerKwargs(TypedDict):
+        """Optional kwargs for scanner."""
+
+        adapter: NotRequired[str]
+        service_uuids: NotRequired[list[str]]
 
 
 DEFAULT_TIMEOUT = 30
@@ -21,13 +29,13 @@ DEFAULT_TIMEOUT = 30
 logger = logging.getLogger(__name__)
 
 
-def build_scanner_kwargs(adapter: str | None = None) -> dict[str, Any]:
+def build_scanner_kwargs(adapter: str | None = None, *, service_uuids: list[str] | None = None) -> ScannerKwargs:
     """Add Adapter to kwargs for scanner if specified and using BlueZ."""
     if adapter and IS_LINUX is not True:
         msg = "The adapter option is only valid for the Linux BlueZ Backend."
         raise ValueError(msg)
-    kwargs = {"service_uuids": DEVICE_SERVICE_UUIDS}
-    return kwargs | {"adapter": adapter} if adapter else kwargs
+    kwargs = {"service_uuids": service_uuids} if service_uuids else {}
+    return cast("ScannerKwargs", kwargs | {"adapter": adapter} if adapter else kwargs)
 
 
 async def discover_devices(
@@ -47,7 +55,7 @@ async def discover_devices(
         ```
 
     """
-    async with BleakScanner(**build_scanner_kwargs(adapter)) as scanner:
+    async with BleakScanner(**build_scanner_kwargs(adapter, service_uuids=DEVICE_SERVICE_UUIDS)) as scanner:
         await asyncio.sleep(wait)
         return [
             (d, a)

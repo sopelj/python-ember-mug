@@ -1,5 +1,3 @@
-[tool]
-
 [project]
 name = "python-ember-mug"
 readme = "README.md"
@@ -42,6 +40,9 @@ docs = [
   "mkdocs-gen-files",
   "black",
   "termynal",
+]
+dev = [
+  "ipython",
 ]
 
 [project.urls]

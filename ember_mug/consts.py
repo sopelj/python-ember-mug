@@ -149,10 +149,10 @@ TRAVEL_MUG_SERVICE_UUIDS = (
     str(MugCharacteristic.TRAVEL_MUG_SERVICE_OTHER),
 )
 
-DEVICE_SERVICE_UUIDS = (
+DEVICE_SERVICE_UUIDS = [
     str(MugCharacteristic.STANDARD_SERVICE),
     *TRAVEL_MUG_SERVICE_UUIDS,
-)
+]
 
 
 class LiquidState(IntEnum):

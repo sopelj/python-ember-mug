@@ -4,7 +4,15 @@ from __future__ import annotations
 
 from uuid import UUID
 
+import pytest
+
 from ember_mug.consts import LiquidState, MugCharacteristic, VolumeLevel
+
+
+@pytest.mark.parametrize("characteristic", MugCharacteristic)
+def test_characteristic_uuids(characteristic: MugCharacteristic) -> None:
+    assert characteristic.uuid == UUID(f"fc54{characteristic.value:04x}-236c-4c94-8fa9-944a3e5353fa")
+    assert str(characteristic) == f"fc54{characteristic.value:04x}-236c-4c94-8fa9-944a3e5353fa"
 
 
 def test_mug_uuids() -> None:

@@ -1,5 +1,8 @@
 """Tests for scanner."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -10,15 +13,20 @@ from ember_mug.scanner import build_scanner_kwargs, discover_devices, find_devic
 
 from .conftest import TEST_MUG_ADVERTISEMENT
 
+if TYPE_CHECKING:
+    from ember_mug.scanner import ScannerKwargs
+
 MUG_1 = BLEDevice(address="32:36:a5:be:88:cb", name="Ember Ceramic Mug", details={}, rssi=1)
 MUG_2 = BLEDevice(address="9c:da:8c:19:27:da", name="Ember Ceramic Mug", details={}, rssi=1)
 EXAMPLE_MUGS = [MUG_1, MUG_2]
+SERVICE_UUID_KWARG = {"service_uuids": DEVICE_SERVICE_UUIDS}
+ADAPTER_KWARG = {"adapter": "hci0"}
 
 
 @patch("ember_mug.scanner.IS_LINUX", True)
-def test_build_scanner_kwargs_linux() -> None:
-    assert build_scanner_kwargs() == {"service_uuids": DEVICE_SERVICE_UUIDS}
-    assert build_scanner_kwargs(adapter="hci0") == {"adapter": "hci0", "service_uuids": DEVICE_SERVICE_UUIDS}
+@pytest.mark.parametrize("kwargs", [{}, ADAPTER_KWARG, SERVICE_UUID_KWARG, ADAPTER_KWARG | SERVICE_UUID_KWARG])
+def test_build_scanner_kwargs_linux(kwargs: ScannerKwargs) -> None:
+    assert build_scanner_kwargs(**kwargs) == kwargs
 
 
 @patch("ember_mug.scanner.IS_LINUX", False)
