@@ -134,7 +134,7 @@ def guess_model_from_name(name: str | None) -> DeviceModel | None:
 
 def get_model_info_from_advertiser_data(advertisement: AdvertisementData) -> ModelInfo:
     """Extract model info from manufacturer data in advertiser data."""
-    from ember_mug.data import ModelInfo
+    from ember_mug.data import ModelInfo  # noqa: PLC0415
 
     model_data = advertisement.manufacturer_data.get(EMBER_BLE_SIG, None)
     if model_data is not None:

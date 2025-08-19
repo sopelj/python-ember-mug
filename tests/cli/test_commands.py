@@ -316,7 +316,7 @@ def test_ember_cli():
 @patch("ember_mug.consts.IS_LINUX", False)
 def test_ember_cli_windows():
     del sys.modules["ember_mug.cli.commands"]  # force re-import
-    from ember_mug.cli.commands import EmberMugCli
+    from ember_mug.cli.commands import EmberMugCli  # noqa: PLC0415
 
     cli = EmberMugCli()
 
@@ -364,7 +364,7 @@ async def test_cli_run_discover_debug(mock_logging_config: Mock):
 @patch("sys.argv", ["file.py", "find", "-m", TEST_MAC, "--raw"])
 async def test_cli_run_non_linux():
     del sys.modules["ember_mug.cli.commands"]  # force re-import
-    from ember_mug.cli.commands import EmberMugCli
+    from ember_mug.cli.commands import EmberMugCli  # noqa: PLC0415
 
     cli = EmberMugCli()
     mock_find = AsyncMock()
