@@ -2,13 +2,11 @@
 name = "python-ember-mug"
 readme = "README.md"
 description = "Python Library for Ember Mugs."
-authors = [
-    { name = "Jesse Sopel", email = "jesse.sopel@gmail.com" },
-]
-license =  "MIT"
+authors = [{ name = "Jesse Sopel", email = "jesse@sopelj.ca" }]
+license = "MIT"
 requires-python = ">=3.11"
 dynamic = ["version"]
-classifiers=[
+classifiers = [
     'Intended Audience :: Developers',
     'License :: OSI Approved :: MIT License',
     'Natural Language :: English',
@@ -24,26 +22,20 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-test = [
-  "pytest>=7.2.1",
-  "pytest-cov",
-  "pytest-asyncio",
-]
+test = ["pytest>=7.2.1", "pytest-cov", "pytest-asyncio"]
 docs = [
-  "mkdocs>=1.6.1",
-  "mkdocs-include-markdown-plugin>=7.0.0,<8.0.0",
-  "mkdocs-material>=9.5.44,<10.0.0",
-  "mkdocs-material-extensions",
-  "mkdocstrings-python>=1.12.0",
-  "mkdocs-autorefs",
-  "mkdocs-literate-nav",
-  "mkdocs-gen-files",
-  "black",
-  "termynal",
+    "mkdocs>=1.6.1",
+    "mkdocs-include-markdown-plugin>=7.0.0,<8.0.0",
+    "mkdocs-material>=9.5.44,<10.0.0",
+    "mkdocs-material-extensions",
+    "mkdocstrings-python>=1.12.0",
+    "mkdocs-autorefs",
+    "mkdocs-literate-nav",
+    "mkdocs-gen-files",
+    "black",
+    "termynal",
 ]
-dev = [
-  "ipython",
-]
+dev = ["ipython"]
 
 [project.urls]
 "Changelog" = "https://sopelj.github.io/python-ember-mug/changelog/"
@@ -63,12 +55,15 @@ build-backend = "hatchling.build"
 [tool.hatch.version]
 path = "ember_mug/__init__.py"
 
+[tool.hatch.build]
+exclude = ["/docs", "/tests"]
+
 [tool.hatch.build.targets.sdist]
-packages = ["ember_mug", "tests"]
+packages = ["ember_mug"]
 exclude = [".gitignore"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["ember_mug", "tests"]
+packages = ["ember_mug"]
 exclude = [".gitignore"]
 
 [tool.hatch.envs.default]
@@ -112,15 +107,15 @@ exclude = '''
 
 [tool.coverage.report]
 exclude_lines = [
-  "pragma: no cover",
-  "def __repr__",
-  "def __str__",
-  "def main",
-  "raise AssertionError",
-  "raise NotImplementedError",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-  "if typing.TYPE_CHECKING:"
+    "pragma: no cover",
+    "def __repr__",
+    "def __str__",
+    "def main",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "if typing.TYPE_CHECKING:",
 ]
 
 [tool.ruff]
@@ -163,7 +158,7 @@ ignore = ["D203", "D212", "PLR2004"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
-    "D103",  # No docstrings in tests needed
-    "S101",  # We needs asserts in tests
+    "D103",   # No docstrings in tests needed
+    "S101",   # We needs asserts in tests
     "SLF001",
 ]
