@@ -1,10 +1,14 @@
 # Changelog
 
-## [1.2.0] - 2025-08-19
+## [1.2.0] - 2025-08-29
 
 ### Changed
 
 * Remove `service_uuids` filtering for `find_mug` method
+
+### Fixed
+
+* Removed tests folder from packaging
 
 ## [1.1.1] - 2025-03-25
 
