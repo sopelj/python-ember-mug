@@ -166,6 +166,9 @@ You may also need to re-add it to the app in order to make it writable again as 
 This seems to be caused by the bluetooth adaptor being in some sort of passive mode. I have not yet figured out how to wake it programmatically so sadly, you need to manually open `bluetoothctl` to do so.
 Please ensure the device is in pairing mode (ie the light is flashing blue or says "PAIR") and run the `bluetoothctl` command. You don't need to type anything. run it and wait until the mug connects.
 
+### Model incorrect or not found
+
+I don't have a lot of these devices, so if this library does not correctly identify your device, please open and issue with the advertisement data of your device, so I can update the library to correctly identify it. Thanks!
 
 ## Development
 
