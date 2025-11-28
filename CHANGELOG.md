@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.1] - 2025-11-28
+
+### Fixed
+
+* Add -59 to represent 14oz Mug 2 Stainless Steel for <https://github.com/sopelj/hass-ember-mug-component/issues/101>
+
 ## [1.2.0] - 2025-08-29
 
 ### Changed
