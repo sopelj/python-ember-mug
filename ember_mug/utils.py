@@ -64,7 +64,7 @@ def temp_from_bytes(temp_bytes: bytearray, metric: bool = True) -> float:
     return round(temp, 2)
 
 
-def get_colour_from_int(colour_id: int) -> DeviceColour | None:
+def get_colour_from_int(colour_id: int) -> DeviceColour | None:  # noqa: PLR0911
     """Extrapolate device colour from integer in advertiser data."""
     if colour_id in (-127, -63, 1, 14, 65):
         return DeviceColour.BLACK
@@ -76,13 +76,14 @@ def get_colour_from_int(colour_id: int) -> DeviceColour | None:
         return DeviceColour.COPPER
     if colour_id in (-124, -60):
         return DeviceColour.ROSE_GOLD
+    if colour_id in (-59, -123):
+        return DeviceColour.STAINLESS_STEEL
     return {
         -51: DeviceColour.SANDSTONE,
         -52: DeviceColour.SAGE_GREEN,
         -55: DeviceColour.GREY,
         -57: DeviceColour.BLUE,
         -122: DeviceColour.GOLD,
-        -123: DeviceColour.STAINLESS_STEEL,
     }.get(colour_id)
 
 
@@ -97,7 +98,7 @@ def get_model_from_single_int_and_services(  # noqa PLR0911
         return DeviceModel.MUG_1_10_OZ
     if model_id == 65:
         return DeviceModel.MUG_1_14_OZ
-    if model_id in (-51, -63, -61, -62):
+    if model_id in (-51, -59, -63, -61, -62):
         return DeviceModel.MUG_2_14_OZ
     if model_id == -60:
         return DeviceModel.CUP_6_OZ

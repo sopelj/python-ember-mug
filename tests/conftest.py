@@ -43,6 +43,7 @@ class TestManufacturerData(bytes, Enum):
 
     UNKNOWN = b""
     MUG_2_BLACK = b"\x81"
+    MUG_2_STEEL = b"\xc5"
     TUMBLER = b"\x01\t\x03\x0e"
     RED_TRAVEL_MUG = b"\x0b"
 
