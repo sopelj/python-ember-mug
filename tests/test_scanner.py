@@ -46,7 +46,7 @@ async def test_discover_devices(mock_scanner: AsyncMock, mock_sleep: AsyncMock) 
     assert len(devices) == 2
     devices = await discover_devices(mac="32:36:a5:be:88:cb")
     assert len(devices) == 1
-    device_1, advertisement_1 = devices[0]
+    device_1, _ = devices[0]
     assert device_1.address == "32:36:a5:be:88:cb"
     mock_sleep.assert_called_with(5)
 
@@ -59,13 +59,13 @@ async def test_find_device(mock_scanner: AsyncMock, mock_sleep: AsyncMock) -> No
     mock_scanner.return_value.__aenter__.return_value.advertisement_data = mock_data_iterator
 
     # Without filter
-    device, advertisement = await find_device()
+    device, _ = await find_device()
     assert device is not None
     assert device.name == "Ember Ceramic Mug"
     assert device.address == MUG_1.address
 
     # With Filter
-    device, advertisement = await find_device(mac=MUG_2.address)
+    device, _ = await find_device(mac=MUG_2.address)
     assert device is not None
     assert device.name == "Ember Ceramic Mug"
     assert device.address == MUG_2.address
