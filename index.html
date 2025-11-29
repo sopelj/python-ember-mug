@@ -569,6 +569,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#model-incorrect-or-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model incorrect or not found
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1417,6 +1428,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#model-incorrect-or-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model incorrect or not found
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1720,6 +1742,8 @@ You may also need to re-add it to the app in order to make it writable again as 
 <h4 id="operation-failed-with-att-error-0x0e-or-another-connection-error">'Operation failed with ATT error: 0x0e' or another connection error<a class="headerlink" href="#operation-failed-with-att-error-0x0e-or-another-connection-error" title="Permanent link">&para;</a></h4>
 <p>This seems to be caused by the bluetooth adaptor being in some sort of passive mode. I have not yet figured out how to wake it programmatically so sadly, you need to manually open <code>bluetoothctl</code> to do so.
 Please ensure the device is in pairing mode (ie the light is flashing blue or says "PAIR") and run the <code>bluetoothctl</code> command. You don't need to type anything. run it and wait until the mug connects.</p>
+<h4 id="model-incorrect-or-not-found">Model incorrect or not found<a class="headerlink" href="#model-incorrect-or-not-found" title="Permanent link">&para;</a></h4>
+<p>I don't have a lot of these devices, so if this library does not correctly identify your device, please open and issue with the advertisement data of your device, so I can update the library to correctly identify it. Thanks!</p>
 <h3 id="development">Development<a class="headerlink" href="#development" title="Permanent link">&para;</a></h3>
 <p>Install:
 - <a href="https://hatch.pypa.io/latest/install/">hatch</a>
