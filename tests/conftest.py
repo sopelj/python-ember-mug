@@ -82,7 +82,7 @@ TEST_TRAVEL_MUG_ADVERTISEMENT = build_advertisement_data(
 
 @pytest.fixture(name="ble_device")
 def ble_device_fixture() -> BLEDevice:
-    return BLEDevice(address=TEST_MAC, name=TEST_MUG_BLUETOOTH_NAME, details={}, rssi=1)
+    return BLEDevice(address=TEST_MAC, name=TEST_MUG_BLUETOOTH_NAME, details={})
 
 
 @pytest.fixture

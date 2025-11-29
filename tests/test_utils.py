@@ -40,7 +40,6 @@ def test_bytes_to_big_int() -> None:
 def test_temp_from_bytes() -> None:
     raw_data = bytearray(b"\xcd\x15")  # int: 5581
     assert temp_from_bytes(raw_data) == 55.81
-    assert temp_from_bytes(raw_data, metric=False) == 132.46
 
 
 def test_temp_conversions() -> None:

@@ -212,12 +212,7 @@ async def test_write(mock_logger: Mock, ember_mug: MockMug) -> None:
 
 
 def test_ble_event_callback(ember_mug: MockMug) -> None:
-    new_device = BLEDevice(
-        address="BA:36:a5:be:88:cb",
-        name="Ember Ceramic Mug",
-        details={},
-        rssi=1,
-    )
+    new_device = BLEDevice(address="BA:36:a5:be:88:cb", name="Ember Ceramic Mug", details={})
     ember_mug.data.model_info.model = None
     assert ember_mug.device.address != new_device.address
     ember_mug.ble_event_callback(new_device, TEST_MUG_ADVERTISEMENT)

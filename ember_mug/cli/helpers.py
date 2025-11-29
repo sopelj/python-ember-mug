@@ -47,11 +47,11 @@ def print_table(data: list[tuple[str, ...]]) -> None:
     rows = [build_sub_rows(r) for r in data]
     num_columns = max(len(sr) for r in rows for sr in r.values())
     column_sizes = [max(len(sr[i]) for r in rows for sr in r.values()) + 2 for i in range(num_columns)]
-    vertical = f'+{"+".join("-" * i for i in column_sizes)}+'
+    vertical = f"+{'+'.join('-' * i for i in column_sizes)}+"
     print(vertical)
     for row in rows:
         for sub_row in row.values():
-            inner = "|".join(f" {sub_row[i]:<{width-2}} " for i, width in enumerate(column_sizes))
+            inner = "|".join(f" {sub_row[i]:<{width - 2}} " for i, width in enumerate(column_sizes))
             print(f"|{inner}|")
         print(vertical)
 

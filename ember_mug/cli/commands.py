@@ -144,13 +144,13 @@ async def set_device_value_cmd(args: Namespace) -> None:
     if not values:
         print("Please specify at least one attribute and value to set.")
         options = [f"--{a.replace('_', '-')}" for a in attrs]
-        print(f'Options: {", ".join(options)}')
+        print(f"Options: {', '.join(options)}")
         sys.exit(1)
 
     mug = await get_device(args)
     async with mug.connection(adapter=args.adapter):
         for attr, value in values:
-            method = getattr(mug, f'set_{attr.replace("-", "_")}')
+            method = getattr(mug, f"set_{attr.replace('-', '_')}")
             print(f"Setting {attr} to {value}")
             try:
                 await method(value)

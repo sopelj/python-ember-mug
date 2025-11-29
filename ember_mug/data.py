@@ -87,7 +87,7 @@ class BatteryInfo(AsDict):
 
     def __str__(self) -> str:
         """Format nicely for printing."""
-        return f'{self.percent}%, {"" if self.on_charging_base else "not "}on charging base'
+        return f"{self.percent}%, {'' if self.on_charging_base else 'not '}on charging base"
 
 
 @dataclass

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0] - 2025-11-28
+
+### Changed
+
+* Change internal API for temperature conversion
+* Remove rounding in temp conversion
+* Use `bleak` >= 1.0.1
+
 ## [1.2.1] - 2025-11-28
 
 ### Fixed

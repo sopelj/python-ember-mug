@@ -31,6 +31,7 @@ from .utils import (
     bytes_to_big_int,
     bytes_to_little_int,
     convert_temp_to_celsius,
+    convert_temp_to_fahrenheit,
     decode_byte_string,
     discover_services,
     encode_byte_string,
@@ -43,6 +44,8 @@ if TYPE_CHECKING:
 
     from bleak.backends.characteristic import BleakGATTCharacteristic
     from bleak.backends.device import BLEDevice
+
+    TempUnitType = Literal["°C", "°F"] | TemperatureUnit | Enum
 
 
 logger = logging.getLogger(__name__)
@@ -130,6 +133,22 @@ class EmberMug:
         """Check if the mug can support write operations."""
         return self.data.udsk is not None
 
+    def _convert_to_device_unit(self, value: float) -> float:
+        """Convert user value to the unit the device expects."""
+        if self.data.use_metric and self.data.temperature_unit != TemperatureUnit.CELSIUS:
+            return convert_temp_to_fahrenheit(value)
+        if not self.data.use_metric and self.data.temperature_unit != TemperatureUnit.FAHRENHEIT:
+            return convert_temp_to_celsius(value)
+        return value
+
+    def _convert_to_user_unit(self, value: float) -> float:
+        """Convert device value to the unit the user expects."""
+        if self.data.use_metric and self.data.temperature_unit != TemperatureUnit.CELSIUS:
+            return convert_temp_to_celsius(value)
+        if not self.data.use_metric and self.data.temperature_unit != TemperatureUnit.FAHRENHEIT:
+            return convert_temp_to_fahrenheit(value)
+        return value
+
     def has_attribute(self, attribute: str) -> bool:
         """Check whether the device has the given attribute."""
         return attribute in self.data.model_info.device_attributes
@@ -155,7 +174,7 @@ class EmberMug:
                     disconnected_callback=self._disconnect_callback,
                     ble_device_callback=lambda: self.device,
                 )
-                if self.debug is True:
+                if self.debug:
                     await discover_services(client)
                 self._expected_disconnect = False
             except (TimeoutError, BleakError) as error:
@@ -273,7 +292,7 @@ class EmberMug:
     async def get_target_temp(self) -> float:
         """Get target temp form mug gatt."""
         temp_bytes = await self._read(MugCharacteristic.TARGET_TEMPERATURE)
-        return temp_from_bytes(temp_bytes, self.data.use_metric)
+        return self._convert_to_user_unit(temp_from_bytes(temp_bytes))
 
     async def set_target_temp(self, target_temp: float) -> None:
         """Set new target temp for mug."""
@@ -282,9 +301,7 @@ class EmberMug:
         if target_temp != 0 and not (min_temp <= target_temp <= max_temp):
             raise ValueError(f"Temperature should be between {min_temp} and {max_temp} or 0.")
 
-        if self.data.use_metric is False:
-            target_temp = convert_temp_to_celsius(target_temp)
-
+        target_temp = self._convert_to_device_unit(target_temp)
         target = bytearray(int(target_temp / 0.01).to_bytes(2, "little"))
         await self._write(MugCharacteristic.TARGET_TEMPERATURE, target)
         self.data.target_temp = target_temp
@@ -292,7 +309,7 @@ class EmberMug:
     async def get_current_temp(self) -> float:
         """Get current temp from mug gatt."""
         temp_bytes = await self._read(MugCharacteristic.CURRENT_TEMPERATURE)
-        return temp_from_bytes(temp_bytes, self.data.use_metric)
+        return self._convert_to_user_unit(temp_from_bytes(temp_bytes))
 
     async def get_liquid_level(self) -> int:
         """Get liquid level from mug gatt."""
@@ -368,7 +385,7 @@ class EmberMug:
             return TemperatureUnit.CELSIUS
         return TemperatureUnit.FAHRENHEIT
 
-    async def set_temperature_unit(self, unit: Literal["°C", "°F"] | TemperatureUnit | Enum) -> None:
+    async def set_temperature_unit(self, unit: TempUnitType) -> None:
         """Set mug unit."""
         text_unit = unit.value if isinstance(unit, Enum) else unit
         unit_bytes = bytearray([1 if text_unit == TemperatureUnit.FAHRENHEIT else 0])

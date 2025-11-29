@@ -56,12 +56,9 @@ def convert_temp_to_celsius(temp: float) -> float:
     return (temp - 32) * 5 / 9
 
 
-def temp_from_bytes(temp_bytes: bytearray, metric: bool = True) -> float:
-    """Get temperature from bytearray and convert to Fahrenheit if needed."""
-    temp = float(bytes_to_little_int(temp_bytes)) * 0.01
-    if metric is False:
-        temp = convert_temp_to_fahrenheit(temp)
-    return round(temp, 2)
+def temp_from_bytes(temp_bytes: bytearray) -> float:
+    """Get temperature from bytearray."""
+    return float(bytes_to_little_int(temp_bytes)) * 0.01
 
 
 def get_colour_from_int(colour_id: int) -> DeviceColour | None:  # noqa: PLR0911
@@ -151,7 +148,7 @@ def get_model_info_from_advertiser_data(advertisement: AdvertisementData) -> Mod
             get_colour_from_int(colour_id),
         )
     logger.debug(
-        "Unable to reliably determine model info from advertiser data." "Falling back to guessing based on name.",
+        "Unable to reliably determine model info from advertiser data.Falling back to guessing based on name.",
     )
     return ModelInfo(guess_model_from_name(advertisement.local_name))
 

@@ -16,8 +16,8 @@ from .conftest import TEST_MUG_ADVERTISEMENT
 if TYPE_CHECKING:
     from ember_mug.scanner import ScannerKwargs
 
-MUG_1 = BLEDevice(address="32:36:a5:be:88:cb", name="Ember Ceramic Mug", details={}, rssi=1)
-MUG_2 = BLEDevice(address="9c:da:8c:19:27:da", name="Ember Ceramic Mug", details={}, rssi=1)
+MUG_1 = BLEDevice(address="32:36:a5:be:88:cb", name="Ember Ceramic Mug", details={})
+MUG_2 = BLEDevice(address="9c:da:8c:19:27:da", name="Ember Ceramic Mug", details={})
 EXAMPLE_MUGS = [MUG_1, MUG_2]
 SERVICE_UUID_KWARG = {"service_uuids": DEVICE_SERVICE_UUIDS}
 ADAPTER_KWARG = {"adapter": "hci0"}
