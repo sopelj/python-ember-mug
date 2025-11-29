@@ -302,7 +302,7 @@ class EmberMug:
             raise ValueError(f"Temperature should be between {min_temp} and {max_temp} or 0.")
 
         target_temp = self._convert_to_device_unit(target_temp)
-        target = bytearray(int(target_temp / 0.01).to_bytes(2, "little"))
+        target = bytearray(round(target_temp / 0.01).to_bytes(2, "little"))
         await self._write(MugCharacteristic.TARGET_TEMPERATURE, target)
         self.data.target_temp = target_temp
 

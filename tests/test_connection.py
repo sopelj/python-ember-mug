@@ -312,44 +312,62 @@ async def test_get_mug_target_temp(ember_mug: MockMug) -> None:
         ember_mug._client.read_gatt_char.assert_called_once_with(MugCharacteristic.TARGET_TEMPERATURE.uuid)
 
 
-async def test_set_mug_target_temp_celsius(ember_mug: MockMug) -> None:
+@pytest.mark.parametrize(
+    ("value", "expected", "use_metric", "unit"),
+    [
+        (54, b"x2", True, TemperatureUnit.FAHRENHEIT),
+        (55.81, b"\xcd\x15", True, TemperatureUnit.CELSIUS),
+        (132.45, b"\xbd3", False, TemperatureUnit.FAHRENHEIT),
+        (120, b"\x19\x13", False, TemperatureUnit.CELSIUS),
+    ],
+)
+async def test_set_mug_target_temp(
+    ember_mug: MockMug,
+    value: float,
+    expected: bytes,
+    use_metric: bool,
+    unit: TemperatureUnit,
+) -> None:
     mock_ensure_connection = AsyncMock()
     ember_mug._client.write_gatt_char = AsyncMock()
-    error = "Temperature should be between 49 and 63 or 0."
-    with pytest.raises(ValueError, match=error):
-        await ember_mug.set_target_temp(10)
-
-    with pytest.raises(ValueError, match=error):
-        await ember_mug.set_target_temp(100)
+    ember_mug.data.use_metric = use_metric
+    ember_mug.data.temperature_unit = unit
 
     with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
-        await ember_mug.set_target_temp(55.81)
+        await ember_mug.set_target_temp(value)
         mock_ensure_connection.assert_called_once()
         ember_mug._client.write_gatt_char.assert_called_once_with(
             MugCharacteristic.TARGET_TEMPERATURE.uuid,
-            bytearray(b"\xcd\x15"),
+            bytearray(expected),
         )
 
 
-async def test_set_mug_target_temp_fahrenheit(ember_mug: MockMug) -> None:
-    mock_ensure_connection = AsyncMock()
+@pytest.mark.parametrize(
+    ("value", "error", "use_metric", "unit"),
+    [
+        (30, "Temperature should be between 49 and 63 or 0.", True, TemperatureUnit.CELSIUS),
+        (65, "Temperature should be between 49 and 63 or 0.", True, TemperatureUnit.CELSIUS),
+        (30, "Temperature should be between 49 and 63 or 0.", True, TemperatureUnit.FAHRENHEIT),
+        (65, "Temperature should be between 49 and 63 or 0.", True, TemperatureUnit.FAHRENHEIT),
+        (30, "Temperature should be between 120 and 145 or 0.", False, TemperatureUnit.CELSIUS),
+        (150, "Temperature should be between 120 and 145 or 0.", False, TemperatureUnit.CELSIUS),
+        (30, "Temperature should be between 120 and 145 or 0.", False, TemperatureUnit.FAHRENHEIT),
+        (150, "Temperature should be between 120 and 145 or 0.", False, TemperatureUnit.FAHRENHEIT),
+    ],
+)
+async def test_set_mug_target_temp_errors(
+    ember_mug: MockMug,
+    value: float,
+    error: str,
+    use_metric: bool,
+    unit: TemperatureUnit,
+) -> None:
     ember_mug._client.write_gatt_char = AsyncMock()
-    ember_mug.data.use_metric = False
-    error = "Temperature should be between 120 and 145 or 0."
-
-    with pytest.raises(ValueError, match=error):
-        await ember_mug.set_target_temp(50)
+    ember_mug.data.use_metric = use_metric
+    ember_mug.data.temperature_unit = unit
 
     with pytest.raises(ValueError, match=error):
         await ember_mug.set_target_temp(200)
-
-    with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
-        await ember_mug.set_target_temp(132.45)
-        mock_ensure_connection.assert_called_once()
-        ember_mug._client.write_gatt_char.assert_called_once_with(
-            MugCharacteristic.TARGET_TEMPERATURE.uuid,
-            bytearray(b"\xcc\x15"),
-        )
 
 
 async def test_get_mug_current_temp(ember_mug: MockMug) -> None:
