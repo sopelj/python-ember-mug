@@ -186,7 +186,10 @@ async def discover_services(client: BleakClient) -> dict[str, Any]:
                 "descriptors": descriptors,
             }
             for descriptor in characteristic.descriptors:
-                value = bytes(await client.read_gatt_descriptor(descriptor.handle))
+                try:
+                    value = bytes(await client.read_gatt_descriptor(descriptor.handle))
+                except BleakError as e:
+                    value = e
                 logger.debug(
                     "\t\t[Descriptor] %s: Handle: %s | Value: '%s'",
                     descriptor.uuid,
