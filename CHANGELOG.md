@@ -2,6 +2,11 @@
 
 ## [1.3.0] - 2025-11-28
 
+### Added
+
+* Add pair method to mug
+* Add method to make the device writable
+
 ### Changed
 
 * Change internal API for temperature conversion

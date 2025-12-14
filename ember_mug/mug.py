@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import logging
+import os
 from datetime import UTC, datetime
 from enum import Enum
 from functools import cached_property
@@ -274,6 +275,25 @@ class EmberMug:
     async def get_battery(self) -> BatteryInfo:
         """Get Battery percent from mug gatt."""
         return BatteryInfo.from_bytes(await self._read(MugCharacteristic.BATTERY))
+
+    async def make_writable(self) -> bool:
+        """Try to make device writable if need be."""
+        if self.can_write:
+            return True
+        try:
+            await self._ensure_connection()
+            # Attempt to write a random string
+            await self.set_udsk(os.urandom(14).hex())
+            return True
+        except BleakError as e:
+            logger.debug("Failed to make device writable: %s", e)
+            return False
+
+    async def pair(self) -> None:
+        """Attempt to pair."""
+        with contextlib.suppress(BleakError, EOFError):
+            await self._ensure_connection()
+            await self._client.pair()
 
     @require_attribute("led_colour")
     async def get_led_colour(self) -> Colour:

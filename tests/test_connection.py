@@ -261,6 +261,33 @@ async def test_get_mug_led_colour(ember_mug: MockMug) -> None:
         ember_mug._client.read_gatt_char.assert_called_once_with(MugCharacteristic.LED.uuid)
 
 
+@patch("os.urandom", return_value=b"\x98\x92\x02\x10\xbd\x94\xb9\xf2\xe15\x9b6\x82\xa0")
+async def test_make_writable(mock_urandom, ember_mug: MockMug) -> None:
+    mock_ensure_connection = AsyncMock()
+    ember_mug._client.write_gatt_char = AsyncMock()
+    with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
+        ember_mug.data.udsk = "non-empty"
+        await ember_mug.make_writable()
+        mock_urandom.assert_not_called()
+
+        ember_mug.data.udsk = None
+        await ember_mug.make_writable()
+        mock_urandom.assert_called_once()
+        ember_mug._client.write_gatt_char.assert_called_once_with(
+            MugCharacteristic.UDSK.uuid,
+            bytearray(b"OTg5MjAyMTBiZDk0YjlmMmUxMzU5YjM2ODJhMA=="),
+        )
+
+
+async def test_pair(ember_mug: MockMug) -> None:
+    mock_ensure_connection = AsyncMock()
+    ember_mug._client.pair = AsyncMock()
+    with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
+        await ember_mug.pair()
+        mock_ensure_connection.assert_called_once()
+        ember_mug._client.pair.assert_called_once()
+
+
 async def test_set_mug_led_colour(ember_mug: MockMug) -> None:
     mock_ensure_connection = AsyncMock()
     ember_mug._client.write_gatt_char = AsyncMock()
