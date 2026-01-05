@@ -14,10 +14,11 @@ classifiers = [
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
     'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3.14',
 ]
 dependencies = [
     "bleak-retry-connector>=4.0.2",
-    "bleak>=1.0.1",
+    "bleak>=1.0.1,<2.2.0",
 ]
 
 [project.optional-dependencies]
@@ -72,7 +73,8 @@ python = "3.13"
 features = ["test"]
 
 [[tool.hatch.envs.test.matrix]]
-python = ["3.11", "3.12", "3.13"]
+python = ["3.11", "3.12", "3.13", "3.14"]
+bleak = ["1.0.1", "2.0.0"]
 
 [tool.hatch.envs.test.scripts]
 cov = "pytest -vvv --asyncio-mode=auto --cov=ember_mug --cov-branch --cov-report=xml --cov-report=term-missing tests"
@@ -89,7 +91,7 @@ serve = "mkdocs serve --dev-addr localhost:8000"
 [tool.black]
 line-length = 120
 skip-string-normalization = true
-target-version = ["py311", "py312", "py313"]
+target-version = ["py311", "py312", "py313", "py314"]
 include = '\.pyi?$'
 exclude = '''
 /(

@@ -68,7 +68,7 @@ def require_attribute(
         """Inner decorator."""
 
         async def wrapper(self: EmberMug, *args: P.args, **kwargs: P.kwargs) -> T:
-            if self.has_attribute(attr_name) is False:
+            if not self.has_attribute(attr_name):
                 device_type = self.data.model_info.device_type.value
                 raise NotImplementedError(
                     f"The {device_type} does not have the {attr_name} attribute",
