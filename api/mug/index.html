@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1222,17 +1222,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#mug.EmberMug.ensure_correct_unit" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;ensure_correct_unit
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#mug.EmberMug.get_battery" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1997,17 +1986,6 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;discover_services
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mug.EmberMug.ensure_correct_unit" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;ensure_correct_unit
       
     </span>
   </a>
@@ -3048,20 +3026,14 @@
 <span class="normal">535</span>
 <span class="normal">536</span>
 <span class="normal">537</span>
-<span class="normal">538</span>
-<span class="normal">539</span>
-<span class="normal">540</span>
-<span class="normal">541</span>
-<span class="normal">542</span>
-<span class="normal">543</span>
-<span class="normal">544</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">EmberMug</span><span class="p">:</span>
+<span class="normal">538</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">EmberMug</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle actual the actual mug connection and update states.&quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">ble_device</span><span class="p">:</span> <span class="n">BLEDevice</span><span class="p">,</span>
         <span class="n">model_info</span><span class="p">:</span> <span class="n">ModelInfo</span><span class="p">,</span>
-        <span class="n">use_metric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">use_metric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -3110,17 +3082,17 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_convert_to_device_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert user value to the unit the device expects.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">use_metric</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">temperature_unit</span> <span class="o">!=</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">CELSIUS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">user_unit</span> <span class="o">==</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">CELSIUS</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">temperature_unit</span> <span class="o">==</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">FAHRENHEIT</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">convert_temp_to_fahrenheit</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">use_metric</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">temperature_unit</span> <span class="o">!=</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">FAHRENHEIT</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">user_unit</span> <span class="o">==</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">FAHRENHEIT</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">temperature_unit</span> <span class="o">==</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">CELSIUS</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">convert_temp_to_celsius</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">value</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_convert_to_user_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert device value to the unit the user expects.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">use_metric</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">temperature_unit</span> <span class="o">!=</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">CELSIUS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">user_unit</span> <span class="o">==</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">CELSIUS</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">temperature_unit</span> <span class="o">==</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">FAHRENHEIT</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">convert_temp_to_celsius</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">use_metric</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">temperature_unit</span> <span class="o">!=</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">FAHRENHEIT</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">user_unit</span> <span class="o">==</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">FAHRENHEIT</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">temperature_unit</span> <span class="o">==</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">CELSIUS</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">convert_temp_to_fahrenheit</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">value</span>
 
@@ -3288,11 +3260,11 @@
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">set_target_temp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_temp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set new target temp for mug.&quot;&quot;&quot;</span>
-        <span class="n">unit</span> <span class="o">=</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">CELSIUS</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">use_metric</span> <span class="k">else</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">FAHRENHEIT</span>
-        <span class="n">min_temp</span><span class="p">,</span> <span class="n">max_temp</span> <span class="o">=</span> <span class="n">MIN_MAX_TEMPS</span><span class="p">[</span><span class="n">unit</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">target_temp</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">min_temp</span> <span class="o">&lt;=</span> <span class="n">target_temp</span> <span class="o">&lt;=</span> <span class="n">max_temp</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Temperature should be between </span><span class="si">{</span><span class="n">min_temp</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">max_temp</span><span class="si">}</span><span class="s2"> or 0.&quot;</span><span class="p">)</span>
-
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">use_metric</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">FAHRENHEIT</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">use_metric</span> <span class="ow">is</span> <span class="kc">False</span> <span class="k">else</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">CELSIUS</span>
+            <span class="n">min_temp</span><span class="p">,</span> <span class="n">max_temp</span> <span class="o">=</span> <span class="n">MIN_MAX_TEMPS</span><span class="p">[</span><span class="n">unit</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">target_temp</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">min_temp</span> <span class="o">&lt;=</span> <span class="n">target_temp</span> <span class="o">&lt;=</span> <span class="n">max_temp</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Temperature should be between </span><span class="si">{</span><span class="n">min_temp</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">max_temp</span><span class="si">}</span><span class="s2"> or 0.&quot;</span><span class="p">)</span>
         <span class="n">target_temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_to_device_unit</span><span class="p">(</span><span class="n">target_temp</span><span class="p">)</span>
         <span class="n">target</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">target_temp</span> <span class="o">/</span> <span class="mf">0.01</span><span class="p">)</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;little&quot;</span><span class="p">))</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">TARGET_TEMPERATURE</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
@@ -3383,12 +3355,6 @@
         <span class="n">unit_bytes</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mi">1</span> <span class="k">if</span> <span class="n">text_unit</span> <span class="o">==</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">FAHRENHEIT</span> <span class="k">else</span> <span class="mi">0</span><span class="p">])</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">TEMPERATURE_UNIT</span><span class="p">,</span> <span class="n">unit_bytes</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">temperature_unit</span> <span class="o">=</span> <span class="n">TemperatureUnit</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span>
-
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ensure_correct_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set mug unit if it&#39;s not what we want.&quot;&quot;&quot;</span>
-        <span class="n">desired</span> <span class="o">=</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">CELSIUS</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">use_metric</span> <span class="k">else</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">FAHRENHEIT</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">temperature_unit</span> <span class="o">!=</span> <span class="n">desired</span><span class="p">:</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_temperature_unit</span><span class="p">(</span><span class="n">desired</span><span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_battery_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get voltage and charge time.&quot;&quot;&quot;</span>
@@ -3731,14 +3697,14 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/mug.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">537</span>
-<span class="normal">538</span>
-<span class="normal">539</span>
-<span class="normal">540</span>
-<span class="normal">541</span>
-<span class="normal">542</span>
-<span class="normal">543</span>
-<span class="normal">544</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@contextlib</span><span class="o">.</span><span class="n">asynccontextmanager</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@contextlib</span><span class="o">.</span><span class="n">asynccontextmanager</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">EmberMug</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Establish a connection and close automatically.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">set_client_options</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -3850,43 +3816,6 @@
 <div class="doc doc-object doc-function">
 
 
-<h6 id="mug.EmberMug.ensure_correct_unit" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">ensure_correct_unit</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
-
-<a href="#mug.EmberMug.ensure_correct_unit" class="headerlink" title="Permanent link">&para;</a></h6>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">ensure_correct_unit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Set mug unit if it's not what we want.</p>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>ember_mug/mug.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">413</span>
-<span class="normal">414</span>
-<span class="normal">415</span>
-<span class="normal">416</span>
-<span class="normal">417</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ensure_correct_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set mug unit if it&#39;s not what we want.&quot;&quot;&quot;</span>
-    <span class="n">desired</span> <span class="o">=</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">CELSIUS</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">use_metric</span> <span class="k">else</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">FAHRENHEIT</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">temperature_unit</span> <span class="o">!=</span> <span class="n">desired</span><span class="p">:</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_temperature_unit</span><span class="p">(</span><span class="n">desired</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
 <h6 id="mug.EmberMug.get_battery" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">get_battery</span>
 
@@ -3939,10 +3868,10 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/mug.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">419</span>
-<span class="normal">420</span>
-<span class="normal">421</span>
-<span class="normal">422</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_battery_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_battery_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get voltage and charge time.&quot;&quot;&quot;</span>
     <span class="n">battery_voltage_bytes</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">CONTROL_REGISTER_DATA</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">bytes_to_big_int</span><span class="p">(</span><span class="n">battery_voltage_bytes</span><span class="p">[:</span><span class="mi">1</span><span class="p">])</span>
@@ -4009,11 +3938,11 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/mug.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">424</span>
-<span class="normal">425</span>
-<span class="normal">426</span>
-<span class="normal">427</span>
-<span class="normal">428</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_date_time_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_date_time_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get date and time zone.&quot;&quot;&quot;</span>
     <span class="n">date_time_zone_bytes</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">DATE_TIME_AND_ZONE</span><span class="p">)</span>
     <span class="n">time_value</span> <span class="o">=</span> <span class="n">bytes_to_big_int</span><span class="p">(</span><span class="n">date_time_zone_bytes</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
@@ -4087,9 +4016,9 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/mug.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">430</span>
-<span class="normal">431</span>
-<span class="normal">432</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_firmware</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MugFirmwareInfo</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_firmware</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MugFirmwareInfo</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get firmware info.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">MugFirmwareInfo</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">FIRMWARE</span><span class="p">))</span>
 </code></pre></div></td></tr></table></div>
@@ -4627,12 +4556,12 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/mug.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">530</span>
-<span class="normal">531</span>
-<span class="normal">532</span>
-<span class="normal">533</span>
-<span class="normal">534</span>
-<span class="normal">535</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_client_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_client_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update options in case they need to overriden in some cases.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;adapter&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">IS_LINUX</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;The adapter option is only valid for the Linux BlueZ Backend.&quot;</span>
@@ -4758,11 +4687,11 @@
 <span class="normal">324</span>
 <span class="normal">325</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">set_target_temp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_temp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set new target temp for mug.&quot;&quot;&quot;</span>
-    <span class="n">unit</span> <span class="o">=</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">CELSIUS</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">use_metric</span> <span class="k">else</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">FAHRENHEIT</span>
-    <span class="n">min_temp</span><span class="p">,</span> <span class="n">max_temp</span> <span class="o">=</span> <span class="n">MIN_MAX_TEMPS</span><span class="p">[</span><span class="n">unit</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">target_temp</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">min_temp</span> <span class="o">&lt;=</span> <span class="n">target_temp</span> <span class="o">&lt;=</span> <span class="n">max_temp</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Temperature should be between </span><span class="si">{</span><span class="n">min_temp</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">max_temp</span><span class="si">}</span><span class="s2"> or 0.&quot;</span><span class="p">)</span>
-
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">use_metric</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">unit</span> <span class="o">=</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">FAHRENHEIT</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">use_metric</span> <span class="ow">is</span> <span class="kc">False</span> <span class="k">else</span> <span class="n">TemperatureUnit</span><span class="o">.</span><span class="n">CELSIUS</span>
+        <span class="n">min_temp</span><span class="p">,</span> <span class="n">max_temp</span> <span class="o">=</span> <span class="n">MIN_MAX_TEMPS</span><span class="p">[</span><span class="n">unit</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">target_temp</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">min_temp</span> <span class="o">&lt;=</span> <span class="n">target_temp</span> <span class="o">&lt;=</span> <span class="n">max_temp</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Temperature should be between </span><span class="si">{</span><span class="n">min_temp</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">max_temp</span><span class="si">}</span><span class="s2"> or 0.&quot;</span><span class="p">)</span>
     <span class="n">target_temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_to_device_unit</span><span class="p">(</span><span class="n">target_temp</span><span class="p">)</span>
     <span class="n">target</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">target_temp</span> <span class="o">/</span> <span class="mf">0.01</span><span class="p">)</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;little&quot;</span><span class="p">))</span>
     <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">TARGET_TEMPERATURE</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
@@ -4921,15 +4850,15 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/mug.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">520</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
 <span class="normal">521</span>
-<span class="normal">522</span>
-<span class="normal">523</span>
-<span class="normal">524</span>
-<span class="normal">525</span>
-<span class="normal">526</span>
-<span class="normal">527</span>
-<span class="normal">528</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">522</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Subscribe to notifications from the mug.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Subscribe to Push Events&quot;</span><span class="p">)</span>
@@ -4966,15 +4895,15 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/mug.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">510</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
 <span class="normal">511</span>
-<span class="normal">512</span>
-<span class="normal">513</span>
-<span class="normal">514</span>
-<span class="normal">515</span>
-<span class="normal">516</span>
-<span class="normal">517</span>
-<span class="normal">518</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">unsubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">512</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">unsubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Unsubscribe from Mug notifications.&quot;&quot;&quot;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Unsubscribe called&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="p">:</span>
@@ -5011,11 +4940,11 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/mug.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">438</span>
-<span class="normal">439</span>
-<span class="normal">440</span>
-<span class="normal">441</span>
-<span class="normal">442</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Change</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Change</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update all standard attributes.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_multiple</span><span class="p">(</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">model_info</span><span class="o">.</span><span class="n">device_attributes</span> <span class="o">-</span> <span class="n">INITIAL_ATTRS</span><span class="p">,</span>
@@ -5048,9 +4977,9 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/mug.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">434</span>
-<span class="normal">435</span>
-<span class="normal">436</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_initial</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Change</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_initial</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Change</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update attributes that don&#39;t normally change and don&#39;t need to be regularly updated.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_multiple</span><span class="p">(</span><span class="n">INITIAL_ATTRS</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -5081,18 +5010,18 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/mug.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">454</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
 <span class="normal">455</span>
 <span class="normal">456</span>
 <span class="normal">457</span>
 <span class="normal">458</span>
-<span class="normal">459</span>
-<span class="normal">460</span>
-<span class="normal">461</span>
-<span class="normal">462</span>
-<span class="normal">463</span>
-<span class="normal">464</span>
-<span class="normal">465</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_queued_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Change</span><span class="p">]:</span>
+<span class="normal">459</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_queued_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Change</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update all attributes in queue.&quot;&quot;&quot;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Updating queued attributes: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queued_updates</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queued_updates</span><span class="p">:</span>
@@ -5201,7 +5130,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Inner decorator.&quot;&quot;&quot;</span>
 
         <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">EmberMug</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_attribute</span><span class="p">(</span><span class="n">attr_name</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_attribute</span><span class="p">(</span><span class="n">attr_name</span><span class="p">):</span>
                 <span class="n">device_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">model_info</span><span class="o">.</span><span class="n">device_type</span><span class="o">.</span><span class="n">value</span>
                 <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="n">device_type</span><span class="si">}</span><span class="s2"> does not have the </span><span class="si">{</span><span class="n">attr_name</span><span class="si">}</span><span class="s2"> attribute&quot;</span><span class="p">,</span>
@@ -5297,10 +5226,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.tooltips", "navigation.expand", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "content.code.copy"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.tooltips", "navigation.expand", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
         <script src="../../termynal.js"></script>
       
