@@ -8,7 +8,7 @@ from collections import defaultdict
 from functools import partial
 from typing import TYPE_CHECKING
 
-from ember_mug.consts import MAC_ADDRESS_REGEX
+from ember_mug.consts import MAC_ADDRESS_REGEX, TemperatureUnit
 from ember_mug.data import Change
 from ember_mug.formatting import format_led_colour, format_liquid_level, format_temp
 
@@ -62,11 +62,11 @@ def print_info(mug: EmberMug) -> None:
     print_table(list(mug.data.formatted.items()))
 
 
-def print_changes(changes: list[Change], metric: bool = True) -> None:
+def print_changes(changes: list[Change], unit: TemperatureUnit | None) -> None:
     """Print changes."""
     formatters: dict[str, Callable] = {
-        "current_temp": partial(format_temp, metric=metric),
-        "target_temp": partial(format_temp, metric=metric),
+        "current_temp": partial(format_temp, unit=unit),
+        "target_temp": partial(format_temp, unit=unit),
         **base_formatters,
     }
     for attr, old_value, new_value in changes:

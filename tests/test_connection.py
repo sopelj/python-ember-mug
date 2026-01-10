@@ -500,19 +500,6 @@ async def test_set_mug_temperature_unit(ember_mug: MockMug) -> None:
         )
 
 
-async def test_mug_ensure_correct_unit(ember_mug: MockMug) -> None:
-    with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
-        ember_mug.data.temperature_unit = TemperatureUnit.CELSIUS
-        ember_mug.data.use_metric = True
-        mock_set_temp = AsyncMock(return_value=None)
-        with patch.object(ember_mug, "set_temperature_unit", mock_set_temp):
-            await ember_mug.ensure_correct_unit()
-            mock_set_temp.assert_not_called()
-            ember_mug.data.temperature_unit = TemperatureUnit.FAHRENHEIT
-            await ember_mug.ensure_correct_unit()
-            mock_set_temp.assert_called_with(TemperatureUnit.CELSIUS)
-
-
 async def test_get_mug_battery_voltage(ember_mug: MockMug) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
         ember_mug._client.read_gatt_char = AsyncMock(return_value=b"\x01")

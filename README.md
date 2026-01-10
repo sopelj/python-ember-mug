@@ -137,8 +137,6 @@ Device Data
 +--------------+----------------------+
 | Target Temp  | 55.00°C              |
 +--------------+----------------------+
-| Use Metric   | True                 |
-+--------------+----------------------+
 
 Watching for changes
 Current Temp changed from "24.50°C" to "25.50°"

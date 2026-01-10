@@ -240,7 +240,6 @@ ATTR_LABELS = {
     "liquid_level": "Liquid Level",
     "current_temp": "Current Temp",
     "target_temp": "Target Temp",
-    "use_metric": "Use Metric",
     "dsk": "DSK",
     "udsk": "UDSK",
     "date_time_zone": "Date Time + Time Zone",

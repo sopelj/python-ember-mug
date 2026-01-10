@@ -47,7 +47,6 @@ def test_mug_formatting(mug_data: MugData) -> None:
         "Liquid Level": "16.67%",
         "Current Temp": "25.00°C",
         "Target Temp": "55.00°C",
-        "Use Metric": True,
     }
     assert mug_data.formatted == dict(
         sorted(
@@ -94,7 +93,6 @@ def test_mug_dict(mug_data: MugData) -> None:
             "model": DeviceModel.TRAVEL_MUG_12_OZ,
             "name": "Ember Travel Mug",
         },
-        "use_metric": True,
         "debug": False,
         "battery": None,
         "battery_voltage": None,

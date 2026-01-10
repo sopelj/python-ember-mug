@@ -87,7 +87,7 @@ class EmberMug:
         self,
         ble_device: BLEDevice,
         model_info: ModelInfo,
-        use_metric: bool = True,
+        use_metric: bool | None = None,
         debug: bool = False,
         **kwargs: Any,
     ) -> None:
@@ -136,17 +136,17 @@ class EmberMug:
 
     def _convert_to_device_unit(self, value: float) -> float:
         """Convert user value to the unit the device expects."""
-        if self.data.use_metric and self.data.temperature_unit != TemperatureUnit.CELSIUS:
+        if self.data.user_unit == TemperatureUnit.CELSIUS and self.data.temperature_unit == TemperatureUnit.FAHRENHEIT:
             return convert_temp_to_fahrenheit(value)
-        if not self.data.use_metric and self.data.temperature_unit != TemperatureUnit.FAHRENHEIT:
+        if self.data.user_unit == TemperatureUnit.FAHRENHEIT and self.data.temperature_unit == TemperatureUnit.CELSIUS:
             return convert_temp_to_celsius(value)
         return value
 
     def _convert_to_user_unit(self, value: float) -> float:
         """Convert device value to the unit the user expects."""
-        if self.data.use_metric and self.data.temperature_unit != TemperatureUnit.CELSIUS:
+        if self.data.user_unit == TemperatureUnit.CELSIUS and self.data.temperature_unit == TemperatureUnit.FAHRENHEIT:
             return convert_temp_to_celsius(value)
-        if not self.data.use_metric and self.data.temperature_unit != TemperatureUnit.FAHRENHEIT:
+        if self.data.user_unit == TemperatureUnit.FAHRENHEIT and self.data.temperature_unit == TemperatureUnit.CELSIUS:
             return convert_temp_to_fahrenheit(value)
         return value
 
@@ -314,11 +314,11 @@ class EmberMug:
 
     async def set_target_temp(self, target_temp: float) -> None:
         """Set new target temp for mug."""
-        unit = TemperatureUnit.CELSIUS if self.data.use_metric else TemperatureUnit.FAHRENHEIT
-        min_temp, max_temp = MIN_MAX_TEMPS[unit]
-        if target_temp != 0 and not (min_temp <= target_temp <= max_temp):
-            raise ValueError(f"Temperature should be between {min_temp} and {max_temp} or 0.")
-
+        if self.data.use_metric is not None:
+            unit = TemperatureUnit.FAHRENHEIT if self.data.use_metric is False else TemperatureUnit.CELSIUS
+            min_temp, max_temp = MIN_MAX_TEMPS[unit]
+            if target_temp != 0 and not (min_temp <= target_temp <= max_temp):
+                raise ValueError(f"Temperature should be between {min_temp} and {max_temp} or 0.")
         target_temp = self._convert_to_device_unit(target_temp)
         target = bytearray(round(target_temp / 0.01).to_bytes(2, "little"))
         await self._write(MugCharacteristic.TARGET_TEMPERATURE, target)
@@ -409,12 +409,6 @@ class EmberMug:
         unit_bytes = bytearray([1 if text_unit == TemperatureUnit.FAHRENHEIT else 0])
         await self._write(MugCharacteristic.TEMPERATURE_UNIT, unit_bytes)
         self.data.temperature_unit = TemperatureUnit(unit)
-
-    async def ensure_correct_unit(self) -> None:
-        """Set mug unit if it's not what we want."""
-        desired = TemperatureUnit.CELSIUS if self.data.use_metric else TemperatureUnit.FAHRENHEIT
-        if self.data.temperature_unit != desired:
-            await self.set_temperature_unit(desired)
 
     async def get_battery_voltage(self) -> int:
         """Get voltage and charge time."""

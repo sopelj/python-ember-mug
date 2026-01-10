@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 import pytest
 
 from ember_mug.cli.helpers import build_sub_rows, print_changes, print_info, print_table, validate_mac
-from ember_mug.consts import LiquidState
+from ember_mug.consts import LiquidState, TemperatureUnit
 from ember_mug.data import Change
 
 if TYPE_CHECKING:
@@ -42,7 +42,7 @@ def test_print_changes(capsys: CaptureFixture) -> None:
         Change("liquid_state", LiquidState.EMPTY, LiquidState.HEATING),
         Change("target_temp", 45, 55),
     ]
-    print_changes(changes, True)
+    print_changes(changes, TemperatureUnit.CELSIUS)
     captured = capsys.readouterr()
     assert captured.out == dedent(
         """\
@@ -85,8 +85,6 @@ def test_print_info(ember_mug: EmberMug, capsys: CaptureFixture) -> None:
         | Current Temp | 0.00°C  |
         +--------------+---------+
         | Target Temp  | 0.00°C  |
-        +--------------+---------+
-        | Use Metric   | True    |
         +--------------+---------+
         """,
     )

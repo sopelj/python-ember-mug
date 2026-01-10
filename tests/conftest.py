@@ -12,7 +12,7 @@ from bleak import AdvertisementData
 from bleak.backends.device import BLEDevice
 
 from ember_mug import EmberMug
-from ember_mug.consts import EMBER_BLE_SIG, DeviceColour, DeviceModel, MugCharacteristic
+from ember_mug.consts import EMBER_BLE_SIG, DeviceColour, DeviceModel, MugCharacteristic, TemperatureUnit
 from ember_mug.data import ModelInfo, MugData
 
 if TYPE_CHECKING:
@@ -87,7 +87,7 @@ def ble_device_fixture() -> BLEDevice:
 
 @pytest.fixture
 def mug_data() -> MugData:
-    return MugData(ModelInfo())
+    return MugData(ModelInfo(), temperature_unit=TemperatureUnit.CELSIUS, use_metric=True)
 
 
 @pytest_asyncio.fixture
@@ -96,5 +96,7 @@ async def ember_mug(ble_device: BLEDevice) -> AsyncGenerator[EmberMug | Mock, No
         ble_device,
         ModelInfo(DeviceModel.MUG_2_10_OZ, DeviceColour.BLACK),
     )
+    mug.data.use_metric = True
+    mug.data.temperature_unit = TemperatureUnit.CELSIUS
     mug._client = Mock()
     yield mug

@@ -211,7 +211,7 @@ class MugData(AsDict):
 
     # Options
     model_info: ModelInfo
-    use_metric: bool = True
+    use_metric: bool | None = None
     debug: bool = False
 
     # Attributes
@@ -230,6 +230,15 @@ class MugData(AsDict):
     volume_level: VolumeLevel | None = None
     date_time_zone: datetime | None = None
     battery_voltage: int | None = None
+
+    @property
+    def user_unit(self) -> TemperatureUnit | None:
+        """Get the correct unit for the user."""
+        if self.use_metric is False:
+            return TemperatureUnit.FAHRENHEIT
+        if self.use_metric is True:
+            return TemperatureUnit.CELSIUS
+        return None
 
     @property
     def meta_display(self) -> str:
@@ -263,12 +272,12 @@ class MugData(AsDict):
     @property
     def current_temp_display(self) -> str:
         """Human-readable current temp with unit."""
-        return format_temp(self.current_temp, self.use_metric)
+        return format_temp(self.current_temp, self.user_unit)
 
     @property
     def target_temp_display(self) -> str:
         """Human-readable target temp with unit."""
-        return format_temp(self.target_temp, self.use_metric)
+        return format_temp(self.target_temp, self.user_unit)
 
     def update_info(self, **kwargs: Any) -> list[Change]:
         """Update attributes of the mug if they haven't changed."""
@@ -288,7 +297,7 @@ class MugData(AsDict):
     @property
     def formatted(self) -> dict[str, Any]:
         """Return human-readable names and values for all attributes for display."""
-        all_attrs = self.model_info.device_attributes | {"use_metric"}
+        all_attrs = set(self.model_info.device_attributes)
         if not self.debug:
             all_attrs -= EXTRA_ATTRS
         return {label: self.get_formatted_attr(attr) for attr, label in ATTR_LABELS.items() if attr in all_attrs}
@@ -296,6 +305,7 @@ class MugData(AsDict):
     def as_dict(self) -> dict[str, Any]:
         """Dump all attributes as dict for info/debugging."""
         data = asdict(self)
+        del data["use_metric"]
         all_attrs = self.model_info.device_attributes
         if not self.debug:
             all_attrs -= EXTRA_ATTRS

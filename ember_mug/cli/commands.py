@@ -112,9 +112,9 @@ async def poll_device_cmd(args: Namespace) -> None:
         for _ in CommandLoop():
             for _ in range(60):
                 await asyncio.sleep(1)
-                print_changes(await mug.update_queued_attributes(), mug.data.use_metric)
+                print_changes(await mug.update_queued_attributes(), mug.data.user_unit)
             # Every minute do a full update
-            print_changes(await mug.update_all(), mug.data.use_metric)
+            print_changes(await mug.update_all(), mug.data.user_unit)
 
 
 async def get_device_value_cmd(args: Namespace) -> None:

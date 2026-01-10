@@ -5,16 +5,17 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from .consts import TemperatureUnit
     from .data import Colour
 
 
-def format_temp(temp: float, metric: bool = True) -> str:
+def format_temp(temp: float, unit: TemperatureUnit | None = None) -> str:
     """Format temperature with the correct unit."""
-    unit = "C" if metric else "F"
-    return f"{temp:.2f}°{unit}"
+    value = f"{temp:.2f}"
+    return f"{value}{unit.value}" if unit else value
 
 
-def format_capacity(capacity: int | None, metric: bool = True) -> str:
+def format_capacity(capacity: int | None, metric: bool | None = None) -> str:
     """Format capacity for display."""
     if capacity is None:
         return "Unknown"
