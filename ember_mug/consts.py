@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import platform
 import re
-from enum import Enum, IntEnum
+from enum import IntEnum, StrEnum
 from functools import cached_property
 from typing import NamedTuple
 from uuid import UUID
@@ -17,7 +17,7 @@ EMBER_BLE_SIG = 0x03C1
 DEFAULT_NAME = "Ember Device"
 
 
-class DeviceType(str, Enum):
+class DeviceType(StrEnum):
     """Base device types."""
 
     CUP = "cup"
@@ -26,7 +26,7 @@ class DeviceType(str, Enum):
     TUMBLER = "tumbler"
 
 
-class DeviceModel(str, Enum):
+class DeviceModel(StrEnum):
     """Know device models."""
 
     CUP_6_OZ = "CM21S"
@@ -50,7 +50,7 @@ DEVICE_MODEL_NAMES: dict[DeviceModel, str] = {
 }
 
 
-class DeviceColour(str, Enum):
+class DeviceColour(StrEnum):
     """All colours possible found across models."""
 
     SAGE_GREEN = "Sage Green"
@@ -66,7 +66,7 @@ class DeviceColour(str, Enum):
     ROSE_GOLD = "Rose Gold"
 
 
-class TemperatureUnit(str, Enum):
+class TemperatureUnit(StrEnum):
     """Temperature Units."""
 
     CELSIUS = "°C"
@@ -177,7 +177,7 @@ class LiquidState(IntEnum):
         return self.label
 
 
-class VolumeLevel(str, Enum):
+class VolumeLevel(StrEnum):
     """Class to manage volume levels."""
 
     LOW = "low"

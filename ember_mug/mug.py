@@ -7,7 +7,7 @@ import contextlib
 import logging
 import os
 from datetime import UTC, datetime
-from enum import Enum
+from enum import StrEnum
 from functools import cached_property
 from time import time
 from typing import TYPE_CHECKING, Any, Concatenate, Literal, ParamSpec, TypeVar
@@ -46,7 +46,7 @@ if TYPE_CHECKING:
     from bleak.backends.characteristic import BleakGATTCharacteristic
     from bleak.backends.device import BLEDevice
 
-    TempUnitType = Literal["°C", "°F"] | TemperatureUnit | Enum
+    TempUnitType = Literal["°C", "°F"] | TemperatureUnit | StrEnum
 
 
 logger = logging.getLogger(__name__)
@@ -406,7 +406,7 @@ class EmberMug:
 
     async def set_temperature_unit(self, unit: TempUnitType) -> None:
         """Set mug unit."""
-        text_unit = unit.value if isinstance(unit, Enum) else unit
+        text_unit = unit.value if isinstance(unit, StrEnum) else unit
         unit_bytes = bytearray([1 if text_unit == TemperatureUnit.FAHRENHEIT else 0])
         await self._write(MugCharacteristic.TEMPERATURE_UNIT, unit_bytes)
         self.data.temperature_unit = TemperatureUnit(unit)
