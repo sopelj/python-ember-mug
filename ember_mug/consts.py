@@ -268,7 +268,8 @@ UPDATE_ATTRS = {
 EXTRA_ATTRS = {"battery_voltage", "date_time_zone", "udsk", "dsk"}
 
 # Validation
-MUG_NAME_REGEX = re.compile(r"^[A-Za-z0-9,.\[\]#()!\"\';:|\-_+<>%= ]{1,16}$")
+# *Note*: Additional characters are escaped because Home Assistant uses LitElement with "v" mode which is stricter.
+MUG_NAME_REGEX = re.compile(r"^[A-Za-z0-9,.\[\]#\(\)!\"\';:\|\-_+<>%= ]{1,16}$")
 MUG_NAME_PATTERN = MUG_NAME_REGEX.pattern
 MAC_ADDRESS_REGEX = re.compile(r"^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$", re.IGNORECASE)
 MAC_UUID_REGEX = re.compile(r"^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$", re.IGNORECASE)
