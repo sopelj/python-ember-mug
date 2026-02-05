@@ -1,11 +1,12 @@
 # Changelog
 
-## [1.3.0] - 2026-01-10
+## [1.3.0] - 2026-02-04
 
 ### Added
 
 * Add pair method to mug
 * Add method to make the device writable
+* Add support for macOS UUIDs
 
 ### Changed
 
@@ -14,6 +15,7 @@
   * conversion takes mug unit into account
 * Remove rounding in temp conversion
 * Use `bleak` >= 1.0.1
+* Not passing `use_metric` will by default not display a unit
 
 ### Removed
 

@@ -11,7 +11,7 @@ devices = await discover_devices()
 # after paired you can simply use
 device, advertisement = await find_device()
 model_info = get_model_info_from_advertiser_data(advertisement)
-mug = EmberMug(device, model_info)
+mug = EmberMug(device, model_info, use_metric=True)
 await mug.update_all()
 print(mug.data.formatted)
 await mug.disconnect()

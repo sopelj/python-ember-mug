@@ -5,6 +5,7 @@ from __future__ import annotations
 from argparse import ArgumentTypeError
 from textwrap import dedent
 from typing import TYPE_CHECKING
+from unittest.mock import patch
 
 import pytest
 
@@ -20,8 +21,15 @@ if TYPE_CHECKING:
 
 def test_validate_mac() -> None:
     with pytest.raises(ArgumentTypeError, match="Invalid MAC Address"):
-        validate_mac("potato")
+        validate_mac("154ce597-7bd6-432f-bd59-a20c21f1d61b")
     assert validate_mac("9C:DA:8C:19:27:DA") == "9c:da:8c:19:27:da"
+
+
+@patch("ember_mug.cli.helpers.IS_MACOS", True)
+def test_validate_mac_macos() -> None:
+    with pytest.raises(ArgumentTypeError, match="Invalid MAC Address"):
+        validate_mac("9C:DA:8C:19:27:DA")
+    assert validate_mac("154CE597-7BD6-432F-BD59-A20C21F1D61B") == "154ce597-7bd6-432f-bd59-a20c21f1d61b"
 
 
 def test_build_sub_rows() -> None:

@@ -291,7 +291,7 @@ class EmberMug:
 
     async def pair(self) -> None:
         """Attempt to pair."""
-        with contextlib.suppress(BleakError, EOFError):
+        with contextlib.suppress(BleakError, EOFError, NotImplementedError):
             await self._ensure_connection()
             await self._client.pair()
 
@@ -319,6 +319,7 @@ class EmberMug:
             min_temp, max_temp = MIN_MAX_TEMPS[unit]
             if target_temp != 0 and not (min_temp <= target_temp <= max_temp):
                 raise ValueError(f"Temperature should be between {min_temp} and {max_temp} or 0.")
+
         target_temp = self._convert_to_device_unit(target_temp)
         target = bytearray(round(target_temp / 0.01).to_bytes(2, "little"))
         await self._write(MugCharacteristic.TARGET_TEMPERATURE, target)

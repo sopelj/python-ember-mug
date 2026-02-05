@@ -2,13 +2,12 @@
 
 from __future__ import annotations
 
-import re
 from argparse import ArgumentTypeError
 from collections import defaultdict
 from functools import partial
 from typing import TYPE_CHECKING
 
-from ember_mug.consts import MAC_ADDRESS_REGEX, TemperatureUnit
+from ember_mug.consts import IS_MACOS, MAC_ADDRESS_REGEX, MAC_UUID_REGEX, TemperatureUnit
 from ember_mug.data import Change
 from ember_mug.formatting import format_led_colour, format_liquid_level, format_temp
 
@@ -26,7 +25,8 @@ base_formatters: dict[str, Callable] = {
 
 def validate_mac(value: str) -> str:
     """Check if specified MAC Address is valid."""
-    if not isinstance(value, str) or not re.match(MAC_ADDRESS_REGEX, value):
+    mac_reg = MAC_UUID_REGEX if IS_MACOS else MAC_ADDRESS_REGEX
+    if not isinstance(value, str) or not mac_reg.match(value):
         raise ArgumentTypeError("Invalid MAC Address")
     return value.lower()
 
