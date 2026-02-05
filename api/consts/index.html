@@ -1021,6 +1021,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#consts.IS_MACOS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;IS_MACOS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#consts.LIQUID_STATE_LABELS" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1047,6 +1058,17 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;MAC_ADDRESS_REGEX
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consts.MAC_UUID_REGEX" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;MAC_UUID_REGEX
       
     </span>
   </a>
@@ -2589,6 +2611,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#consts.IS_MACOS" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;IS_MACOS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#consts.LIQUID_STATE_LABELS" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2615,6 +2648,17 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;MAC_ADDRESS_REGEX
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consts.MAC_UUID_REGEX" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;MAC_UUID_REGEX
       
     </span>
   </a>
@@ -4125,6 +4169,28 @@
 
 
 
+<h4 id="consts.IS_MACOS" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">IS_MACOS</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+<a href="#consts.IS_MACOS" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">IS_MACOS</span> <span class="o">=</span> <span class="n"><span title="platform">platform</span></span><span class="o">.</span><span class="n"><span title="platform.system">system</span></span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Darwin&#39;</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
 <h4 id="consts.LIQUID_STATE_LABELS" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">LIQUID_STATE_LABELS</span>
 
@@ -4236,7 +4302,32 @@
 
 <a href="#consts.MAC_ADDRESS_REGEX" class="headerlink" title="Permanent link">&para;</a></h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">MAC_ADDRESS_REGEX</span> <span class="o">=</span> <span class="n"><span title="re">re</span></span><span class="o">.</span><span class="n"><span title="re.compile">compile</span></span><span class="p">(</span>
-    <span class="s2">&quot;^([0-9A-Fa-f]</span><span class="si">{2}</span><span class="s2">:)</span><span class="si">{5}</span><span class="s2">([0-9A-Fa-f]</span><span class="si">{2}</span><span class="s2">)$&quot;</span>
+    <span class="s2">&quot;^([0-9A-Fa-f]</span><span class="si">{2}</span><span class="s2">:)</span><span class="si">{5}</span><span class="s2">([0-9A-Fa-f]</span><span class="si">{2}</span><span class="s2">)$&quot;</span><span class="p">,</span> <span class="n"><span title="re">re</span></span><span class="o">.</span><span class="n"><span title="re.IGNORECASE">IGNORECASE</span></span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="consts.MAC_UUID_REGEX" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">MAC_UUID_REGEX</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+<a href="#consts.MAC_UUID_REGEX" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">MAC_UUID_REGEX</span> <span class="o">=</span> <span class="n"><span title="re">re</span></span><span class="o">.</span><span class="n"><span title="re.compile">compile</span></span><span class="p">(</span>
+    <span class="s2">&quot;^([0-9a-f]</span><span class="si">{8}</span><span class="s2">-[0-9a-f]</span><span class="si">{4}</span><span class="s2">-[0-9a-f]</span><span class="si">{4}</span><span class="s2">-[0-9a-f]</span><span class="si">{4}</span><span class="s2">-[0-9a-f]</span><span class="si">{12}</span><span class="s2">)$&quot;</span><span class="p">,</span>
+    <span class="n"><span title="re">re</span></span><span class="o">.</span><span class="n"><span title="re.IGNORECASE">IGNORECASE</span></span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -4328,7 +4419,7 @@
 
 <a href="#consts.MUG_NAME_REGEX" class="headerlink" title="Permanent link">&para;</a></h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">MUG_NAME_REGEX</span> <span class="o">=</span> <span class="n"><span title="re">re</span></span><span class="o">.</span><span class="n"><span title="re.compile">compile</span></span><span class="p">(</span>
-    <span class="s2">&quot;^[A-Za-z0-9,.</span><span class="se">\\</span><span class="s2">[</span><span class="se">\\</span><span class="s2">]#()!</span><span class="se">\\\&quot;\\</span><span class="s2">&#39;;:|</span><span class="se">\\</span><span class="s2">-_+&lt;&gt;%= ]{1,16}$&quot;</span>
+    <span class="s2">&quot;^[A-Za-z0-9,.</span><span class="se">\\</span><span class="s2">[</span><span class="se">\\</span><span class="s2">]#</span><span class="se">\\</span><span class="s2">(</span><span class="se">\\</span><span class="s2">)!</span><span class="se">\\\&quot;\\</span><span class="s2">&#39;;:</span><span class="se">\\</span><span class="s2">|</span><span class="se">\\</span><span class="s2">-_+&lt;&gt;%= ]{1,16}$&quot;</span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -4487,7 +4578,7 @@
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="str">str</span></code>, <code><span title="enum">enum</span>.<span title="enum.Enum">Enum</span></code></p>
+              Bases: <code><span title="enum">enum</span>.<span title="enum.StrEnum">StrEnum</span></code></p>
 
 
 
@@ -4515,7 +4606,7 @@
 <span class="normal">63</span>
 <span class="normal">64</span>
 <span class="normal">65</span>
-<span class="normal">66</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">DeviceColour</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="normal">66</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">DeviceColour</span><span class="p">(</span><span class="n">StrEnum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;All colours possible found across models.&quot;&quot;&quot;</span>
 
     <span class="n">SAGE_GREEN</span> <span class="o">=</span> <span class="s2">&quot;Sage Green&quot;</span>
@@ -4819,7 +4910,7 @@
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="str">str</span></code>, <code><span title="enum">enum</span>.<span title="enum.Enum">Enum</span></code></p>
+              Bases: <code><span title="enum">enum</span>.<span title="enum.StrEnum">StrEnum</span></code></p>
 
 
 
@@ -4844,7 +4935,7 @@
 <span class="normal">36</span>
 <span class="normal">37</span>
 <span class="normal">38</span>
-<span class="normal">39</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">DeviceModel</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="normal">39</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">DeviceModel</span><span class="p">(</span><span class="n">StrEnum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Know device models.&quot;&quot;&quot;</span>
 
     <span class="n">CUP_6_OZ</span> <span class="o">=</span> <span class="s2">&quot;CM21S&quot;</span>
@@ -5076,7 +5167,7 @@
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="str">str</span></code>, <code><span title="enum">enum</span>.<span title="enum.Enum">Enum</span></code></p>
+              Bases: <code><span title="enum">enum</span>.<span title="enum.StrEnum">StrEnum</span></code></p>
 
 
 
@@ -5097,7 +5188,7 @@
 <span class="normal">23</span>
 <span class="normal">24</span>
 <span class="normal">25</span>
-<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">DeviceType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">DeviceType</span><span class="p">(</span><span class="n">StrEnum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base device types.&quot;&quot;&quot;</span>
 
     <span class="n">CUP</span> <span class="o">=</span> <span class="s2">&quot;cup&quot;</span>
@@ -6637,7 +6728,7 @@
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="str">str</span></code>, <code><span title="enum">enum</span>.<span title="enum.Enum">Enum</span></code></p>
+              Bases: <code><span title="enum">enum</span>.<span title="enum.StrEnum">StrEnum</span></code></p>
 
 
 
@@ -6656,7 +6747,7 @@
 <span class="normal">70</span>
 <span class="normal">71</span>
 <span class="normal">72</span>
-<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TemperatureUnit</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TemperatureUnit</span><span class="p">(</span><span class="n">StrEnum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Temperature Units.&quot;&quot;&quot;</span>
 
     <span class="n">CELSIUS</span> <span class="o">=</span> <span class="s2">&quot;°C&quot;</span>
@@ -6744,7 +6835,7 @@
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="str">str</span></code>, <code><span title="enum">enum</span>.<span title="enum.Enum">Enum</span></code></p>
+              Bases: <code><span title="enum">enum</span>.<span title="enum.StrEnum">StrEnum</span></code></p>
 
 
 
@@ -6774,7 +6865,7 @@
 <span class="normal">192</span>
 <span class="normal">193</span>
 <span class="normal">194</span>
-<span class="normal">195</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">VolumeLevel</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="normal">195</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">VolumeLevel</span><span class="p">(</span><span class="n">StrEnum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to manage volume levels.&quot;&quot;&quot;</span>
 
     <span class="n">LOW</span> <span class="o">=</span> <span class="s2">&quot;low&quot;</span>

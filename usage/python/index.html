@@ -1198,7 +1198,7 @@
 <span class="c1"># after paired you can simply use</span>
 <span class="n">device</span><span class="p">,</span> <span class="n">advertisement</span> <span class="o">=</span> <span class="k">await</span> <span class="n">find_device</span><span class="p">()</span>
 <span class="n">model_info</span> <span class="o">=</span> <span class="n">get_model_info_from_advertiser_data</span><span class="p">(</span><span class="n">advertisement</span><span class="p">)</span>
-<span class="n">mug</span> <span class="o">=</span> <span class="n">EmberMug</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">model_info</span><span class="p">)</span>
+<span class="n">mug</span> <span class="o">=</span> <span class="n">EmberMug</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">model_info</span><span class="p">,</span> <span class="n">use_metric</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">await</span> <span class="n">mug</span><span class="o">.</span><span class="n">update_all</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">mug</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">formatted</span><span class="p">)</span>
 <span class="k">await</span> <span class="n">mug</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
