@@ -136,17 +136,13 @@ class EmberMug:
 
     def _convert_to_device_unit(self, value: float) -> float:
         """Convert user value to the unit the device expects."""
-        if self.data.user_unit == TemperatureUnit.CELSIUS and self.data.temperature_unit == TemperatureUnit.FAHRENHEIT:
-            return convert_temp_to_fahrenheit(value)
-        if self.data.user_unit == TemperatureUnit.FAHRENHEIT and self.data.temperature_unit == TemperatureUnit.CELSIUS:
+        if self.data.user_unit == TemperatureUnit.FAHRENHEIT:
             return convert_temp_to_celsius(value)
         return value
 
     def _convert_to_user_unit(self, value: float) -> float:
         """Convert device value to the unit the user expects."""
-        if self.data.user_unit == TemperatureUnit.CELSIUS and self.data.temperature_unit == TemperatureUnit.FAHRENHEIT:
-            return convert_temp_to_celsius(value)
-        if self.data.user_unit == TemperatureUnit.FAHRENHEIT and self.data.temperature_unit == TemperatureUnit.CELSIUS:
+        if self.data.user_unit == TemperatureUnit.FAHRENHEIT:
             return convert_temp_to_fahrenheit(value)
         return value
 
@@ -314,11 +310,10 @@ class EmberMug:
 
     async def set_target_temp(self, target_temp: float) -> None:
         """Set new target temp for mug."""
-        if self.data.use_metric is not None:
-            unit = TemperatureUnit.FAHRENHEIT if self.data.use_metric is False else TemperatureUnit.CELSIUS
-            min_temp, max_temp = MIN_MAX_TEMPS[unit]
-            if target_temp != 0 and not (min_temp <= target_temp <= max_temp):
-                raise ValueError(f"Temperature should be between {min_temp} and {max_temp} or 0.")
+        unit = TemperatureUnit.FAHRENHEIT if self.data.use_metric is False else TemperatureUnit.CELSIUS
+        min_temp, max_temp = MIN_MAX_TEMPS[unit]
+        if target_temp != 0 and not (min_temp <= target_temp <= max_temp):
+            raise ValueError(f"Temperature should be between {min_temp} and {max_temp} or 0.")
 
         target_temp = self._convert_to_device_unit(target_temp)
         target = bytearray(round(target_temp / 0.01).to_bytes(2, "little"))

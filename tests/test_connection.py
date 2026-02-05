@@ -340,12 +340,12 @@ async def test_get_mug_target_temp(ember_mug: MockMug) -> None:
 
 
 @pytest.mark.parametrize(
-    ("value", "expected", "use_metric", "unit"),
+    ("value", "expected", "use_metric"),
     [
-        (54, b"x2", True, TemperatureUnit.FAHRENHEIT),
-        (55.81, b"\xcd\x15", True, TemperatureUnit.CELSIUS),
-        (132.45, b"\xbd3", False, TemperatureUnit.FAHRENHEIT),
-        (120, b"\x19\x13", False, TemperatureUnit.CELSIUS),
+        (54, b"\x18\x15", True),
+        (55.81, b"\xcd\x15", True),
+        (132.45, b"\xcd\x15", False),
+        (120, b"\x19\x13", False),
     ],
 )
 async def test_set_mug_target_temp(
@@ -353,12 +353,10 @@ async def test_set_mug_target_temp(
     value: float,
     expected: bytes,
     use_metric: bool,
-    unit: TemperatureUnit,
 ) -> None:
     mock_ensure_connection = AsyncMock()
     ember_mug._client.write_gatt_char = AsyncMock()
     ember_mug.data.use_metric = use_metric
-    ember_mug.data.temperature_unit = unit
 
     with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
         await ember_mug.set_target_temp(value)
