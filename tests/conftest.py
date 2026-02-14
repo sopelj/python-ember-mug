@@ -44,6 +44,7 @@ class TestManufacturerData(bytes, Enum):
     UNKNOWN = b""
     MUG_2_BLACK = b"\x81"
     MUG_2_STEEL = b"\xc5"
+    MUG_2_COPPER = b"\0xC3"
     TUMBLER = b"\x01\t\x03\x0e"
     RED_TRAVEL_MUG = b"\x0b"
 
@@ -73,6 +74,7 @@ def build_advertisement_data(
 
 TEST_UNKNOWN_ADVERTISEMENT = build_advertisement_data(None)
 TEST_MUG_ADVERTISEMENT = build_advertisement_data(TestManufacturerData.MUG_2_BLACK)
+TEST_MUG_COPPER_ADVERTISEMENT = build_advertisement_data(TestManufacturerData.MUG_2_COPPER)
 TEST_TUMBLER_ADVERTISEMENT = build_advertisement_data(TestManufacturerData.TUMBLER)
 TEST_TRAVEL_MUG_ADVERTISEMENT = build_advertisement_data(
     TestManufacturerData.RED_TRAVEL_MUG,

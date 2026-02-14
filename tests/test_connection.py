@@ -370,14 +370,14 @@ async def test_set_mug_target_temp(
 @pytest.mark.parametrize(
     ("value", "error", "use_metric", "unit"),
     [
-        (30, "Temperature should be between 49 and 63 or 0.", True, TemperatureUnit.CELSIUS),
-        (65, "Temperature should be between 49 and 63 or 0.", True, TemperatureUnit.CELSIUS),
-        (30, "Temperature should be between 49 and 63 or 0.", True, TemperatureUnit.FAHRENHEIT),
-        (65, "Temperature should be between 49 and 63 or 0.", True, TemperatureUnit.FAHRENHEIT),
-        (30, "Temperature should be between 120 and 145 or 0.", False, TemperatureUnit.CELSIUS),
-        (150, "Temperature should be between 120 and 145 or 0.", False, TemperatureUnit.CELSIUS),
-        (30, "Temperature should be between 120 and 145 or 0.", False, TemperatureUnit.FAHRENHEIT),
-        (150, "Temperature should be between 120 and 145 or 0.", False, TemperatureUnit.FAHRENHEIT),
+        (30, "Temperature '200' is not between 49 and 63 or 0.", True, TemperatureUnit.CELSIUS),
+        (65, "Temperature '200' is not between 49 and 63 or 0.", True, TemperatureUnit.CELSIUS),
+        (30, "Temperature '200' is not between 49 and 63 or 0.", True, TemperatureUnit.FAHRENHEIT),
+        (65, "Temperature '200' is not between 49 and 63 or 0.", True, TemperatureUnit.FAHRENHEIT),
+        (30, "Temperature '200' is not between 120 and 145 or 0.", False, TemperatureUnit.CELSIUS),
+        (150, "Temperature '200' is not between 120 and 145 or 0.", False, TemperatureUnit.CELSIUS),
+        (30, "Temperature '200' is not between 120 and 145 or 0.", False, TemperatureUnit.FAHRENHEIT),
+        (150, "Temperature '200' is not between 120 and 145 or 0.", False, TemperatureUnit.FAHRENHEIT),
     ],
 )
 async def test_set_mug_target_temp_errors(

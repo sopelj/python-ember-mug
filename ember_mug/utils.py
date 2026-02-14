@@ -67,13 +67,13 @@ def get_colour_from_int(colour_id: int) -> DeviceColour | None:  # noqa: PLR0911
         return DeviceColour.BLACK
     if colour_id in (-126, -62, 2):
         return DeviceColour.WHITE
-    if colour_id in (8, 11, -56, -63, -120, -117, -53):
+    if colour_id in (-120, -117, -63, -56, -53, 8, 11):
         return DeviceColour.RED
-    if colour_id in (-131, -125, -61, 3, 83):
+    if colour_id in (-131, -125, -61, 3, 51, 83):
         return DeviceColour.COPPER
     if colour_id in (-124, -60):
         return DeviceColour.ROSE_GOLD
-    if colour_id in (-59, -123):
+    if colour_id in (-123, -59):
         return DeviceColour.STAINLESS_STEEL
     return {
         -51: DeviceColour.SANDSTONE,
@@ -95,7 +95,7 @@ def get_model_from_single_int_and_services(  # noqa PLR0911
         return DeviceModel.MUG_1_10_OZ
     if model_id == 65:
         return DeviceModel.MUG_1_14_OZ
-    if model_id in (-51, -59, -63, -61, -62):
+    if model_id in (-51, -59, -63, -61, -62, 120):
         return DeviceModel.MUG_2_14_OZ
     if model_id == -60:
         return DeviceModel.CUP_6_OZ
@@ -108,7 +108,7 @@ def get_model_from_id_and_gen(model_id: int, generation: int) -> DeviceModel | N
     """Extract model from identifier in advertiser data."""
     if model_id == 1:
         return DeviceModel.MUG_1_10_OZ if generation < 2 else DeviceModel.MUG_2_10_OZ
-    if model_id == 2:
+    if model_id in (2, 120):
         return DeviceModel.MUG_1_14_OZ if generation < 2 else DeviceModel.MUG_2_14_OZ
     if model_id == 3:
         return DeviceModel.TRAVEL_MUG_12_OZ
