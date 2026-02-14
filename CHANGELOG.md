@@ -1,12 +1,13 @@
 # Changelog
 
-## [1.3.0] - 2026-02-04
+## [1.3.0] - 2026-02-13
 
 ### Added
 
 * Add pair method to mug
 * Add method to make the device writable
 * Add support for macOS UUIDs
+* Add Copper Mug 14oz for @AlexanderLeporiday
 
 ### Changed
 
