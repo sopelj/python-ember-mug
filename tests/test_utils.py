@@ -24,6 +24,7 @@ from ember_mug.utils import (
 from tests.conftest import (
     TEST_MUG_ADVERTISEMENT,
     TEST_MUG_COPPER_ADVERTISEMENT,
+    TEST_MUG_COPPER_TESTING_ADVERTISEMENT,
     TEST_TRAVEL_MUG_ADVERTISEMENT,
     TEST_TUMBLER_ADVERTISEMENT,
     TEST_UNKNOWN_ADVERTISEMENT,
@@ -140,6 +141,7 @@ def test_get_model_from_id_and_gen(
         (TEST_UNKNOWN_ADVERTISEMENT, DeviceModel.UNKNOWN_DEVICE, None),
         (TEST_MUG_ADVERTISEMENT, DeviceModel.MUG_2_10_OZ, DeviceColour.BLACK),
         (TEST_MUG_COPPER_ADVERTISEMENT, DeviceModel.MUG_2_14_OZ, DeviceColour.COPPER),
+        (TEST_MUG_COPPER_TESTING_ADVERTISEMENT, DeviceModel.MUG_2_14_OZ, DeviceColour.COPPER),
         (TEST_TUMBLER_ADVERTISEMENT, DeviceModel.TUMBLER_16_OZ, DeviceColour.BLACK),
         (TEST_TRAVEL_MUG_ADVERTISEMENT, DeviceModel.TRAVEL_MUG_12_OZ, DeviceColour.RED),
     ],

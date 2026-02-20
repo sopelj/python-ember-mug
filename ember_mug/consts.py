@@ -14,6 +14,7 @@ UUID_TEMPLATE = "fc54{:0>4x}-236c-4c94-8fa9-944a3e5353fa"
 
 # Registered SIG for BLE Manufacturer Data
 EMBER_BLE_SIG = 0x03C1
+TESTING_BLE_SIG = 0xFFFF
 DEFAULT_NAME = "Ember Device"
 
 

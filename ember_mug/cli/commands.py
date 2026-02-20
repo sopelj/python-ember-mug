@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, ClassVar
 
 from bleak import AdvertisementData, BleakError
 
-from ember_mug.consts import ATTR_LABELS, EMBER_BLE_SIG, EXTRA_ATTRS, IS_LINUX, VolumeLevel
+from ember_mug.consts import ATTR_LABELS, EMBER_BLE_SIG, EXTRA_ATTRS, IS_LINUX, TESTING_BLE_SIG, VolumeLevel
 from ember_mug.data import Colour, DeviceModel
 from ember_mug.mug import EmberMug
 from ember_mug.scanner import discover_devices, find_device
@@ -33,9 +33,10 @@ get_attribute_names = [n.replace("_", "-") for n in all_attrs]
 async def get_device(args: Namespace) -> EmberMug:
     """Help to get the devices based on command args."""
     device, advertisement = await find_device_cmd(args)
+    manufacturer_data = advertisement.manufacturer_data
     model_info = get_model_info_from_advertiser_data(advertisement)
     if model_info.model == DeviceModel.UNKNOWN_DEVICE and not args.raw:
-        data = advertisement.manufacturer_data.get(EMBER_BLE_SIG, None)
+        data = manufacturer_data.get(EMBER_BLE_SIG, manufacturer_data.get(TESTING_BLE_SIG, None))
         print(f"Warning: No model found matching advertisement data: {data!r}")
 
     mug = EmberMug(

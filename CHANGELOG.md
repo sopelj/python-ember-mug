@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.1] - 2026-02-20
+
+### Added
+
+* Add testing SIG support for @AlexanderLeporiday
+
 ## [1.3.0] - 2026-02-13
 
 ### Added

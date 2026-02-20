@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Any
 
 from bleak import AdvertisementData, BleakError
 
-from ember_mug.consts import EMBER_BLE_SIG, TRAVEL_MUG_SERVICE_UUIDS, DeviceColour, DeviceModel
+from ember_mug.consts import EMBER_BLE_SIG, TESTING_BLE_SIG, TRAVEL_MUG_SERVICE_UUIDS, DeviceColour, DeviceModel
 
 if TYPE_CHECKING:
     from bleak import BleakClient
@@ -134,7 +134,9 @@ def get_model_info_from_advertiser_data(advertisement: AdvertisementData) -> Mod
     """Extract model info from manufacturer data in advertiser data."""
     from ember_mug.data import ModelInfo  # noqa: PLC0415
 
-    model_data = advertisement.manufacturer_data.get(EMBER_BLE_SIG, None)
+    manufacturer_data = advertisement.manufacturer_data
+
+    model_data = manufacturer_data.get(EMBER_BLE_SIG, manufacturer_data.get(TESTING_BLE_SIG, None))
     if model_data is not None:
         if len(model_data) < 4:
             model_id = bytes_to_big_int(model_data, signed=True)

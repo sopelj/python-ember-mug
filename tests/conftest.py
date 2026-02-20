@@ -12,7 +12,14 @@ from bleak import AdvertisementData
 from bleak.backends.device import BLEDevice
 
 from ember_mug import EmberMug
-from ember_mug.consts import EMBER_BLE_SIG, DeviceColour, DeviceModel, MugCharacteristic, TemperatureUnit
+from ember_mug.consts import (
+    EMBER_BLE_SIG,
+    TESTING_BLE_SIG,
+    DeviceColour,
+    DeviceModel,
+    MugCharacteristic,
+    TemperatureUnit,
+)
 from ember_mug.data import ModelInfo, MugData
 
 if TYPE_CHECKING:
@@ -53,13 +60,14 @@ def build_advertisement_data(
     manufacturer_data: TestManufacturerData | None = None,
     service_uuids: list[MugCharacteristic] | None = None,
     name: str = TEST_MUG_BLUETOOTH_NAME,
+    ble_sig: int = EMBER_BLE_SIG,
 ) -> AdvertisementData:
     if service_uuids is None:
         service_uuids = [MugCharacteristic.STANDARD_SERVICE]
 
     data_dict: dict[int, bytes] = {}
     if manufacturer_data is not None:
-        data_dict[EMBER_BLE_SIG] = manufacturer_data
+        data_dict[ble_sig] = manufacturer_data
 
     return AdvertisementData(
         local_name=name,
@@ -75,6 +83,10 @@ def build_advertisement_data(
 TEST_UNKNOWN_ADVERTISEMENT = build_advertisement_data(None)
 TEST_MUG_ADVERTISEMENT = build_advertisement_data(TestManufacturerData.MUG_2_BLACK)
 TEST_MUG_COPPER_ADVERTISEMENT = build_advertisement_data(TestManufacturerData.MUG_2_COPPER)
+TEST_MUG_COPPER_TESTING_ADVERTISEMENT = build_advertisement_data(
+    TestManufacturerData.MUG_2_COPPER,
+    ble_sig=TESTING_BLE_SIG,
+)
 TEST_TUMBLER_ADVERTISEMENT = build_advertisement_data(TestManufacturerData.TUMBLER)
 TEST_TRAVEL_MUG_ADVERTISEMENT = build_advertisement_data(
     TestManufacturerData.RED_TRAVEL_MUG,
