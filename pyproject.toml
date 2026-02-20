@@ -60,10 +60,12 @@ exclude = ["/docs", "/tests"]
 
 [tool.hatch.build.targets.sdist]
 packages = ["ember_mug"]
+include = ["ember_mug/py.typed"]
 exclude = [".gitignore"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["ember_mug"]
+include = ["ember_mug/py.typed"]
 exclude = [".gitignore"]
 
 [tool.hatch.envs.default]

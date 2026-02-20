@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.2] - 2026-02-20
+
+### Added
+
+* `py.typed` marker to indicate package is typed
+
 ## [1.3.1] - 2026-02-20
 
 ### Added
