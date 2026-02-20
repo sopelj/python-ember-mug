@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
     
     
       
@@ -1762,8 +1762,7 @@
 
               <details class="mkdocstrings-source">
                 <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">185</span>
-<span class="normal">186</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">186</span>
 <span class="normal">187</span>
 <span class="normal">188</span>
 <span class="normal">189</span>
@@ -1840,7 +1839,8 @@
 <span class="normal">260</span>
 <span class="normal">261</span>
 <span class="normal">262</span>
-<span class="normal">263</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">EmberMugCli</span><span class="p">:</span>
+<span class="normal">263</span>
+<span class="normal">264</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">EmberMugCli</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Very simple CLI Interface to interact with a mug.&quot;&quot;&quot;</span>
 
     <span class="n">_commands</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Namespace</span><span class="p">],</span> <span class="n">Awaitable</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span>
@@ -1982,8 +1982,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">252</span>
-<span class="normal">253</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">253</span>
 <span class="normal">254</span>
 <span class="normal">255</span>
 <span class="normal">256</span>
@@ -1993,7 +1992,8 @@
 <span class="normal">260</span>
 <span class="normal">261</span>
 <span class="normal">262</span>
-<span class="normal">263</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">263</span>
+<span class="normal">264</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the specified command based on subparser.&quot;&quot;&quot;</span>
     <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">IS_LINUX</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
@@ -2038,8 +2038,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">162</span>
-<span class="normal">163</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">163</span>
 <span class="normal">164</span>
 <span class="normal">165</span>
 <span class="normal">166</span>
@@ -2058,7 +2057,8 @@
 <span class="normal">179</span>
 <span class="normal">180</span>
 <span class="normal">181</span>
-<span class="normal">182</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">colour_type</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Colour</span><span class="p">:</span>
+<span class="normal">182</span>
+<span class="normal">183</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">colour_type</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Colour</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a hex or rgb colour to a Colour object.&quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">match</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;#?([0-9a-f]</span><span class="si">{6}</span><span class="s2">([0-9a-f]</span><span class="si">{2}</span><span class="s2">)?)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">):</span>
@@ -2114,8 +2114,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">67</span>
-<span class="normal">68</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">68</span>
 <span class="normal">69</span>
 <span class="normal">70</span>
 <span class="normal">71</span>
@@ -2136,7 +2135,8 @@
 <span class="normal">86</span>
 <span class="normal">87</span>
 <span class="normal">88</span>
-<span class="normal">89</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">discover_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">BLEDevice</span><span class="p">,</span> <span class="n">AdvertisementData</span><span class="p">]]:</span>
+<span class="normal">89</span>
+<span class="normal">90</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">discover_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">BLEDevice</span><span class="p">,</span> <span class="n">AdvertisementData</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Discover new devices in pairing mode.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">mugs</span> <span class="o">=</span> <span class="k">await</span> <span class="n">discover_devices</span><span class="p">(</span><span class="n">mac</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">mac</span><span class="p">)</span>
@@ -2187,14 +2187,14 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span>
-<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_info_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_info_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch all information from a mug and end.&quot;&quot;&quot;</span>
     <span class="n">mug</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_device</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="k">async</span> <span class="k">with</span> <span class="n">mug</span><span class="o">.</span><span class="n">connection</span><span class="p">(</span><span class="n">adapter</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">adapter</span><span class="p">):</span>
@@ -2234,8 +2234,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">52</span>
-<span class="normal">53</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span>
 <span class="normal">56</span>
@@ -2246,7 +2245,8 @@
 <span class="normal">61</span>
 <span class="normal">62</span>
 <span class="normal">63</span>
-<span class="normal">64</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_device_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">BLEDevice</span><span class="p">,</span> <span class="n">AdvertisementData</span><span class="p">]:</span>
+<span class="normal">64</span>
+<span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_device_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">BLEDevice</span><span class="p">,</span> <span class="n">AdvertisementData</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find a single device that has already been paired.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">device</span><span class="p">,</span> <span class="n">advertisement</span> <span class="o">=</span> <span class="k">await</span> <span class="n">find_device</span><span class="p">(</span><span class="n">mac</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">mac</span><span class="p">,</span> <span class="n">adapter</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">adapter</span><span class="p">)</span>
@@ -2305,12 +2305,14 @@
 <span class="normal">46</span>
 <span class="normal">47</span>
 <span class="normal">48</span>
-<span class="normal">49</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_device</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmberMug</span><span class="p">:</span>
+<span class="normal">49</span>
+<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_device</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmberMug</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Help to get the devices based on command args.&quot;&quot;&quot;</span>
     <span class="n">device</span><span class="p">,</span> <span class="n">advertisement</span> <span class="o">=</span> <span class="k">await</span> <span class="n">find_device_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">manufacturer_data</span> <span class="o">=</span> <span class="n">advertisement</span><span class="o">.</span><span class="n">manufacturer_data</span>
     <span class="n">model_info</span> <span class="o">=</span> <span class="n">get_model_info_from_advertiser_data</span><span class="p">(</span><span class="n">advertisement</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">model_info</span><span class="o">.</span><span class="n">model</span> <span class="o">==</span> <span class="n">DeviceModel</span><span class="o">.</span><span class="n">UNKNOWN_DEVICE</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">raw</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">advertisement</span><span class="o">.</span><span class="n">manufacturer_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">EMBER_BLE_SIG</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">manufacturer_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">EMBER_BLE_SIG</span><span class="p">,</span> <span class="n">manufacturer_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">TESTING_BLE_SIG</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: No model found matching advertisement data: </span><span class="si">{</span><span class="n">data</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="n">mug</span> <span class="o">=</span> <span class="n">EmberMug</span><span class="p">(</span>
@@ -2350,8 +2352,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">120</span>
-<span class="normal">121</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">121</span>
 <span class="normal">122</span>
 <span class="normal">123</span>
 <span class="normal">124</span>
@@ -2367,7 +2368,8 @@
 <span class="normal">134</span>
 <span class="normal">135</span>
 <span class="normal">136</span>
-<span class="normal">137</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_device_value_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">137</span>
+<span class="normal">138</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_device_value_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get values from the mug and print them.&quot;&quot;&quot;</span>
     <span class="n">mug</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_device</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
@@ -2413,8 +2415,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">102</span>
-<span class="normal">103</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">103</span>
 <span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
@@ -2428,7 +2429,8 @@
 <span class="normal">114</span>
 <span class="normal">115</span>
 <span class="normal">116</span>
-<span class="normal">117</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">poll_device_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">117</span>
+<span class="normal">118</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">poll_device_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch all information and keep polling for changes.&quot;&quot;&quot;</span>
     <span class="n">mug</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_device</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="k">async</span> <span class="k">with</span> <span class="n">mug</span><span class="o">.</span><span class="n">connection</span><span class="p">(</span><span class="n">adapter</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">adapter</span><span class="p">):</span>
@@ -2472,8 +2474,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">140</span>
-<span class="normal">141</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">141</span>
 <span class="normal">142</span>
 <span class="normal">143</span>
 <span class="normal">144</span>
@@ -2491,7 +2492,8 @@
 <span class="normal">156</span>
 <span class="normal">157</span>
 <span class="normal">158</span>
-<span class="normal">159</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">set_device_value_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">159</span>
+<span class="normal">160</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">set_device_value_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set one or more values on the device.&quot;&quot;&quot;</span>
     <span class="n">attrs</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;target_temp&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature_unit&quot;</span><span class="p">,</span> <span class="s2">&quot;led_colour&quot;</span><span class="p">,</span> <span class="s2">&quot;volume_level&quot;</span><span class="p">)</span>
     <span class="n">values</span> <span class="o">=</span> <span class="p">[(</span><span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span> <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">))]</span>

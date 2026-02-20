@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
     
     
       
@@ -1821,9 +1821,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">158</span>
 <span class="normal">159</span>
 <span class="normal">160</span>
 <span class="normal">161</span>
@@ -1871,7 +1869,9 @@
 <span class="normal">203</span>
 <span class="normal">204</span>
 <span class="normal">205</span>
-<span class="normal">206</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">discover_services</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">BleakClient</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">discover_services</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">BleakClient</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Log all services and all values for debugging/development.&quot;&quot;&quot;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Logging all services that were discovered&quot;</span><span class="p">)</span>
     <span class="n">services</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -2176,11 +2176,15 @@
 <span class="normal">150</span>
 <span class="normal">151</span>
 <span class="normal">152</span>
-<span class="normal">153</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model_info_from_advertiser_data</span><span class="p">(</span><span class="n">advertisement</span><span class="p">:</span> <span class="n">AdvertisementData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelInfo</span><span class="p">:</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model_info_from_advertiser_data</span><span class="p">(</span><span class="n">advertisement</span><span class="p">:</span> <span class="n">AdvertisementData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelInfo</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract model info from manufacturer data in advertiser data.&quot;&quot;&quot;</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">ember_mug.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelInfo</span>  <span class="c1"># noqa: PLC0415</span>
 
-    <span class="n">model_data</span> <span class="o">=</span> <span class="n">advertisement</span><span class="o">.</span><span class="n">manufacturer_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">EMBER_BLE_SIG</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">manufacturer_data</span> <span class="o">=</span> <span class="n">advertisement</span><span class="o">.</span><span class="n">manufacturer_data</span>
+
+    <span class="n">model_data</span> <span class="o">=</span> <span class="n">manufacturer_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">EMBER_BLE_SIG</span><span class="p">,</span> <span class="n">manufacturer_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">TESTING_BLE_SIG</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">model_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">model_data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
             <span class="n">model_id</span> <span class="o">=</span> <span class="n">bytes_to_big_int</span><span class="p">(</span><span class="n">model_data</span><span class="p">,</span> <span class="n">signed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
