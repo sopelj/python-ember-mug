@@ -343,7 +343,7 @@ async def test_cli_run():
     assert args.adapter is None
 
 
-@patch("sys.argv", ["file.py", "discover", "--debug"])
+@patch("sys.argv", ["file.py", "--debug", "discover"])
 @patch("logging.basicConfig")
 async def test_cli_run_discover_debug(mock_logging_config: Mock):
     cli = EmberMugCli()
