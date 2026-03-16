@@ -41,7 +41,7 @@ from .utils import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncIterator, Awaitable, Callable
+    from collections.abc import AsyncGenerator, Awaitable, Callable
 
     from bleak.backends.characteristic import BleakGATTCharacteristic
     from bleak.backends.device import BLEDevice
@@ -525,7 +525,7 @@ class EmberMug:
         self._client_kwargs = {**kwargs}
 
     @contextlib.asynccontextmanager
-    async def connection(self, **kwargs: str) -> AsyncIterator[EmberMug]:
+    async def connection(self, **kwargs: str) -> AsyncGenerator[EmberMug]:
         """Establish a connection and close automatically."""
         self.set_client_options(**kwargs)
         # This will happen automatically, but calling it now will give us immediate feedback

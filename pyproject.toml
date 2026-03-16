@@ -32,7 +32,7 @@ docs = [
     "mkdocs-autorefs",
     "mkdocs-literate-nav",
     "mkdocs-gen-files",
-    "black",
+    "black>=26.3.1",
     "termynal",
 ]
 dev = ["ipython"]

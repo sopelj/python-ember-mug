@@ -21,11 +21,11 @@ repos:
       - id: check-case-conflict
       - id: trailing-whitespace
   - repo: https://github.com/ambv/black
-    rev: 26.1.0
+    rev: 26.3.1
     hooks:
       - id: black
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.2
+    rev: v0.15.6
     hooks:
       - id: ruff-check
         args: [--fix]
@@ -38,7 +38,7 @@ repos:
           - --pretty
           - --show-error-codes
           - --show-error-context
-        language_version: python3.11
+        language_version: python3.14
         additional_dependencies:
           - bleak
           - bleak-retry-connector
@@ -49,7 +49,7 @@ repos:
     hooks:
       - id: yamllint
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.47.0
+    rev: v0.48.0
     hooks:
       - id: markdownlint-fix
         args: [--disable, MD013]
