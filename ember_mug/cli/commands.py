@@ -17,6 +17,7 @@ from ember_mug.data import Colour, DeviceModel
 from ember_mug.mug import EmberMug
 from ember_mug.scanner import discover_devices, find_device
 
+from .. import __version__
 from ..formatting import format_capacity
 from ..utils import get_model_info_from_advertiser_data
 from .helpers import CommandLoop, print_changes, print_info, print_table, validate_mac
@@ -206,19 +207,20 @@ class EmberMugCli:
             type=validate_mac,
             help="Only look for this specific address",
         )
-        shared_parser.add_argument(
+        self.parser.add_argument(
             "-d",
             "--debug",
             action="store_true",
             help="Print extra information for development or debugging issues",
         )
-        shared_parser.add_argument(
+        self.parser.add_argument(
             "--log-file",
             type=FileType("w", encoding="utf-8"),
             nargs="?",
             default=sys.stdout,
             help="File to write logs too (Will be overwritten)",
         )
+        self.parser.add_argument("--version", action="version", version=__version__)
         shared_parser.add_argument("-r", "--raw", help="No formatting. One value per line.", action="store_true")
         if IS_LINUX is True:
             # Only works on Linux with BlueZ so don't add for others.
