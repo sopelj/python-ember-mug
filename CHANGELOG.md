@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.3] - 2026-03-24
+
+### Added
+
+* Add support for white mug with code 130
+
 ## [1.3.2] - 2026-02-20
 
 ### Added

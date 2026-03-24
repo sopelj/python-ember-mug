@@ -65,7 +65,7 @@ def get_colour_from_int(colour_id: int) -> DeviceColour | None:  # noqa: PLR0911
     """Extrapolate device colour from integer in advertiser data."""
     if colour_id in (-127, -63, 1, 14, 65):
         return DeviceColour.BLACK
-    if colour_id in (-126, -62, 2):
+    if colour_id in (-126, -62, 2, 130):
         return DeviceColour.WHITE
     if colour_id in (-120, -117, -63, -56, -53, 8, 11):
         return DeviceColour.RED

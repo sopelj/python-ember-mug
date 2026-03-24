@@ -63,6 +63,7 @@ def test_encode_byte_string() -> None:
     [
         (-127, DeviceColour.BLACK),
         (-126, DeviceColour.WHITE),
+        (130, DeviceColour.WHITE),
         (8, DeviceColour.RED),
         (3, DeviceColour.COPPER),
         (-124, DeviceColour.ROSE_GOLD),
