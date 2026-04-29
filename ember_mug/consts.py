@@ -220,7 +220,7 @@ LIQUID_STATE_LABELS: dict[int, str] = {
     LiquidState.COLD_NO_TEMP_CONTROL: "Cold (No control)",
     LiquidState.COOLING: "Cooling",
     LiquidState.HEATING: "Heating",
-    LiquidState.TARGET_TEMPERATURE: "Perfect",
+    LiquidState.TARGET_TEMPERATURE: "Ready",
     LiquidState.WARM_NO_TEMP_CONTROL: "Warm (No control)",
 }
 
