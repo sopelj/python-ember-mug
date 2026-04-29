@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+* Add official MAC-derived UDSK generation and verification helpers.
+
+### Changed
+
+* Prepare the writable session using the app DSK/UDSK flow instead of writing a random UDSK value.
+
 ## [1.3.3] - 2026-03-24
 
 ### Added

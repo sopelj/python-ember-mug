@@ -5,7 +5,6 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import logging
-import os
 from datetime import UTC, datetime
 from enum import StrEnum
 from functools import cached_property
@@ -36,8 +35,10 @@ from .utils import (
     decode_byte_string,
     discover_services,
     encode_byte_string,
+    generate_udsk,
     get_model_info_from_advertiser_data,
     temp_from_bytes,
+    verify_udsk,
 )
 
 if TYPE_CHECKING:
@@ -104,6 +105,7 @@ class EmberMug:
         self._queued_updates: set[str] = set()
         self._latest_events: dict[int, float] = {}
         self._client_kwargs: dict[str, str] = {}
+        self._session_prepared = False
 
         logger.debug("New mug connection initialized.")
         self.set_client_options(**kwargs)
@@ -132,7 +134,7 @@ class EmberMug:
     @property
     def can_write(self) -> bool:
         """Check if the mug can support write operations."""
-        return self.data.udsk is not None
+        return self._session_prepared
 
     def _convert_to_device_unit(self, value: float) -> float:
         """Convert user value to the unit the device expects."""
@@ -175,19 +177,95 @@ class EmberMug:
             except (TimeoutError, BleakError) as error:
                 logger.debug("%s: Failed to connect to the mug: %s", self.device, error)
                 raise error
-            # Attempt to pair for good measure
-            try:
-                await client.pair()
-            except (BleakError, EOFError):
-                pass
-            except NotImplementedError:
-                # workaround for Home Assistant ESPHome Proxy backend which does not allow pairing.
-                logger.warning(
-                    "Pairing not implemented. "
-                    "If your mug is still in pairing mode (blinking blue) tap the button on the bottom to exit.",
-                )
             self._client = client
+            await self._prepare_session()
             await self.subscribe()
+
+    async def _read_without_lock(self, characteristic: MugCharacteristic) -> bytearray:
+        """Read a characteristic during connection setup without re-entering locks."""
+        data = await self._client.read_gatt_char(characteristic.uuid)
+        logger.debug("Read attribute '%s' with value '%s'", characteristic, data)
+        return data
+
+    async def _write_without_lock(
+        self,
+        characteristic: MugCharacteristic,
+        data: bytes | bytearray,
+        *,
+        response: bool | None = None,
+    ) -> None:
+        """Write a characteristic during connection setup without re-entering locks."""
+        kwargs = {} if response is None else {"response": response}
+        await self._client.write_gatt_char(characteristic.uuid, bytearray(data), **kwargs)
+        logger.debug("Wrote '%s' to attribute '%s'", data, characteristic)
+
+    async def _prepare_session(self) -> bool:
+        """Prepare the official Ember DSK/UDSK session when possible."""
+        self._session_prepared = False
+        paired = False
+        try:
+            dsk = await self._read_without_lock(MugCharacteristic.DSK)
+        except BleakError as error:
+            logger.debug("Unable to read DSK before pairing: %s", error)
+            if not await self._pair_for_session():
+                return False
+            paired = True
+            try:
+                dsk = await self._read_without_lock(MugCharacteristic.DSK)
+            except BleakError as retry_error:
+                logger.debug("Unable to read DSK after pairing: %s", retry_error)
+                return False
+
+        self.data.dsk = decode_byte_string(dsk)
+
+        try:
+            udsk = generate_udsk(self.device.address)
+        except ValueError as error:
+            logger.warning("Unable to prepare writable session: %s", error)
+            return False
+
+        try:
+            await self._write_without_lock(MugCharacteristic.UDSK, udsk, response=True)
+            readback = await self._read_without_lock(MugCharacteristic.UDSK)
+        except BleakError as error:
+            logger.debug("Unable to write or read UDSK: %s", error)
+            if paired or not await self._pair_for_session():
+                return False
+            try:
+                await self._write_without_lock(MugCharacteristic.UDSK, udsk, response=True)
+                readback = await self._read_without_lock(MugCharacteristic.UDSK)
+            except BleakError as retry_error:
+                logger.debug("Unable to write or read UDSK after pairing: %s", retry_error)
+                return False
+
+        if not verify_udsk(self.device.address, readback):
+            logger.warning(
+                "Generated UDSK verification failed for %s: expected %s got %s",
+                self.device.address,
+                udsk.hex(),
+                bytes(readback).hex(),
+            )
+            return False
+
+        self.data.udsk = decode_byte_string(readback)
+        self._session_prepared = True
+        return True
+
+    async def _pair_for_session(self) -> bool:
+        """Pair as part of session preparation."""
+        try:
+            await self._client.pair()
+        except (BleakError, EOFError) as error:
+            logger.debug("Pairing failed while preparing session: %s", error)
+            return False
+        except NotImplementedError:
+            # Home Assistant ESPHome Proxy backend does not allow pairing.
+            logger.warning(
+                "Pairing not implemented. "
+                "If your mug is still in pairing mode (blinking blue) tap the button on the bottom to exit.",
+            )
+            return False
+        return True
 
     async def _read(self, characteristic: MugCharacteristic) -> bytearray:
         """Help read characteristic from Mug."""
@@ -219,6 +297,7 @@ class EmberMug:
                 await self._client.disconnect()
         self._client = None  # type: ignore[assignment]
         self._expected_disconnect = False
+        self._session_prepared = False
 
     def _disconnect_callback(self, client: BleakClient) -> None:
         """Disconnect from device."""
@@ -278,9 +357,7 @@ class EmberMug:
             return True
         try:
             await self._ensure_connection()
-            # Attempt to write a random string
-            await self.set_udsk(os.urandom(14).hex())
-            return True
+            return self.can_write
         except BleakError as e:
             logger.debug("Failed to make device writable: %s", e)
             return False
@@ -383,6 +460,11 @@ class EmberMug:
         """Attempt to write udsk."""
         await self._write(MugCharacteristic.UDSK, bytearray(encode_byte_string(udsk)))
         self.data.udsk = udsk
+
+    async def set_udsk_raw(self, udsk: bytes | bytearray) -> None:
+        """Write a raw UDSK value."""
+        await self._write(MugCharacteristic.UDSK, bytearray(udsk))
+        self.data.udsk = decode_byte_string(udsk)
 
     async def get_dsk(self) -> str:
         """Get mug dsk from gatt."""

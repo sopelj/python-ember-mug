@@ -116,9 +116,9 @@ class MugCharacteristic(IntEnum):
     FIRMWARE = 12
     # [Unique ID]-[serial number] (Read)
     MUG_ID = 13
-    # DSK - Unique ID used for auth in app (Read)
+    # DSK - Mug-side auth/session value read by the app (Read)
     DSK = 14
-    # UDSK - Used for auth in app (Read/Write)
+    # UDSK - App-generated auth/session value derived from the BLE MAC (Read/Write)
     UDSK = 15
     # int/temp lock - Address (Read/Write)
     CONTROL_REGISTER_ADDRESS = 16
