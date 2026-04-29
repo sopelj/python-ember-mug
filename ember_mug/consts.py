@@ -116,9 +116,9 @@ class MugCharacteristic(IntEnum):
     FIRMWARE = 12
     # [Unique ID]-[serial number] (Read)
     MUG_ID = 13
-    # DSK - Unique ID used for auth in app (Read)
+    # DSK - Mug-side auth/session value read by the app (Read)
     DSK = 14
-    # UDSK - Used for auth in app (Read/Write)
+    # UDSK - App-generated auth/session value derived from the BLE MAC (Read/Write)
     UDSK = 15
     # int/temp lock - Address (Read/Write)
     CONTROL_REGISTER_ADDRESS = 16
@@ -220,7 +220,7 @@ LIQUID_STATE_LABELS: dict[int, str] = {
     LiquidState.COLD_NO_TEMP_CONTROL: "Cold (No control)",
     LiquidState.COOLING: "Cooling",
     LiquidState.HEATING: "Heating",
-    LiquidState.TARGET_TEMPERATURE: "Perfect",
+    LiquidState.TARGET_TEMPERATURE: "Ready",
     LiquidState.WARM_NO_TEMP_CONTROL: "Warm (No control)",
 }
 

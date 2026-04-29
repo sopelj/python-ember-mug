@@ -14,12 +14,15 @@ from ember_mug.utils import (
     decode_byte_string,
     discover_services,
     encode_byte_string,
+    generate_udsk,
     get_colour_from_int,
     get_model_from_id_and_gen,
     get_model_from_single_int_and_services,
     get_model_info_from_advertiser_data,
     guess_model_from_name,
+    mac_to_bytes,
     temp_from_bytes,
+    verify_udsk,
 )
 from tests.conftest import (
     TEST_MUG_ADVERTISEMENT,
@@ -56,6 +59,35 @@ def test_decode_byte_string() -> None:
 
 def test_encode_byte_string() -> None:
     assert encode_byte_string("abcd12345") == b"YWJjZDEyMzQ1"
+
+
+def test_mac_to_bytes() -> None:
+    expected = bytes.fromhex("f5fc43378da6")
+    assert mac_to_bytes("F5:FC:43:37:8D:A6") == expected
+    assert mac_to_bytes("F5-FC-43-37-8D-A6") == expected
+    assert mac_to_bytes("f5fc43378da6") == expected
+    assert mac_to_bytes(expected) == expected
+
+
+@pytest.mark.parametrize(
+    "mac",
+    [
+        "00000000-0000-0000-0000-000000000000",
+        "f5fc43378da",
+        b"\x01\x02\x03",
+    ],
+)
+def test_mac_to_bytes_errors(mac: str | bytes) -> None:
+    with pytest.raises(ValueError, match=r"MAC address|Expected a six-byte BLE MAC"):
+        mac_to_bytes(mac)
+
+
+def test_generate_udsk() -> None:
+    expected = bytes.fromhex("2bb2f0c09cd191e8d124484e05f509bf74ba2ba6")
+    assert generate_udsk("F5:FC:43:37:8D:A6") == expected
+    assert generate_udsk(bytes.fromhex("f5fc43378da6")) == expected
+    assert verify_udsk("F5:FC:43:37:8D:A6", expected) is True
+    assert verify_udsk("F5:FC:43:37:8D:A6", b"wrong") is False
 
 
 @pytest.mark.parametrize(

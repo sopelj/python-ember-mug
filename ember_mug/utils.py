@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import base64
 import contextlib
+import hashlib
 import logging
 import re
 from typing import TYPE_CHECKING, Any
@@ -18,6 +19,9 @@ if TYPE_CHECKING:
     from ember_mug.data import ModelInfo
 
 logger = logging.getLogger(__name__)
+
+_COMPACT_MAC_REGEX = re.compile(r"^[0-9A-Fa-f]{12}$")
+_SEPARATED_MAC_REGEX = re.compile(r"^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$")
 
 
 def decode_byte_string(data: bytes | bytearray) -> str:
@@ -34,6 +38,45 @@ def decode_byte_string(data: bytes | bytearray) -> str:
 def encode_byte_string(data: str) -> bytes:
     """Encode string from Ember Mug."""
     return re.sub(b"[\r\n]", b"", base64.encodebytes(data.encode()))
+
+
+def mac_to_bytes(mac: str | bytes) -> bytes:
+    """Convert a BLE MAC address to six raw bytes."""
+    if isinstance(mac, bytes):
+        if len(mac) != 6:
+            msg = "MAC address bytes must be exactly 6 bytes"
+            raise ValueError(msg)
+        return mac
+
+    compact_mac = mac.replace(":", "").replace("-", "")
+    if not _COMPACT_MAC_REGEX.fullmatch(compact_mac) or (
+        not _SEPARATED_MAC_REGEX.fullmatch(mac) and not _COMPACT_MAC_REGEX.fullmatch(mac)
+    ):
+        msg = f"Expected a six-byte BLE MAC address, got {mac!r}"
+        raise ValueError(msg)
+    return bytes.fromhex(compact_mac)
+
+
+def generate_udsk(mac: str | bytes) -> bytes:
+    """Generate the Ember app UDSK from a six-byte BLE MAC address."""
+    mac_bytes = mac_to_bytes(mac)
+    mixed = bytes(
+        [
+            mac_bytes[0],
+            mac_bytes[0] ^ mac_bytes[1],
+            mac_bytes[1] ^ mac_bytes[2],
+            mac_bytes[2] ^ mac_bytes[3],
+            mac_bytes[3] ^ mac_bytes[4],
+            mac_bytes[4] ^ mac_bytes[5],
+            mac_bytes[5],
+        ],
+    )
+    return hashlib.sha256(mixed).digest()[19:32] + mixed
+
+
+def verify_udsk(mac: str | bytes, udsk: bytes | bytearray) -> bool:
+    """Verify a UDSK value matches the BLE MAC-derived Ember UDSK."""
+    return bytes(udsk) == generate_udsk(mac)
 
 
 def bytes_to_little_int(data: bytearray | bytes) -> int:
