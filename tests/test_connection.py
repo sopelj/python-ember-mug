@@ -43,11 +43,16 @@ async def test_adapter_without_bluez(ble_device: BLEDevice):
         EmberMug(ble_device, ModelInfo(), adapter="hci0")
 
 
+EXPECTED_TEST_UDSK = bytes.fromhex("61a973d8efb8d0e569a59923793204931b3643cb")
+
+
 @patch("ember_mug.mug.EmberMug.subscribe")
+@patch("ember_mug.mug.EmberMug._prepare_session")
 @patch("ember_mug.mug.establish_connection")
 async def test_connect(
-    mug_subscribe: Mock,
     mock_establish_connection: Mock,
+    mug_prepare_session: Mock,
+    mug_subscribe: Mock,
     ember_mug: MockMug,
 ) -> None:
     # Already connected
@@ -56,6 +61,7 @@ async def test_connect(
     async with ember_mug.connection():
         pass
     mug_subscribe.assert_not_called()
+    mug_prepare_session.assert_not_called()
     mock_establish_connection.assert_not_called()
 
     # Not connected
@@ -65,6 +71,7 @@ async def test_connect(
             pass
 
         mock_establish_connection.assert_called()
+        mug_prepare_session.assert_called()
         mug_subscribe.assert_called()
         assert ember_mug._client is not None
         mock_disconnect.assert_called()
@@ -88,21 +95,17 @@ async def test_connect_error(
 
 @patch("ember_mug.mug.logger")
 @patch("ember_mug.mug.establish_connection")
-async def test_pairing_exceptions_esphome(
+async def test_prepare_session_pairing_exceptions_esphome(
     mock_establish_connection: Mock,
     mock_logger: Mock,
     ember_mug: MockMug,
 ) -> None:
     ember_mug._client.is_connected = False
     mock_client = AsyncMock()
-    mock_client.connect.side_effect = BleakError
+    mock_client.read_gatt_char.side_effect = BleakError
     mock_client.pair.side_effect = NotImplementedError
     mock_establish_connection.return_value = mock_client
-    with patch.multiple(
-        ember_mug,
-        update_initial=AsyncMock(),
-        subscribe=AsyncMock(),
-    ):
+    with patch.object(ember_mug, "subscribe", AsyncMock()):
         await ember_mug._ensure_connection()
 
     mock_establish_connection.assert_called_once()
@@ -113,19 +116,71 @@ async def test_pairing_exceptions_esphome(
 
 
 @patch("ember_mug.mug.establish_connection")
-async def test_pairing_exceptions(
+async def test_prepare_session_pairing_exceptions(
     mock_establish_connection: Mock,
     ember_mug: MockMug,
 ) -> None:
     mock_client = AsyncMock()
+    mock_client.read_gatt_char.side_effect = BleakError
     mock_client.pair.side_effect = BleakError
     mock_establish_connection.return_value = mock_client
-    with patch.multiple(
-        ember_mug,
-        update_initial=AsyncMock(),
-        subscribe=AsyncMock(),
-    ):
+    with patch.object(ember_mug, "subscribe", AsyncMock()):
         await ember_mug._ensure_connection()
+
+
+async def test_prepare_session_success(ember_mug: MockMug) -> None:
+    ember_mug._client.read_gatt_char = AsyncMock(side_effect=[b"dsk", EXPECTED_TEST_UDSK])
+    ember_mug._client.write_gatt_char = AsyncMock()
+
+    assert await ember_mug._prepare_session() is True
+    assert ember_mug.can_write is True
+    assert ember_mug.data.dsk == "ZHNr"
+    assert ember_mug.data.udsk == "Yalz2O+40OVppZkjeTIEkxs2Q8s="
+    ember_mug._client.pair.assert_not_called()
+    ember_mug._client.write_gatt_char.assert_called_once_with(
+        MugCharacteristic.UDSK.uuid,
+        bytearray(EXPECTED_TEST_UDSK),
+        response=True,
+    )
+
+
+async def test_prepare_session_pairs_after_dsk_failure(ember_mug: MockMug) -> None:
+    ember_mug._client.read_gatt_char = AsyncMock(side_effect=[BleakError("auth"), b"dsk", EXPECTED_TEST_UDSK])
+    ember_mug._client.pair = AsyncMock()
+    ember_mug._client.write_gatt_char = AsyncMock()
+
+    assert await ember_mug._prepare_session() is True
+    ember_mug._client.pair.assert_called_once()
+    assert ember_mug.can_write is True
+
+
+async def test_prepare_session_pairs_after_udsk_write_failure(ember_mug: MockMug) -> None:
+    ember_mug._client.read_gatt_char = AsyncMock(side_effect=[b"dsk", EXPECTED_TEST_UDSK])
+    ember_mug._client.pair = AsyncMock()
+    ember_mug._client.write_gatt_char = AsyncMock(side_effect=[BleakError("auth"), None])
+
+    assert await ember_mug._prepare_session() is True
+    ember_mug._client.pair.assert_called_once()
+    assert ember_mug._client.write_gatt_char.call_count == 2
+    assert ember_mug.can_write is True
+
+
+async def test_prepare_session_invalid_address(ember_mug: MockMug) -> None:
+    ember_mug.device = BLEDevice(address="00000000-0000-0000-0000-000000000000", name="Ember Ceramic Mug", details={})
+    ember_mug._client.read_gatt_char = AsyncMock(return_value=b"dsk")
+    ember_mug._client.write_gatt_char = AsyncMock()
+
+    assert await ember_mug._prepare_session() is False
+    assert ember_mug.can_write is False
+    ember_mug._client.write_gatt_char.assert_not_called()
+
+
+async def test_prepare_session_udsk_mismatch(ember_mug: MockMug) -> None:
+    ember_mug._client.read_gatt_char = AsyncMock(side_effect=[b"dsk", b"wrong"])
+    ember_mug._client.write_gatt_char = AsyncMock()
+
+    assert await ember_mug._prepare_session() is False
+    assert ember_mug.can_write is False
 
 
 async def test_disconnect(ember_mug: MockMug) -> None:
@@ -221,10 +276,10 @@ def test_ble_event_callback(ember_mug: MockMug) -> None:
 
 
 def test_can_write(ember_mug: MockMug) -> None:
-    ember_mug.data.udsk = "non-empty"
+    ember_mug._session_prepared = True
     assert ember_mug.can_write is True
 
-    ember_mug.data.udsk = None
+    ember_mug._session_prepared = False
     assert ember_mug.can_write is False
 
 
@@ -261,22 +316,22 @@ async def test_get_mug_led_colour(ember_mug: MockMug) -> None:
         ember_mug._client.read_gatt_char.assert_called_once_with(MugCharacteristic.LED.uuid)
 
 
-@patch("os.urandom", return_value=b"\x98\x92\x02\x10\xbd\x94\xb9\xf2\xe15\x9b6\x82\xa0")
-async def test_make_writable(mock_urandom, ember_mug: MockMug) -> None:
+async def test_make_writable(ember_mug: MockMug) -> None:
     mock_ensure_connection = AsyncMock()
-    ember_mug._client.write_gatt_char = AsyncMock()
     with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
-        ember_mug.data.udsk = "non-empty"
+        ember_mug._session_prepared = True
         await ember_mug.make_writable()
-        mock_urandom.assert_not_called()
+        mock_ensure_connection.assert_not_called()
 
-        ember_mug.data.udsk = None
+        ember_mug._session_prepared = False
         await ember_mug.make_writable()
-        mock_urandom.assert_called_once()
-        ember_mug._client.write_gatt_char.assert_called_once_with(
-            MugCharacteristic.UDSK.uuid,
-            bytearray(b"OTg5MjAyMTBiZDk0YjlmMmUxMzU5YjM2ODJhMA=="),
-        )
+        mock_ensure_connection.assert_called_once()
+
+
+async def test_make_writable_returns_false_without_prepared_session(ember_mug: MockMug) -> None:
+    with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
+        ember_mug._session_prepared = False
+        assert await ember_mug.make_writable() is False
 
 
 async def test_pair(ember_mug: MockMug) -> None:
@@ -464,6 +519,18 @@ async def test_set_mug_udsk(ember_mug: MockMug) -> None:
         ember_mug._client.write_gatt_char.assert_called_once_with(
             MugCharacteristic.UDSK.uuid,
             bytearray(b"YWJjZDEyMzQ1"),
+        )
+
+
+async def test_set_mug_udsk_raw(ember_mug: MockMug) -> None:
+    mock_ensure_connection = AsyncMock()
+    ember_mug._client.write_gatt_char = AsyncMock()
+    with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
+        await ember_mug.set_udsk_raw(EXPECTED_TEST_UDSK)
+        mock_ensure_connection.assert_called_once()
+        ember_mug._client.write_gatt_char.assert_called_once_with(
+            MugCharacteristic.UDSK.uuid,
+            bytearray(EXPECTED_TEST_UDSK),
         )
 
 
