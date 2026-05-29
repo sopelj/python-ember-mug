@@ -18,7 +18,7 @@ classifiers = [
 ]
 dependencies = [
     "bleak-retry-connector>=4.0.2",
-    "bleak>=1.0.1,<2.2.0",
+    "bleak>=1.0.1",
 ]
 
 [project.optional-dependencies]
@@ -76,13 +76,14 @@ features = ["test"]
 
 [[tool.hatch.envs.test.matrix]]
 python = ["3.11", "3.12", "3.13", "3.14"]
+bleak = ["1.0.1", "2.0.0", "3.0.2"]
 
 [tool.hatch.envs.test.scripts]
 cov = "pytest -vvv --asyncio-mode=auto --cov=ember_mug --cov-branch --cov-report=xml --cov-report=term-missing tests"
 no-cov = "cov --no-cov"
 
 [tool.hatch.envs.docs]
-python = "3.13"
+python = "3.14"
 features = ["docs"]
 
 [tool.hatch.envs.docs.scripts]

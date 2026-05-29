@@ -266,11 +266,11 @@ class EmberMug:
 
     async def get_meta(self) -> MugMeta:
         """Fetch Meta info from the mug (Serial number and ID)."""
-        return MugMeta.from_bytes(await self._read(MugCharacteristic.MUG_ID))
+        return MugMeta.from_bytes(bytes(await self._read(MugCharacteristic.MUG_ID)))
 
     async def get_battery(self) -> BatteryInfo:
         """Get Battery percent from mug gatt."""
-        return BatteryInfo.from_bytes(await self._read(MugCharacteristic.BATTERY))
+        return BatteryInfo.from_bytes(bytes(await self._read(MugCharacteristic.BATTERY)))
 
     async def make_writable(self) -> bool:
         """Try to make device writable if need be."""
@@ -419,7 +419,7 @@ class EmberMug:
 
     async def get_firmware(self) -> MugFirmwareInfo:
         """Get firmware info."""
-        return MugFirmwareInfo.from_bytes(await self._read(MugCharacteristic.FIRMWARE))
+        return MugFirmwareInfo.from_bytes(bytes(await self._read(MugCharacteristic.FIRMWARE)))
 
     async def update_initial(self) -> list[Change]:
         """Update attributes that don't normally change and don't need to be regularly updated."""

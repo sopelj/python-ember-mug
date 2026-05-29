@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.0] - 2026-05-29
+
+### Changes
+
+* Remove `bleak` version limit and test for version `3.0.2`
+
 ## [1.3.3] - 2026-03-24
 
 ### Added

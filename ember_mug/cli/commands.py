@@ -10,7 +10,7 @@ import sys
 from argparse import ArgumentParser, ArgumentTypeError, FileType, Namespace
 from typing import TYPE_CHECKING, ClassVar
 
-from bleak import AdvertisementData, BleakError
+from bleak import BleakError
 
 from ember_mug.consts import ATTR_LABELS, EMBER_BLE_SIG, EXTRA_ATTRS, IS_LINUX, TESTING_BLE_SIG, VolumeLevel
 from ember_mug.data import Colour, DeviceModel
@@ -25,6 +25,7 @@ from .helpers import CommandLoop, print_changes, print_info, print_table, valida
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
 
+    from bleak import AdvertisementData
     from bleak.backends.device import BLEDevice
 
 all_attrs = list(ATTR_LABELS) + list(EXTRA_ATTRS)

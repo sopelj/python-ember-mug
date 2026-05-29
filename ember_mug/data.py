@@ -206,7 +206,7 @@ class MugMeta(AsDict):
 
 
 @dataclass
-class MugData(AsDict):
+class MugData:
     """Class to store/display the state of the mug."""
 
     # Options

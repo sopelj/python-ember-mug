@@ -192,7 +192,7 @@ async def test_discover_services(read_gatt_descriptor: Mock) -> None:
     def mock_read_char(uuid: str) -> bytes:
         if "invalid" in uuid:
             raise bleak_invalid_exception
-        return bytearray(b"test char")
+        return b"test char"
 
     client = AsyncMock(services=[mock_service])
     client.read_gatt_char = AsyncMock(side_effect=mock_read_char)
