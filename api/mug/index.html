@@ -3208,11 +3208,11 @@
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MugMeta</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch Meta info from the mug (Serial number and ID).&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">MugMeta</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">MUG_ID</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">MugMeta</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">MUG_ID</span><span class="p">)))</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_battery</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BatteryInfo</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Battery percent from mug gatt.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">BatteryInfo</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">BATTERY</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">BatteryInfo</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">BATTERY</span><span class="p">)))</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">make_writable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Try to make device writable if need be.&quot;&quot;&quot;</span>
@@ -3361,7 +3361,7 @@
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_firmware</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MugFirmwareInfo</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get firmware info.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">MugFirmwareInfo</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">FIRMWARE</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">MugFirmwareInfo</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">FIRMWARE</span><span class="p">)))</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_initial</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Change</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update attributes that don&#39;t normally change and don&#39;t need to be regularly updated.&quot;&quot;&quot;</span>
@@ -3467,7 +3467,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_client_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">kwargs</span><span class="p">}</span>
 
     <span class="nd">@contextlib</span><span class="o">.</span><span class="n">asynccontextmanager</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">EmberMug</span><span class="p">]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="n">EmberMug</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Establish a connection and close automatically.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_client_options</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="c1"># This will happen automatically, but calling it now will give us immediate feedback</span>
@@ -3679,7 +3679,7 @@
 <a href="#mug.EmberMug.connection" class="headerlink" title="Permanent link">&para;</a></h6>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">connection</span><span class="p">(</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="collections">collections</span></span><span class="o">.</span><span class="n"><span title="collections.abc">abc</span></span><span class="o">.</span><span class="n"><span title="collections.abc.AsyncIterator">AsyncIterator</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-module&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-module-name&quot;&gt;mug&lt;/span&gt;" href="#mug">mug</a></span><span class="o">.</span><span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;EmberMug&lt;/span&gt; (&lt;code&gt;mug.EmberMug&lt;/code&gt;)" href="#mug.EmberMug">EmberMug</a></span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="collections">collections</span></span><span class="o">.</span><span class="n"><span title="collections.abc">abc</span></span><span class="o">.</span><span class="n"><span title="collections.abc.AsyncGenerator">AsyncGenerator</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-module&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-module-name&quot;&gt;mug&lt;/span&gt;" href="#mug">mug</a></span><span class="o">.</span><span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;EmberMug&lt;/span&gt; (&lt;code&gt;mug.EmberMug&lt;/code&gt;)" href="#mug.EmberMug">EmberMug</a></span><span class="p">]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3697,7 +3697,7 @@
 <span class="normal">532</span>
 <span class="normal">533</span>
 <span class="normal">534</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@contextlib</span><span class="o">.</span><span class="n">asynccontextmanager</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">EmberMug</span><span class="p">]:</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="n">EmberMug</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Establish a connection and close automatically.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">set_client_options</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="c1"># This will happen automatically, but calling it now will give us immediate feedback</span>
@@ -3831,7 +3831,7 @@
 <span class="normal">272</span>
 <span class="normal">273</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_battery</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BatteryInfo</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get Battery percent from mug gatt.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">BatteryInfo</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">BATTERY</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">BatteryInfo</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">BATTERY</span><span class="p">)))</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4012,7 +4012,7 @@
 <span class="normal">421</span>
 <span class="normal">422</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_firmware</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MugFirmwareInfo</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get firmware info.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">MugFirmwareInfo</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">FIRMWARE</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">MugFirmwareInfo</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">FIRMWARE</span><span class="p">)))</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4154,7 +4154,7 @@
 <span class="normal">268</span>
 <span class="normal">269</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MugMeta</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch Meta info from the mug (Serial number and ID).&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">MugMeta</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">MUG_ID</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">MugMeta</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">MugCharacteristic</span><span class="o">.</span><span class="n">MUG_ID</span><span class="p">)))</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
