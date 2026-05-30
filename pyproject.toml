@@ -17,8 +17,8 @@ classifiers = [
     'Programming Language :: Python :: 3.14',
 ]
 dependencies = [
-    "bleak-retry-connector>=4.0.2",
-    "bleak>=1.0.1",
+    "bleak-retry-connector>=4.6.0",
+    "bleak>=3.0.2",
 ]
 
 [project.optional-dependencies]
@@ -76,7 +76,7 @@ features = ["test"]
 
 [[tool.hatch.envs.test.matrix]]
 python = ["3.11", "3.12", "3.13", "3.14"]
-bleak = ["1.0.1", "2.0.0", "3.0.2"]
+bleak = ["3.0.2"]
 
 [tool.hatch.envs.test.scripts]
 cov = "pytest -vvv --asyncio-mode=auto --cov=ember_mug --cov-branch --cov-report=xml --cov-report=term-missing tests"

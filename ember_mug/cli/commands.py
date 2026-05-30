@@ -7,8 +7,9 @@ import contextlib
 import logging
 import re
 import sys
-from argparse import ArgumentParser, ArgumentTypeError, FileType, Namespace
-from typing import TYPE_CHECKING, ClassVar
+from argparse import ArgumentParser, ArgumentTypeError, Namespace
+from pathlib import Path
+from typing import IO, TYPE_CHECKING, ClassVar
 
 from bleak import BleakError
 
@@ -216,9 +217,8 @@ class EmberMugCli:
         )
         self.parser.add_argument(
             "--log-file",
-            type=FileType("w", encoding="utf-8"),
+            type=Path,
             nargs="?",
-            default=sys.stdout,
             help="File to write logs too (Will be overwritten)",
         )
         self.parser.add_argument("--version", action="version", version=__version__)
@@ -256,12 +256,23 @@ class EmberMugCli:
     async def run(self) -> None:
         """Run the specified command based on subparser."""
         args = self.parser.parse_args()
+        out_file: IO[str] | None = None
         if IS_LINUX is False:
             args.adapter = None  # Set for other platforms
         if args.debug:
+            if args.log_file:
+                try:
+                    out_file = args.log_file.open("w")
+                except OSError as e:
+                    self.parser.error(f"Failed to open '{args.log_file}': {e}")
+
             logging.basicConfig(
-                stream=args.log_file,
+                stream=out_file or sys.stdout,
                 level=logging.DEBUG,
                 format="[%(asctime)s] %(levelname)s [%(filename)s.%(funcName)s:%(lineno)d] %(message)s",
             )
-        await self._commands[args.command](args)
+        try:
+            await self._commands[args.command](args)
+        finally:
+            if out_file is not None:
+                out_file.close()

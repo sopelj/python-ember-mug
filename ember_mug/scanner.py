@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import logging
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 from bleak import BleakScanner
 
@@ -14,13 +14,14 @@ from .consts import DEVICE_SERVICE_UUIDS, IS_LINUX
 if TYPE_CHECKING:
     from typing import NotRequired, TypedDict
 
+    from bleak import BlueZScannerArgs
     from bleak.backends.device import BLEDevice
     from bleak.backends.scanner import AdvertisementData
 
-    class ScannerKwargs(TypedDict):
+    class BleakScannerKwargs(TypedDict):
         """Optional kwargs for scanner."""
 
-        adapter: NotRequired[str]
+        bluez: NotRequired[BlueZScannerArgs]
         service_uuids: NotRequired[list[str]]
 
 
@@ -29,13 +30,17 @@ DEFAULT_TIMEOUT = 30
 logger = logging.getLogger(__name__)
 
 
-def build_scanner_kwargs(adapter: str | None = None, *, service_uuids: list[str] | None = None) -> ScannerKwargs:
+def build_scanner_kwargs(adapter: str | None = None, *, service_uuids: list[str] | None = None) -> BleakScannerKwargs:
     """Add Adapter to kwargs for scanner if specified and using BlueZ."""
     if adapter and IS_LINUX is not True:
         msg = "The adapter option is only valid for the Linux BlueZ Backend."
         raise ValueError(msg)
-    kwargs = {"service_uuids": service_uuids} if service_uuids else {}
-    return cast("ScannerKwargs", kwargs | {"adapter": adapter} if adapter else kwargs)
+    kwargs: BleakScannerKwargs = {}
+    if service_uuids:
+        kwargs |= {"service_uuids": service_uuids}
+    if adapter:
+        kwargs |= {"bluez": {"adapter": adapter}}
+    return kwargs
 
 
 async def discover_devices(

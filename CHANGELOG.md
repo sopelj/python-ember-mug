@@ -4,7 +4,7 @@
 
 ### Changes
 
-* Remove `bleak` version limit and test for version `3.0.2`
+* Require `bleak>=3.0.2` to support change to keywords in version 3
 
 ## [1.3.3] - 2026-03-24
 
