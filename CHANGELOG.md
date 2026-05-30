@@ -5,6 +5,8 @@
 ### Changes
 
 * Require `bleak>=3.0.2` to support change to keywords in version 3
+* Remove deprecated FileType
+* Use new `BlueZScannerArgs` in version 3 of bleak
 
 ## [1.3.3] - 2026-03-24
 
