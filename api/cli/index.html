@@ -1311,8 +1311,7 @@
 
               <details class="mkdocstrings-source">
                 <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">188</span>
-<span class="normal">189</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">189</span>
 <span class="normal">190</span>
 <span class="normal">191</span>
 <span class="normal">192</span>
@@ -1390,7 +1389,18 @@
 <span class="normal">264</span>
 <span class="normal">265</span>
 <span class="normal">266</span>
-<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">EmberMugCli</span><span class="p">:</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">EmberMugCli</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Very simple CLI Interface to interact with a mug.&quot;&quot;&quot;</span>
 
     <span class="n">_commands</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Namespace</span><span class="p">],</span> <span class="n">Awaitable</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span>
@@ -1421,9 +1431,8 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
             <span class="s2">&quot;--log-file&quot;</span><span class="p">,</span>
-            <span class="nb">type</span><span class="o">=</span><span class="n">FileType</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
             <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
-            <span class="n">default</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;File to write logs too (Will be overwritten)&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--version&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">__version__</span><span class="p">)</span>
@@ -1461,15 +1470,26 @@
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the specified command based on subparser.&quot;&quot;&quot;</span>
         <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+        <span class="n">out_file</span><span class="p">:</span> <span class="n">IO</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">IS_LINUX</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="n">args</span><span class="o">.</span><span class="n">adapter</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Set for other platforms</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">out_file</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to open &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
             <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
-                <span class="n">stream</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="p">,</span>
+                <span class="n">stream</span><span class="o">=</span><span class="n">out_file</span> <span class="ow">or</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
                 <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
                 <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;[</span><span class="si">%(asctime)s</span><span class="s2">] </span><span class="si">%(levelname)s</span><span class="s2"> [</span><span class="si">%(filename)s</span><span class="s2">.</span><span class="si">%(funcName)s</span><span class="s2">:</span><span class="si">%(lineno)d</span><span class="s2">] </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">command</span><span class="p">](</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">command</span><span class="p">](</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">out_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">out_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -1544,18 +1564,40 @@
 <span class="normal">264</span>
 <span class="normal">265</span>
 <span class="normal">266</span>
-<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the specified command based on subparser.&quot;&quot;&quot;</span>
     <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">out_file</span><span class="p">:</span> <span class="n">IO</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">IS_LINUX</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
         <span class="n">args</span><span class="o">.</span><span class="n">adapter</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Set for other platforms</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">out_file</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to open &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
-            <span class="n">stream</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="p">,</span>
+            <span class="n">stream</span><span class="o">=</span><span class="n">out_file</span> <span class="ow">or</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
             <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
             <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;[</span><span class="si">%(asctime)s</span><span class="s2">] </span><span class="si">%(levelname)s</span><span class="s2"> [</span><span class="si">%(filename)s</span><span class="s2">.</span><span class="si">%(funcName)s</span><span class="s2">:</span><span class="si">%(lineno)d</span><span class="s2">] </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">command</span><span class="p">](</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">command</span><span class="p">](</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">out_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

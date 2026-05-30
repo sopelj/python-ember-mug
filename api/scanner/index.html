@@ -1084,19 +1084,19 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#scanner.ScannerKwargs" class="md-nav__link">
+  <a href="#scanner.BleakScannerKwargs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ScannerKwargs
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BleakScannerKwargs
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" ScannerKwargs">
+    <nav class="md-nav" aria-label=" BleakScannerKwargs">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#scanner.ScannerKwargs-attributes" class="md-nav__link">
+  <a href="#scanner.BleakScannerKwargs-attributes" class="md-nav__link">
     <span class="md-ellipsis">
       
         Attributes
@@ -1107,10 +1107,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#scanner.ScannerKwargs.adapter" class="md-nav__link">
+  <a href="#scanner.BleakScannerKwargs.bluez" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;adapter
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;bluez
       
     </span>
   </a>
@@ -1118,7 +1118,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#scanner.ScannerKwargs.service_uuids" class="md-nav__link">
+  <a href="#scanner.BleakScannerKwargs.service_uuids" class="md-nav__link">
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;service_uuids
@@ -1421,19 +1421,19 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#scanner.ScannerKwargs" class="md-nav__link">
+  <a href="#scanner.BleakScannerKwargs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ScannerKwargs
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BleakScannerKwargs
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" ScannerKwargs">
+    <nav class="md-nav" aria-label=" BleakScannerKwargs">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#scanner.ScannerKwargs-attributes" class="md-nav__link">
+  <a href="#scanner.BleakScannerKwargs-attributes" class="md-nav__link">
     <span class="md-ellipsis">
       
         Attributes
@@ -1444,10 +1444,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#scanner.ScannerKwargs.adapter" class="md-nav__link">
+  <a href="#scanner.BleakScannerKwargs.bluez" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;adapter
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;bluez
       
     </span>
   </a>
@@ -1455,7 +1455,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#scanner.ScannerKwargs.service_uuids" class="md-nav__link">
+  <a href="#scanner.BleakScannerKwargs.service_uuids" class="md-nav__link">
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;service_uuids
@@ -1667,11 +1667,11 @@
 
 
 
-<h4 id="scanner.ScannerKwargs" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ScannerKwargs</span>
+<h4 id="scanner.BleakScannerKwargs" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">BleakScannerKwargs</span>
 
 
-<a href="#scanner.ScannerKwargs" class="headerlink" title="Permanent link">&para;</a></h4>
+<a href="#scanner.BleakScannerKwargs" class="headerlink" title="Permanent link">&para;</a></h4>
 
 
     <div class="doc doc-contents ">
@@ -1691,14 +1691,14 @@
 
               <details class="mkdocstrings-source">
                 <summary>Source code in <code>ember_mug/scanner.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">20</span>
-<span class="normal">21</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
 <span class="normal">22</span>
 <span class="normal">23</span>
-<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ScannerKwargs</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+<span class="normal">24</span>
+<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BleakScannerKwargs</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Optional kwargs for scanner.&quot;&quot;&quot;</span>
 
-    <span class="n">adapter</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">bluez</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="n">BlueZScannerArgs</span><span class="p">]</span>
     <span class="n">service_uuids</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -1711,22 +1711,22 @@
 
 
 
-<h5 id="scanner.ScannerKwargs-attributes">Attributes<a href="#scanner.ScannerKwargs-attributes" class="headerlink" title="Permanent link">&para;</a></h5>
+<h5 id="scanner.BleakScannerKwargs-attributes">Attributes<a href="#scanner.BleakScannerKwargs-attributes" class="headerlink" title="Permanent link">&para;</a></h5>
 
 <div class="doc doc-object doc-attribute">
 
 
 
-<h6 id="scanner.ScannerKwargs.adapter" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">adapter</span>
+<h6 id="scanner.BleakScannerKwargs.bluez" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">bluez</span>
 
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
   </span>
 
-<a href="#scanner.ScannerKwargs.adapter" class="headerlink" title="Permanent link">&para;</a></h6>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">adapter</span><span class="p">:</span> <span class="n"><span title="typing">typing</span></span><span class="o">.</span><span class="n"><span title="typing.NotRequired">NotRequired</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span>
+<a href="#scanner.BleakScannerKwargs.bluez" class="headerlink" title="Permanent link">&para;</a></h6>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">bluez</span><span class="p">:</span> <span class="n"><span title="typing">typing</span></span><span class="o">.</span><span class="n"><span title="typing.NotRequired">NotRequired</span></span><span class="p">[</span><span class="n"><span title="bleak">bleak</span></span><span class="o">.</span><span class="n"><span title="bleak.BlueZScannerArgs">BlueZScannerArgs</span></span><span class="p">]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -1739,7 +1739,7 @@
 
 
 
-<h6 id="scanner.ScannerKwargs.service_uuids" class="doc doc-heading">
+<h6 id="scanner.BleakScannerKwargs.service_uuids" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">service_uuids</span>
 
 
@@ -1747,7 +1747,7 @@
       <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
   </span>
 
-<a href="#scanner.ScannerKwargs.service_uuids" class="headerlink" title="Permanent link">&para;</a></h6>
+<a href="#scanner.BleakScannerKwargs.service_uuids" class="headerlink" title="Permanent link">&para;</a></h6>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">service_uuids</span><span class="p">:</span> <span class="n"><span title="typing">typing</span></span><span class="o">.</span><span class="n"><span title="typing.NotRequired">NotRequired</span></span><span class="p">[</span><span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]]</span>
 </code></pre></div>
 
@@ -1781,7 +1781,7 @@
     <span class="n">adapter</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">service_uuids</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-module&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-module-name&quot;&gt;scanner&lt;/span&gt;" href="#scanner">scanner</a></span><span class="o">.</span><span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;ScannerKwargs&lt;/span&gt; (&lt;code&gt;scanner.ScannerKwargs&lt;/code&gt;)" href="#scanner.ScannerKwargs">ScannerKwargs</a></span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-module&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-module-name&quot;&gt;scanner&lt;/span&gt;" href="#scanner">scanner</a></span><span class="o">.</span><span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;BleakScannerKwargs&lt;/span&gt; (&lt;code&gt;scanner.BleakScannerKwargs&lt;/code&gt;)" href="#scanner.BleakScannerKwargs">BleakScannerKwargs</a></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -1791,19 +1791,27 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/scanner.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">32</span>
-<span class="normal">33</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">33</span>
 <span class="normal">34</span>
 <span class="normal">35</span>
 <span class="normal">36</span>
 <span class="normal">37</span>
-<span class="normal">38</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_scanner_kwargs</span><span class="p">(</span><span class="n">adapter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">service_uuids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScannerKwargs</span><span class="p">:</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_scanner_kwargs</span><span class="p">(</span><span class="n">adapter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">service_uuids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BleakScannerKwargs</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add Adapter to kwargs for scanner if specified and using BlueZ.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">adapter</span> <span class="ow">and</span> <span class="n">IS_LINUX</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;The adapter option is only valid for the Linux BlueZ Backend.&quot;</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;service_uuids&quot;</span><span class="p">:</span> <span class="n">service_uuids</span><span class="p">}</span> <span class="k">if</span> <span class="n">service_uuids</span> <span class="k">else</span> <span class="p">{}</span>
-    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="s2">&quot;ScannerKwargs&quot;</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">|</span> <span class="p">{</span><span class="s2">&quot;adapter&quot;</span><span class="p">:</span> <span class="n">adapter</span><span class="p">}</span> <span class="k">if</span> <span class="n">adapter</span> <span class="k">else</span> <span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">kwargs</span><span class="p">:</span> <span class="n">BleakScannerKwargs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">service_uuids</span><span class="p">:</span>
+        <span class="n">kwargs</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">&quot;service_uuids&quot;</span><span class="p">:</span> <span class="n">service_uuids</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">adapter</span><span class="p">:</span>
+        <span class="n">kwargs</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">&quot;bluez&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;adapter&quot;</span><span class="p">:</span> <span class="n">adapter</span><span class="p">}}</span>
+    <span class="k">return</span> <span class="n">kwargs</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1848,12 +1856,7 @@ for device, advertisement in devices:
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/scanner.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">46</span>
 <span class="normal">47</span>
 <span class="normal">48</span>
 <span class="normal">49</span>
@@ -1871,7 +1874,12 @@ for device, advertisement in devices:
 <span class="normal">61</span>
 <span class="normal">62</span>
 <span class="normal">63</span>
-<span class="normal">64</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">discover_devices</span><span class="p">(</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">discover_devices</span><span class="p">(</span>
     <span class="n">mac</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">adapter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">wait</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
@@ -1943,12 +1951,7 @@ device = await find_device(&quot;my:mac:addr&quot;)
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/scanner.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">72</span>
 <span class="normal">73</span>
 <span class="normal">74</span>
 <span class="normal">75</span>
@@ -1968,7 +1971,12 @@ device = await find_device(&quot;my:mac:addr&quot;)
 <span class="normal">89</span>
 <span class="normal">90</span>
 <span class="normal">91</span>
-<span class="normal">92</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_device</span><span class="p">(</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_device</span><span class="p">(</span>
     <span class="n">mac</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">adapter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_TIMEOUT</span><span class="p">,</span>  <span class="c1"># noqa: ASYNC109</span>

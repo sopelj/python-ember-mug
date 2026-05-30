@@ -1762,8 +1762,7 @@
 
               <details class="mkdocstrings-source">
                 <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">188</span>
-<span class="normal">189</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">189</span>
 <span class="normal">190</span>
 <span class="normal">191</span>
 <span class="normal">192</span>
@@ -1841,7 +1840,18 @@
 <span class="normal">264</span>
 <span class="normal">265</span>
 <span class="normal">266</span>
-<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">EmberMugCli</span><span class="p">:</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">EmberMugCli</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Very simple CLI Interface to interact with a mug.&quot;&quot;&quot;</span>
 
     <span class="n">_commands</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Namespace</span><span class="p">],</span> <span class="n">Awaitable</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span>
@@ -1872,9 +1882,8 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
             <span class="s2">&quot;--log-file&quot;</span><span class="p">,</span>
-            <span class="nb">type</span><span class="o">=</span><span class="n">FileType</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
             <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
-            <span class="n">default</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;File to write logs too (Will be overwritten)&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--version&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">__version__</span><span class="p">)</span>
@@ -1912,15 +1921,26 @@
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the specified command based on subparser.&quot;&quot;&quot;</span>
         <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+        <span class="n">out_file</span><span class="p">:</span> <span class="n">IO</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">IS_LINUX</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="n">args</span><span class="o">.</span><span class="n">adapter</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Set for other platforms</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">out_file</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to open &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
             <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
-                <span class="n">stream</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="p">,</span>
+                <span class="n">stream</span><span class="o">=</span><span class="n">out_file</span> <span class="ow">or</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
                 <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
                 <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;[</span><span class="si">%(asctime)s</span><span class="s2">] </span><span class="si">%(levelname)s</span><span class="s2"> [</span><span class="si">%(filename)s</span><span class="s2">.</span><span class="si">%(funcName)s</span><span class="s2">:</span><span class="si">%(lineno)d</span><span class="s2">] </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">command</span><span class="p">](</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">command</span><span class="p">](</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">out_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">out_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -1995,18 +2015,40 @@
 <span class="normal">264</span>
 <span class="normal">265</span>
 <span class="normal">266</span>
-<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the specified command based on subparser.&quot;&quot;&quot;</span>
     <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">out_file</span><span class="p">:</span> <span class="n">IO</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">IS_LINUX</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
         <span class="n">args</span><span class="o">.</span><span class="n">adapter</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Set for other platforms</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">out_file</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to open &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
-            <span class="n">stream</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="p">,</span>
+            <span class="n">stream</span><span class="o">=</span><span class="n">out_file</span> <span class="ow">or</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
             <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
             <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;[</span><span class="si">%(asctime)s</span><span class="s2">] </span><span class="si">%(levelname)s</span><span class="s2"> [</span><span class="si">%(filename)s</span><span class="s2">.</span><span class="si">%(funcName)s</span><span class="s2">:</span><span class="si">%(lineno)d</span><span class="s2">] </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">command</span><span class="p">](</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">command</span><span class="p">](</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">out_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2040,8 +2082,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">165</span>
-<span class="normal">166</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">166</span>
 <span class="normal">167</span>
 <span class="normal">168</span>
 <span class="normal">169</span>
@@ -2060,7 +2101,8 @@
 <span class="normal">182</span>
 <span class="normal">183</span>
 <span class="normal">184</span>
-<span class="normal">185</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">colour_type</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Colour</span><span class="p">:</span>
+<span class="normal">185</span>
+<span class="normal">186</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">colour_type</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Colour</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a hex or rgb colour to a Colour object.&quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">match</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;#?([0-9a-f]</span><span class="si">{6}</span><span class="s2">([0-9a-f]</span><span class="si">{2}</span><span class="s2">)?)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">):</span>
@@ -2116,8 +2158,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">70</span>
-<span class="normal">71</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">71</span>
 <span class="normal">72</span>
 <span class="normal">73</span>
 <span class="normal">74</span>
@@ -2138,7 +2179,8 @@
 <span class="normal">89</span>
 <span class="normal">90</span>
 <span class="normal">91</span>
-<span class="normal">92</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">discover_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">BLEDevice</span><span class="p">,</span> <span class="n">AdvertisementData</span><span class="p">]]:</span>
+<span class="normal">92</span>
+<span class="normal">93</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">discover_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">BLEDevice</span><span class="p">,</span> <span class="n">AdvertisementData</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Discover new devices in pairing mode.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">mugs</span> <span class="o">=</span> <span class="k">await</span> <span class="n">discover_devices</span><span class="p">(</span><span class="n">mac</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">mac</span><span class="p">)</span>
@@ -2189,14 +2231,14 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 95</span>
-<span class="normal"> 96</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 96</span>
 <span class="normal"> 97</span>
 <span class="normal"> 98</span>
 <span class="normal"> 99</span>
 <span class="normal">100</span>
 <span class="normal">101</span>
-<span class="normal">102</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_info_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">102</span>
+<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_info_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch all information from a mug and end.&quot;&quot;&quot;</span>
     <span class="n">mug</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_device</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="k">async</span> <span class="k">with</span> <span class="n">mug</span><span class="o">.</span><span class="n">connection</span><span class="p">(</span><span class="n">adapter</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">adapter</span><span class="p">):</span>
@@ -2236,8 +2278,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">55</span>
-<span class="normal">56</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
 <span class="normal">57</span>
 <span class="normal">58</span>
 <span class="normal">59</span>
@@ -2248,7 +2289,8 @@
 <span class="normal">64</span>
 <span class="normal">65</span>
 <span class="normal">66</span>
-<span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_device_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">BLEDevice</span><span class="p">,</span> <span class="n">AdvertisementData</span><span class="p">]:</span>
+<span class="normal">67</span>
+<span class="normal">68</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_device_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">BLEDevice</span><span class="p">,</span> <span class="n">AdvertisementData</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find a single device that has already been paired.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">device</span><span class="p">,</span> <span class="n">advertisement</span> <span class="o">=</span> <span class="k">await</span> <span class="n">find_device</span><span class="p">(</span><span class="n">mac</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">mac</span><span class="p">,</span> <span class="n">adapter</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">adapter</span><span class="p">)</span>
@@ -2291,8 +2333,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">35</span>
-<span class="normal">36</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">36</span>
 <span class="normal">37</span>
 <span class="normal">38</span>
 <span class="normal">39</span>
@@ -2308,7 +2349,8 @@
 <span class="normal">49</span>
 <span class="normal">50</span>
 <span class="normal">51</span>
-<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_device</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmberMug</span><span class="p">:</span>
+<span class="normal">52</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_device</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmberMug</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Help to get the devices based on command args.&quot;&quot;&quot;</span>
     <span class="n">device</span><span class="p">,</span> <span class="n">advertisement</span> <span class="o">=</span> <span class="k">await</span> <span class="n">find_device_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="n">manufacturer_data</span> <span class="o">=</span> <span class="n">advertisement</span><span class="o">.</span><span class="n">manufacturer_data</span>
@@ -2354,8 +2396,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">123</span>
-<span class="normal">124</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">124</span>
 <span class="normal">125</span>
 <span class="normal">126</span>
 <span class="normal">127</span>
@@ -2371,7 +2412,8 @@
 <span class="normal">137</span>
 <span class="normal">138</span>
 <span class="normal">139</span>
-<span class="normal">140</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_device_value_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">140</span>
+<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_device_value_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get values from the mug and print them.&quot;&quot;&quot;</span>
     <span class="n">mug</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_device</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
@@ -2417,8 +2459,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">105</span>
-<span class="normal">106</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">106</span>
 <span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
@@ -2432,7 +2473,8 @@
 <span class="normal">117</span>
 <span class="normal">118</span>
 <span class="normal">119</span>
-<span class="normal">120</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">poll_device_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">120</span>
+<span class="normal">121</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">poll_device_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch all information and keep polling for changes.&quot;&quot;&quot;</span>
     <span class="n">mug</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_device</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="k">async</span> <span class="k">with</span> <span class="n">mug</span><span class="o">.</span><span class="n">connection</span><span class="p">(</span><span class="n">adapter</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">adapter</span><span class="p">):</span>
@@ -2476,8 +2518,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">143</span>
-<span class="normal">144</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">144</span>
 <span class="normal">145</span>
 <span class="normal">146</span>
 <span class="normal">147</span>
@@ -2495,7 +2536,8 @@
 <span class="normal">159</span>
 <span class="normal">160</span>
 <span class="normal">161</span>
-<span class="normal">162</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">set_device_value_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">162</span>
+<span class="normal">163</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">set_device_value_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set one or more values on the device.&quot;&quot;&quot;</span>
     <span class="n">attrs</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;target_temp&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature_unit&quot;</span><span class="p">,</span> <span class="s2">&quot;led_colour&quot;</span><span class="p">,</span> <span class="s2">&quot;volume_level&quot;</span><span class="p">)</span>
     <span class="n">values</span> <span class="o">=</span> <span class="p">[(</span><span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span> <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">))]</span>
