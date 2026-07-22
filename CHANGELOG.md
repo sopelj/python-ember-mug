@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.1] - 2026-07-21
+
+### Changes
+
+* Allow for failures when fetching attributes in update methods
+
 ## [1.4.0] - 2026-05-29
 
 ### Changes

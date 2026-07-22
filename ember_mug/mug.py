@@ -435,9 +435,19 @@ class EmberMug:
         """Update a list of attributes from the mug."""
         logger.debug("Updating the following attributes: %s", attrs)
         await self._ensure_connection()
-        changes = self.data.update_info(**{attr: await getattr(self, f"get_{attr}")() for attr in attrs})
+        updates = {}
+        failed_attrs = set()
+        for attr in attrs:
+            try:
+                updates[attr] = await getattr(self, f"get_{attr}")()
+            except BleakError as e:
+                failed_attrs |= {attr}
+                logger.debug("Failed to fetch %s: %s", attr, e)
+        changes = self.data.update_info(**updates)
         if changes:
             self._fire_callbacks()
+        if failed_attrs:
+            logger.warning("Failed to fetch some attributes: %s", failed_attrs)
         logger.debug("Attributes updated: %s", changes)
         return changes
 
