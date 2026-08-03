@@ -1,18 +1,13 @@
 # Changelog
 
-## [1.4.1] - 2026-07-21
-
-### Changes
-
-* Allow for failures when fetching attributes in update methods
-
-## [1.4.0] - 2026-05-29
+## [1.4.0] - 2026-08-03
 
 ### Changes
 
 * Require `bleak>=3.0.2` to support change to keywords in version 3
 * Remove deprecated FileType
 * Use new `BlueZScannerArgs` in version 3 of bleak
+* Allow for failures when fetching attributes in update methods
 
 ## [1.3.3] - 2026-03-24
 
