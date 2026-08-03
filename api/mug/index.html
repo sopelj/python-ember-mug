@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1170,7 +1170,7 @@
   <a href="#mug.EmberMug-functions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Functions
+        Methods:
       
     </span>
   </a>
@@ -1576,12 +1576,12 @@
   <a href="#mug-functions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Functions
+        Functions:
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Functions">
+    <nav class="md-nav" aria-label="Functions:">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1941,7 +1941,7 @@
   <a href="#mug.EmberMug-functions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Functions
+        Methods:
       
     </span>
   </a>
@@ -2347,12 +2347,12 @@
   <a href="#mug-functions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Functions
+        Functions:
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Functions">
+    <nav class="md-nav" aria-label="Functions:">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2464,7 +2464,7 @@
   </span>
 
 <a href="#mug.P" class="headerlink" title="Permanent link">&para;</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">P</span> <span class="o">=</span> <span class="n"><span title="typing">typing</span></span><span class="o">.</span><span class="n"><span title="typing.ParamSpec">ParamSpec</span></span><span class="p">(</span><span class="s1">&#39;P&#39;</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">P</span> <span class="o">=</span> <span class="n"><span title="typing.ParamSpec">ParamSpec</span></span><span class="p">(</span><span class="s1">&#39;P&#39;</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2486,7 +2486,7 @@
   </span>
 
 <a href="#mug.T" class="headerlink" title="Permanent link">&para;</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">T</span> <span class="o">=</span> <span class="n"><span title="typing">typing</span></span><span class="o">.</span><span class="n"><span title="typing.TypeVar">TypeVar</span></span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">T</span> <span class="o">=</span> <span class="n"><span title="typing.TypeVar">TypeVar</span></span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2509,9 +2509,7 @@
 
 <a href="#mug.TempUnitType" class="headerlink" title="Permanent link">&para;</a></h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">TempUnitType</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n"><span title="typing">typing</span></span><span class="o">.</span><span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s2">&quot;°C&quot;</span><span class="p">,</span> <span class="s2">&quot;°F&quot;</span><span class="p">]</span>
-    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-module&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-module-name&quot;&gt;mug&lt;/span&gt;" href="#mug">mug</a></span><span class="o">.</span><span class="n"><span title="mug.consts">consts</span></span><span class="o">.</span><span class="n"><span title="mug.consts.TemperatureUnit">TemperatureUnit</span></span>
-    <span class="o">|</span> <span class="n"><span title="enum">enum</span></span><span class="o">.</span><span class="n"><span title="enum.StrEnum">StrEnum</span></span>
+    <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s2">&quot;°C&quot;</span><span class="p">,</span> <span class="s2">&quot;°F&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="n"><span title="mug.consts.TemperatureUnit">TemperatureUnit</span></span> <span class="o">|</span> <span class="n"><span title="enum.StrEnum">StrEnum</span></span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -3022,7 +3020,17 @@
 <span class="normal">531</span>
 <span class="normal">532</span>
 <span class="normal">533</span>
-<span class="normal">534</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">EmberMug</span><span class="p">:</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">EmberMug</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle actual the actual mug connection and update states.&quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -3377,9 +3385,19 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update a list of attributes from the mug.&quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Updating the following attributes: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_connection</span><span class="p">()</span>
-        <span class="n">changes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">update_info</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">attr</span><span class="p">:</span> <span class="k">await</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;get_</span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)()</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">})</span>
+        <span class="n">updates</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">failed_attrs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">updates</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;get_</span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)()</span>
+            <span class="k">except</span> <span class="n">BleakError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">failed_attrs</span> <span class="o">|=</span> <span class="p">{</span><span class="n">attr</span><span class="p">}</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Failed to fetch </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">changes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">update_info</span><span class="p">(</span><span class="o">**</span><span class="n">updates</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">changes</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fire_callbacks</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">failed_attrs</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Failed to fetch some attributes: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">failed_attrs</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Attributes updated: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">changes</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">changes</span>
 
@@ -3524,10 +3542,8 @@
   </span>
 
 <a href="#mug.EmberMug.data" class="headerlink" title="Permanent link">&para;</a></h6>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">data</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-module&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-module-name&quot;&gt;mug&lt;/span&gt;" href="#mug">mug</a></span><span class="o">.</span><span class="n"><span title="mug.data">data</span></span><span class="o">.</span><span class="n"><span title="mug.data.MugData">MugData</span></span><span class="p">(</span>
-    <span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-module&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-module-name&quot;&gt;mug&lt;/span&gt;" href="#mug">mug</a></span><span class="o">.</span><span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;EmberMug&lt;/span&gt; (&lt;code&gt;mug.EmberMug&lt;/code&gt;)" href="#mug.EmberMug">EmberMug</a></span><span class="p">(</span><span class="n"><span title="mug.EmberMug(model_info)">model_info</span></span><span class="p">),</span>
-    <span class="n"><span title="mug.data.MugData(use_metric)">use_metric</span></span><span class="o">=</span><span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-module&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-module-name&quot;&gt;mug&lt;/span&gt;" href="#mug">mug</a></span><span class="o">.</span><span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;EmberMug&lt;/span&gt; (&lt;code&gt;mug.EmberMug&lt;/code&gt;)" href="#mug.EmberMug">EmberMug</a></span><span class="p">(</span><span class="n"><span title="mug.EmberMug(use_metric)">use_metric</span></span><span class="p">),</span>
-    <span class="n"><span title="mug.data.MugData(debug)">debug</span></span><span class="o">=</span><span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-module&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-module-name&quot;&gt;mug&lt;/span&gt;" href="#mug">mug</a></span><span class="o">.</span><span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;EmberMug&lt;/span&gt; (&lt;code&gt;mug.EmberMug&lt;/code&gt;)" href="#mug.EmberMug">EmberMug</a></span><span class="p">(</span><span class="n"><span title="mug.EmberMug(debug)">debug</span></span><span class="p">),</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">data</span> <span class="o">=</span> <span class="n"><span title="mug.data.MugData">MugData</span></span><span class="p">(</span>
+    <span class="n"><span title="mug.EmberMug(model_info)">model_info</span></span><span class="p">,</span> <span class="n"><span title="mug.data.MugData(use_metric)">use_metric</span></span><span class="o">=</span><span class="n"><span title="mug.EmberMug(use_metric)">use_metric</span></span><span class="p">,</span> <span class="n"><span title="mug.data.MugData(debug)">debug</span></span><span class="o">=</span><span class="n"><span title="mug.EmberMug(debug)">debug</span></span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -3550,7 +3566,7 @@
   </span>
 
 <a href="#mug.EmberMug.debug" class="headerlink" title="Permanent link">&para;</a></h6>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">debug</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-module&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-module-name&quot;&gt;mug&lt;/span&gt;" href="#mug">mug</a></span><span class="o">.</span><span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;EmberMug&lt;/span&gt; (&lt;code&gt;mug.EmberMug&lt;/code&gt;)" href="#mug.EmberMug">EmberMug</a></span><span class="p">(</span><span class="n"><span title="mug.EmberMug(debug)">debug</span></span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">debug</span> <span class="o">=</span> <span class="n"><span title="mug.EmberMug(debug)">debug</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3572,7 +3588,7 @@
   </span>
 
 <a href="#mug.EmberMug.device" class="headerlink" title="Permanent link">&para;</a></h6>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">device</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-module&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-module-name&quot;&gt;mug&lt;/span&gt;" href="#mug">mug</a></span><span class="o">.</span><span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;EmberMug&lt;/span&gt; (&lt;code&gt;mug.EmberMug&lt;/code&gt;)" href="#mug.EmberMug">EmberMug</a></span><span class="p">(</span><span class="n"><span title="mug.EmberMug(ble_device)">ble_device</span></span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">device</span> <span class="o">=</span> <span class="n"><span title="mug.EmberMug(ble_device)">ble_device</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3607,7 +3623,7 @@
 </div>
 
 
-<h5 id="mug.EmberMug-functions">Functions<a href="#mug.EmberMug-functions" class="headerlink" title="Permanent link">&para;</a></h5>
+<h5 id="mug.EmberMug-functions">Methods:<a href="#mug.EmberMug-functions" class="headerlink" title="Permanent link">&para;</a></h5>
 
 <div class="doc doc-object doc-function">
 
@@ -3689,14 +3705,14 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/mug.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">527</span>
-<span class="normal">528</span>
-<span class="normal">529</span>
-<span class="normal">530</span>
-<span class="normal">531</span>
-<span class="normal">532</span>
-<span class="normal">533</span>
-<span class="normal">534</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@contextlib</span><span class="o">.</span><span class="n">asynccontextmanager</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@contextlib</span><span class="o">.</span><span class="n">asynccontextmanager</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="n">EmberMug</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Establish a connection and close automatically.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">set_client_options</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -4548,12 +4564,12 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/mug.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">520</span>
-<span class="normal">521</span>
-<span class="normal">522</span>
-<span class="normal">523</span>
-<span class="normal">524</span>
-<span class="normal">525</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_client_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">set_client_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update options in case they need to overriden in some cases.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;adapter&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">IS_LINUX</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;The adapter option is only valid for the Linux BlueZ Backend.&quot;</span>
@@ -4842,15 +4858,15 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/mug.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">510</span>
-<span class="normal">511</span>
-<span class="normal">512</span>
-<span class="normal">513</span>
-<span class="normal">514</span>
-<span class="normal">515</span>
-<span class="normal">516</span>
-<span class="normal">517</span>
-<span class="normal">518</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Subscribe to notifications from the mug.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Subscribe to Push Events&quot;</span><span class="p">)</span>
@@ -4887,15 +4903,15 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/mug.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">500</span>
-<span class="normal">501</span>
-<span class="normal">502</span>
-<span class="normal">503</span>
-<span class="normal">504</span>
-<span class="normal">505</span>
-<span class="normal">506</span>
-<span class="normal">507</span>
-<span class="normal">508</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">unsubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">unsubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Unsubscribe from Mug notifications.&quot;&quot;&quot;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Unsubscribe called&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="p">:</span>
@@ -5002,18 +5018,18 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/mug.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">444</span>
-<span class="normal">445</span>
-<span class="normal">446</span>
-<span class="normal">447</span>
-<span class="normal">448</span>
-<span class="normal">449</span>
-<span class="normal">450</span>
-<span class="normal">451</span>
-<span class="normal">452</span>
-<span class="normal">453</span>
-<span class="normal">454</span>
-<span class="normal">455</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_queued_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Change</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_queued_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Change</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update all attributes in queue.&quot;&quot;&quot;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Updating queued attributes: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queued_updates</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queued_updates</span><span class="p">:</span>
@@ -5038,7 +5054,7 @@
     </div>
 
 </div>
-<h3 id="mug-functions">Functions<a href="#mug-functions" class="headerlink" title="Permanent link">&para;</a></h3>
+<h3 id="mug-functions">Functions:<a href="#mug-functions" class="headerlink" title="Permanent link">&para;</a></h3>
 
 <div class="doc doc-object doc-function">
 
@@ -5221,7 +5237,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.tooltips", "navigation.expand", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../termynal.js"></script>
       
