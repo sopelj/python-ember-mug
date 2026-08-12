@@ -551,6 +551,18 @@ async def test_mug_update_multiple(ember_mug: MockMug) -> None:
         mock_update_info.assert_called_once_with(name="name")
 
 
+async def test_mug_update_multiple_no_name(ember_mug: MockMug) -> None:
+    mock_get_name = AsyncMock(side_effect=BleakError)
+
+    with (
+        patch.multiple(ember_mug, get_name=mock_get_name),
+        patch.object(ember_mug.data, "update_info") as mock_update_info,
+    ):
+        await ember_mug._update_multiple({"name"})
+        mock_get_name.assert_called_once()
+        mock_update_info.assert_called_once_with()
+
+
 async def test_mug_update_queued_attributes(ember_mug: MockMug) -> None:
     mock_get_name = AsyncMock(return_value="name")
 
