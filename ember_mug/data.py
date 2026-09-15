@@ -76,18 +76,29 @@ class BatteryInfo(AsDict):
 
     percent: float
     on_charging_base: bool
+    temperature: float | None = None
+    """Battery temperature in °C (bytes 2-3 of the characteristic), or None if the mug did not report one."""
 
     @classmethod
     def from_bytes(cls, data: bytes) -> BatteryInfo:
         """Initialize from raw bytes."""
+        temperature: float | None = None
+        if len(data) >= 4:
+            raw = bytes_to_little_int(data[2:4])
+            if 0 < raw < 10000:
+                temperature = round(raw * 0.01, 2)
         return cls(
             percent=round(float(data[0]), 2),
             on_charging_base=data[1] == 1,
+            temperature=temperature,
         )
 
     def __str__(self) -> str:
         """Format nicely for printing."""
-        return f"{self.percent}%, {'' if self.on_charging_base else 'not '}on charging base"
+        text = f"{self.percent}%, {'' if self.on_charging_base else 'not '}on charging base"
+        if self.temperature is not None:
+            text += f", {self.temperature:.1f}°C"
+        return text
 
 
 @dataclass
