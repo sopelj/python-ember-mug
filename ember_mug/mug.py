@@ -488,6 +488,7 @@ class EmberMug:
                 self.data.battery = BatteryInfo(
                     percent=self.data.battery.percent if self.data.battery else 0,
                     on_charging_base=event_id == PushEvent.CHARGER_CONNECTED,
+                    temperature=self.data.battery.temperature if self.data.battery else None,
                 )
                 self._fire_callbacks()
             # All indicate changes in battery

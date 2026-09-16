@@ -18,7 +18,20 @@ def test_battery_info() -> None:
     battery_info = BatteryInfo.from_bytes(b"5\x01")
     assert battery_info.percent == 53.00
     assert battery_info.on_charging_base is True
+    assert battery_info.temperature is None
     assert str(battery_info) == "53.0%, on charging base"
+
+
+def test_battery_info_with_temperature() -> None:
+    # Full 5-byte characteristic as read from a Mug 2: 6 %, on base, 0x11f8 = 46.00 °C, legacy voltage byte
+    battery_info = BatteryInfo.from_bytes(b"\x06\x01\xf8\x11\x00")
+    assert battery_info.percent == 6.0
+    assert battery_info.on_charging_base is True
+    assert battery_info.temperature == 46.0
+    assert str(battery_info) == "6.0%, on charging base, 46.0°C"
+    assert battery_info.as_dict() == {"percent": 6.0, "on_charging_base": True, "temperature": 46.0}
+    # A zeroed temperature field means "not reported"
+    assert BatteryInfo.from_bytes(b"\x4f\x00\x00\x00\x00").temperature is None
 
 
 def test_colour() -> None:
