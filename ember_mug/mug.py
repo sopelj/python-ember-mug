@@ -34,8 +34,10 @@ from .utils import (
     convert_temp_to_celsius,
     convert_temp_to_fahrenheit,
     decode_byte_string,
+    decode_date_time,
     discover_services,
     encode_byte_string,
+    encode_date_time,
     get_model_info_from_advertiser_data,
     temp_from_bytes,
 )
@@ -414,8 +416,16 @@ class EmberMug:
     async def get_date_time_zone(self) -> datetime | None:
         """Get date and time zone."""
         date_time_zone_bytes = await self._read(MugCharacteristic.DATE_TIME_AND_ZONE)
-        time_value = bytes_to_big_int(date_time_zone_bytes[:4])
-        return datetime.fromtimestamp(time_value, UTC) if time_value > 0 else None
+        return decode_date_time(date_time_zone_bytes)
+
+    async def set_date_time_zone(self, date_time: datetime | None = None) -> None:
+        """Get date and time zone."""
+        if not date_time:
+            date_time = datetime.now()
+        if date_time.tzinfo is None:
+            date_time = date_time.replace(tzinfo=UTC)
+        encoded_date = encode_date_time(date_time)
+        await self._write(MugCharacteristic.DATE_TIME_AND_ZONE, bytearray(encoded_date))
 
     async def get_firmware(self) -> MugFirmwareInfo:
         """Get firmware info."""
@@ -467,14 +477,15 @@ class EmberMug:
     def _notify_callback(self, characteristic: BleakGATTCharacteristic, data: bytearray) -> None:
         """Push events from the mug to indicate changes."""
         event_id = data[0]
-        now = time()
-        if (last_time := self._latest_events.get(event_id)) and now - last_time < 5:
-            return
-        self._latest_events[event_id] = now
 
         if characteristic.uuid == MugCharacteristic.STATISTICS.uuid:
             logger.info("Statistics received from %s (%s) - Data: %s.", self.model_name, event_id, data)
             return
+
+        now = time()
+        if (last_time := self._latest_events.get(event_id)) and now - last_time < 5:
+            return
+        self._latest_events[event_id] = now
 
         logger.debug("Push event received from %s (%s) - Data: %s.", self.model_name, event_id, data)
 

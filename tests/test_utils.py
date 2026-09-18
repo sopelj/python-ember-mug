@@ -1,6 +1,8 @@
 """Tests for `ember_mug.utils`."""
 
+from datetime import datetime
 from unittest.mock import AsyncMock, MagicMock, Mock, call, patch
+from zoneinfo import ZoneInfo
 
 import pytest
 from bleak import AdvertisementData, BleakError
@@ -12,8 +14,10 @@ from ember_mug.utils import (
     convert_temp_to_celsius,
     convert_temp_to_fahrenheit,
     decode_byte_string,
+    decode_date_time,
     discover_services,
     encode_byte_string,
+    encode_date_time,
     get_colour_from_int,
     get_model_from_id_and_gen,
     get_model_from_single_int_and_services,
@@ -56,6 +60,21 @@ def test_decode_byte_string() -> None:
 
 def test_encode_byte_string() -> None:
     assert encode_byte_string("abcd12345") == b"YWJjZDEyMzQ1"
+
+
+def test_encode_date_time() -> None:
+    assert (
+        encode_date_time(
+            datetime(2026, 9, 18, 10, 0, 26, 889633, tzinfo=ZoneInfo(key="America/Montreal")),
+        )
+        == b"\xfaC\xadj\xfc"
+    )
+
+
+def test_decode_date_time() -> None:
+    result = decode_date_time(b"\xfaC\xadj\xfc")
+    date = datetime(2026, 9, 18, 10, 0, 26, 889633, tzinfo=ZoneInfo(key="America/Montreal"))
+    assert result.timestamp() == int(date.timestamp())
 
 
 @pytest.mark.parametrize(

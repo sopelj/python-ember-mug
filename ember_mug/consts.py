@@ -98,9 +98,9 @@ class MugCharacteristic(IntEnum):
     TARGET_TEMPERATURE = 3
     # Unit (0 -> Celsius, 1 -> Fahrenheit) (Read/Write)
     TEMPERATURE_UNIT = 4
-    # Level (Between 0 -> 30 ?) 30 100% ?
+    # Level (Between 0 -> 30 for mug and 0-100 for travel mug
     LIQUID_LEVEL = 5
-    # Current date and time zone? (Read/Write)
+    # Current date and time zone (Write only)
     DATE_TIME_AND_ZONE = 6
     # Battery Info (Read)
     BATTERY = 7

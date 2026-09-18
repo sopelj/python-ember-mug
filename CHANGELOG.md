@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.5.0] - 2026-09-18
+
+### Added
+
+* Add method for setting date/time on the mug
+* Add battery temperature (Thanks [gwhillhouse](https://github.com/gwhillhouse)!)
+
+## Fixed
+* Skip event debounce for statistics endpoint
+
 ## [1.4.0] - 2026-08-03
 
 ### Changes

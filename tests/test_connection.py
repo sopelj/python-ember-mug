@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING
 from unittest.mock import AsyncMock, Mock, patch
+from zoneinfo import ZoneInfo
 
 import pytest
 from bleak import BleakError
@@ -507,11 +508,24 @@ async def test_get_mug_battery_voltage(ember_mug: MockMug) -> None:
 
 async def test_get_mug_date_time_zone(ember_mug: MockMug) -> None:
     with patch.object(ember_mug, "_ensure_connection", AsyncMock()):
-        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"c\x0f\xf6\x00")
+        ember_mug._client.read_gatt_char = AsyncMock(return_value=b"\xfaC\xadj\xfc")
         date_time = await ember_mug.get_date_time_zone()
         assert isinstance(date_time, datetime)
-        assert date_time.timestamp() == 1661990400.0
+        assert date_time.timestamp() == 1789740026.0
         ember_mug._client.read_gatt_char.assert_called_once_with(MugCharacteristic.DATE_TIME_AND_ZONE.uuid)
+
+
+async def test_set_mug_date_time_zone(ember_mug: MockMug) -> None:
+    mock_ensure_connection = AsyncMock()
+    ember_mug._client.write_gatt_char = AsyncMock()
+    date_time = datetime(2026, 9, 18, 10, 0, 26, 889633, tzinfo=ZoneInfo(key="America/Montreal"))
+    with patch.object(ember_mug, "_ensure_connection", mock_ensure_connection):
+        await ember_mug.set_date_time_zone(date_time)
+        mock_ensure_connection.assert_called_once()
+        ember_mug._client.write_gatt_char.assert_called_once_with(
+            MugCharacteristic.DATE_TIME_AND_ZONE.uuid,
+            bytearray(b"\xfaC\xadj\xfc"),
+        )
 
 
 async def test_read_firmware(ember_mug: MockMug) -> None:
