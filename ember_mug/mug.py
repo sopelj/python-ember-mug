@@ -12,7 +12,8 @@ from functools import cached_property
 from time import time
 from typing import TYPE_CHECKING, Any, Concatenate, Literal, ParamSpec, TypeVar
 
-from bleak import AdvertisementData, BleakClient, BleakError
+from bleak import BleakClient
+from bleak.exc import BleakError
 from bleak_retry_connector import establish_connection
 
 from .consts import (
@@ -47,6 +48,7 @@ if TYPE_CHECKING:
 
     from bleak.backends.characteristic import BleakGATTCharacteristic
     from bleak.backends.device import BLEDevice
+    from bleak.backends.scanner import AdvertisementData
 
     TempUnitType = Literal["°C", "°F"] | TemperatureUnit | StrEnum
 

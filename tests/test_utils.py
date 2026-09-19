@@ -5,7 +5,8 @@ from unittest.mock import AsyncMock, MagicMock, Mock, call, patch
 from zoneinfo import ZoneInfo
 
 import pytest
-from bleak import AdvertisementData, BleakError
+from bleak.backends.scanner import AdvertisementData
+from bleak.exc import BleakError
 
 from ember_mug.consts import DeviceColour, DeviceModel, MugCharacteristic
 from ember_mug.utils import (

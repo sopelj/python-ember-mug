@@ -8,8 +8,8 @@ from unittest.mock import AsyncMock, Mock, patch
 from zoneinfo import ZoneInfo
 
 import pytest
-from bleak import BleakError
 from bleak.backends.device import BLEDevice
+from bleak.exc import BleakError
 
 from ember_mug.consts import (
     INITIAL_ATTRS,

@@ -9,12 +9,13 @@ import re
 from datetime import UTC, datetime, timedelta, timezone
 from typing import TYPE_CHECKING, Any
 
-from bleak import AdvertisementData, BleakError
+from bleak.exc import BleakError
 
 from ember_mug.consts import EMBER_BLE_SIG, TESTING_BLE_SIG, TRAVEL_MUG_SERVICE_UUIDS, DeviceColour, DeviceModel
 
 if TYPE_CHECKING:
     from bleak import BleakClient
+    from bleak.backends.scanner import AdvertisementData
 
     from ember_mug.data import ModelInfo
 

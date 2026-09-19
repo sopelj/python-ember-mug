@@ -80,7 +80,7 @@ await mug.disconnect()
 # You can also use connection as a context manager
 # if you want to ensure connection before starting and cleanup on exit
 async with mug.connection():
-    print('Connected.\nFetching Info')
+    print("Connected.\nFetching Info")
     await mug.update_all()
     print(mug.data.formatted)
 ```

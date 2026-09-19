@@ -4,17 +4,19 @@ from __future__ import annotations
 
 import sys
 from argparse import ArgumentTypeError, Namespace
+from datetime import datetime, timedelta, timezone
 from typing import TYPE_CHECKING, Any
 from unittest.mock import AsyncMock, Mock, call, patch
 
 import pytest
-from bleak import BleakError, BLEDevice
+from bleak.exc import BleakError
 
 from ember_mug import EmberMug
 from ember_mug.cli.commands import (
     EmberMugCli,
     colour_type,
     discover_cmd,
+    dt_zone_type,
     fetch_info_cmd,
     find_device_cmd,
     get_device,
@@ -30,6 +32,7 @@ from ..conftest import TEST_MAC, TEST_MUG_ADVERTISEMENT, mock_connection
 if TYPE_CHECKING:
     from collections.abc import Generator
 
+    from bleak.backends.device import BLEDevice
     from pytest import CaptureFixture  # noqa: PT013
 
 
@@ -251,7 +254,7 @@ async def test_set_device_value_cmd_no_value(capsys: CaptureFixture) -> None:
     captured = capsys.readouterr()
     assert captured.out == (
         "Please specify at least one attribute and value to set.\n"
-        "Options: --name, --target-temp, --temperature-unit, --led-colour, --volume-level\n"
+        "Options: --name, --target-temp, --temperature-unit, --led-colour, --volume-level, --date-time-zone\n"
     )
 
 
@@ -285,6 +288,25 @@ def test_colour_type() -> None:
     assert colour_type("#ffffffaa") == Colour(255, 255, 255, 170)
     assert colour_type("1,2,3") == Colour(1, 2, 3, 255)
     assert colour_type("1,2,3,4") == Colour(1, 2, 3, 4)
+
+
+def test_dt_zone_type_raises() -> None:
+    with pytest.raises(ArgumentTypeError, match="test"):
+        dt_zone_type("test")
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        (
+            "2026-09-19T06:59:17-01:00",
+            datetime(2026, 9, 19, 6, 59, 17, tzinfo=timezone(timedelta(days=-1, seconds=82800))),
+        ),
+        ("2026-09-19T06:59:17", datetime(2026, 9, 19, 6, 59, 17)),
+    ],
+)
+def test_dt_zone_type(value: str, expected: datetime) -> None:
+    assert dt_zone_type(value) == expected
 
 
 def test_ember_cli():

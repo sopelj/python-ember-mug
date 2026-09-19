@@ -14,7 +14,7 @@ from .consts import DEVICE_SERVICE_UUIDS, IS_LINUX
 if TYPE_CHECKING:
     from typing import NotRequired, TypedDict
 
-    from bleak import BlueZScannerArgs
+    from bleak.args.bluez import BlueZScannerArgs
     from bleak.backends.device import BLEDevice
     from bleak.backends.scanner import AdvertisementData
 
