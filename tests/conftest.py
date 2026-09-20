@@ -8,8 +8,8 @@ from unittest.mock import MagicMock, Mock
 
 import pytest
 import pytest_asyncio
-from bleak import AdvertisementData
 from bleak.backends.device import BLEDevice
+from bleak.backends.scanner import AdvertisementData
 
 from ember_mug import EmberMug
 from ember_mug.consts import (

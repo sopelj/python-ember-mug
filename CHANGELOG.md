@@ -1,14 +1,28 @@
 # Changelog
 
-## Unreleased
+## [1.5.0] - 2026-09-18
 
 ### Added
 
+* Add method for setting date/time on the mug
+* Add battery temperature (Thanks [gwhillhouse](https://github.com/gwhillhouse)!)
 * Add official MAC-derived UDSK generation and verification helpers.
+
+## Fixed
+* Skip event debounce for statistics endpoint
 
 ### Changed
 
 * Prepare the writable session using the app DSK/UDSK flow instead of writing a random UDSK value.
+
+## [1.4.0] - 2026-08-03
+
+### Changes
+
+* Require `bleak>=3.0.2` to support change to keywords in version 3
+* Remove deprecated FileType
+* Use new `BlueZScannerArgs` in version 3 of bleak
+* Allow for failures when fetching attributes in update methods
 
 ## [1.3.3] - 2026-03-24
 

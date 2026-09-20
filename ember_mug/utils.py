@@ -7,14 +7,16 @@ import contextlib
 import hashlib
 import logging
 import re
+from datetime import UTC, datetime, timedelta, timezone
 from typing import TYPE_CHECKING, Any
 
-from bleak import AdvertisementData, BleakError
+from bleak.exc import BleakError
 
 from ember_mug.consts import EMBER_BLE_SIG, TESTING_BLE_SIG, TRAVEL_MUG_SERVICE_UUIDS, DeviceColour, DeviceModel
 
 if TYPE_CHECKING:
     from bleak import BleakClient
+    from bleak.backends.scanner import AdvertisementData
 
     from ember_mug.data import ModelInfo
 
@@ -102,6 +104,30 @@ def convert_temp_to_celsius(temp: float) -> float:
 def temp_from_bytes(temp_bytes: bytearray) -> float:
     """Get temperature from bytearray."""
     return float(bytes_to_little_int(temp_bytes)) * 0.01
+
+
+def encode_date_time(date_time: datetime) -> bytes:
+    """Encode datetime with timezone as the mug expects."""
+    offset_hours = 0
+    if offset := date_time.utcoffset():
+        offset_hours = int(offset.total_seconds() / 60 / 60)
+
+    timestamp = int(date_time.timestamp())
+    timestamp_bytes = timestamp.to_bytes(4, byteorder="little", signed=False)
+    offset_byte = offset_hours.to_bytes(1, byteorder="big", signed=True)
+
+    return timestamp_bytes + offset_byte
+
+
+def decode_date_time(data: bytes | bytearray) -> datetime:
+    """Extract date time with timezone from bytes."""
+    timestamp = int.from_bytes(data[:4], "little", signed=False)
+    offset_hours = int.from_bytes(data[4:5], "little", signed=True)
+
+    utc_datetime = datetime.fromtimestamp(timestamp, UTC)
+    local_timezone = timezone(timedelta(hours=offset_hours))
+
+    return utc_datetime.astimezone(local_timezone)
 
 
 def get_colour_from_int(colour_id: int) -> DeviceColour | None:  # noqa: PLR0911

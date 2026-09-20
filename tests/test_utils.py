@@ -1,9 +1,12 @@
 """Tests for `ember_mug.utils`."""
 
+from datetime import datetime
 from unittest.mock import AsyncMock, MagicMock, Mock, call, patch
+from zoneinfo import ZoneInfo
 
 import pytest
-from bleak import AdvertisementData, BleakError
+from bleak.backends.scanner import AdvertisementData
+from bleak.exc import BleakError
 
 from ember_mug.consts import DeviceColour, DeviceModel, MugCharacteristic
 from ember_mug.utils import (
@@ -12,8 +15,10 @@ from ember_mug.utils import (
     convert_temp_to_celsius,
     convert_temp_to_fahrenheit,
     decode_byte_string,
+    decode_date_time,
     discover_services,
     encode_byte_string,
+    encode_date_time,
     generate_udsk,
     get_colour_from_int,
     get_model_from_id_and_gen,
@@ -88,6 +93,21 @@ def test_generate_udsk() -> None:
     assert generate_udsk(bytes.fromhex("f5fc43378da6")) == expected
     assert verify_udsk("F5:FC:43:37:8D:A6", expected) is True
     assert verify_udsk("F5:FC:43:37:8D:A6", b"wrong") is False
+
+
+def test_encode_date_time() -> None:
+    assert (
+        encode_date_time(
+            datetime(2026, 9, 18, 10, 0, 26, 889633, tzinfo=ZoneInfo(key="America/Montreal")),
+        )
+        == b"\xfaC\xadj\xfc"
+    )
+
+
+def test_decode_date_time() -> None:
+    result = decode_date_time(b"\xfaC\xadj\xfc")
+    date = datetime(2026, 9, 18, 10, 0, 26, 889633, tzinfo=ZoneInfo(key="America/Montreal"))
+    assert result.timestamp() == int(date.timestamp())
 
 
 @pytest.mark.parametrize(
@@ -224,7 +244,7 @@ async def test_discover_services(read_gatt_descriptor: Mock) -> None:
     def mock_read_char(uuid: str) -> bytes:
         if "invalid" in uuid:
             raise bleak_invalid_exception
-        return bytearray(b"test char")
+        return b"test char"
 
     client = AsyncMock(services=[mock_service])
     client.read_gatt_char = AsyncMock(side_effect=mock_read_char)

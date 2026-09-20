@@ -7,10 +7,12 @@ import contextlib
 import logging
 import re
 import sys
-from argparse import ArgumentParser, ArgumentTypeError, FileType, Namespace
-from typing import TYPE_CHECKING, ClassVar
+from argparse import ArgumentParser, ArgumentTypeError, Namespace
+from datetime import datetime
+from pathlib import Path
+from typing import IO, TYPE_CHECKING, ClassVar
 
-from bleak import AdvertisementData, BleakError
+from bleak.exc import BleakError
 
 from ember_mug.consts import ATTR_LABELS, EMBER_BLE_SIG, EXTRA_ATTRS, IS_LINUX, TESTING_BLE_SIG, VolumeLevel
 from ember_mug.data import Colour, DeviceModel
@@ -26,9 +28,11 @@ if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
 
     from bleak.backends.device import BLEDevice
+    from bleak.backends.scanner import AdvertisementData
 
 all_attrs = list(ATTR_LABELS) + list(EXTRA_ATTRS)
 get_attribute_names = [n.replace("_", "-") for n in all_attrs]
+SetValues = str | float | Colour | datetime
 
 
 async def get_device(args: Namespace) -> EmberMug:
@@ -84,7 +88,7 @@ async def discover_cmd(args: Namespace) -> list[tuple[BLEDevice, AdvertisementDa
             model_info = get_model_info_from_advertiser_data(advertisement)
             model_number = model_info.model.value if model_info.model else "Unknown Model"
             print(f"Found {model_info.device_type.value}:", mug)
-            print("Name:", advertisement.local_name)
+            print("Name:", advertisement.local_name or "Ember Mug")
             print("Model:", f"{model_info.name} [{model_number}]")
             print("Colour:", model_info.colour.value if model_info.colour else "Unknown")
             print("Capacity:", format_capacity(model_info.capacity))
@@ -141,8 +145,10 @@ async def get_device_value_cmd(args: Namespace) -> None:
 
 async def set_device_value_cmd(args: Namespace) -> None:
     """Set one or more values on the device."""
-    attrs = ("name", "target_temp", "temperature_unit", "led_colour", "volume_level")
-    values = [(attr, value) for attr in attrs if (value := getattr(args, attr, None))]
+    attrs = ("name", "target_temp", "temperature_unit", "led_colour", "volume_level", "date_time_zone")
+    values: list[tuple[str, SetValues | None]] = [
+        (attr, value) for attr in attrs if (value := getattr(args, attr, None))
+    ]
     if not values:
         print("Please specify at least one attribute and value to set.")
         options = [f"--{a.replace('_', '-')}" for a in attrs]
@@ -184,6 +190,14 @@ def colour_type(value: str) -> Colour:
     raise ArgumentTypeError(msg)
 
 
+def dt_zone_type(value: str) -> datetime:
+    """Convert date/time string into datetime object."""
+    try:
+        return datetime.fromisoformat(value)
+    except ValueError as e:
+        raise ArgumentTypeError(f'"{value}" is not a valid ISO datetime string') from e
+
+
 class EmberMugCli:
     """Very simple CLI Interface to interact with a mug."""
 
@@ -215,9 +229,8 @@ class EmberMugCli:
         )
         self.parser.add_argument(
             "--log-file",
-            type=FileType("w", encoding="utf-8"),
+            type=Path,
             nargs="?",
-            default=sys.stdout,
             help="File to write logs too (Will be overwritten)",
         )
         self.parser.add_argument("--version", action="version", version=__version__)
@@ -245,6 +258,7 @@ class EmberMugCli:
         set_parser.add_argument("--target-temp", help="Target Temperature", type=float, required=False)
         set_parser.add_argument("--temperature-unit", help="Temperature Unit", choices=["C", "F"], required=False)
         set_parser.add_argument("--led-colour", help="LED Colour", type=colour_type, required=False)
+        set_parser.add_argument("--date-time-zone", help="Internal Date/Time+Zone", type=dt_zone_type, required=False)
         set_parser.add_argument(
             "--volume-level",
             help="Volume Level",
@@ -255,12 +269,23 @@ class EmberMugCli:
     async def run(self) -> None:
         """Run the specified command based on subparser."""
         args = self.parser.parse_args()
+        out_file: IO[str] | None = None
         if IS_LINUX is False:
             args.adapter = None  # Set for other platforms
         if args.debug:
+            if args.log_file:
+                try:
+                    out_file = args.log_file.open("w")
+                except OSError as e:
+                    self.parser.error(f"Failed to open '{args.log_file}': {e}")
+
             logging.basicConfig(
-                stream=args.log_file,
+                stream=out_file or sys.stdout,
                 level=logging.DEBUG,
                 format="[%(asctime)s] %(levelname)s [%(filename)s.%(funcName)s:%(lineno)d] %(message)s",
             )
-        await self._commands[args.command](args)
+        try:
+            await self._commands[args.command](args)
+        finally:
+            if out_file is not None:
+                out_file.close()

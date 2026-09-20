@@ -11,7 +11,8 @@ from functools import cached_property
 from time import time
 from typing import TYPE_CHECKING, Any, Concatenate, Literal, ParamSpec, TypeVar
 
-from bleak import AdvertisementData, BleakClient, BleakError
+from bleak import BleakClient
+from bleak.exc import BleakError
 from bleak_retry_connector import establish_connection
 
 from .consts import (
@@ -33,8 +34,10 @@ from .utils import (
     convert_temp_to_celsius,
     convert_temp_to_fahrenheit,
     decode_byte_string,
+    decode_date_time,
     discover_services,
     encode_byte_string,
+    encode_date_time,
     generate_udsk,
     get_model_info_from_advertiser_data,
     temp_from_bytes,
@@ -46,6 +49,7 @@ if TYPE_CHECKING:
 
     from bleak.backends.characteristic import BleakGATTCharacteristic
     from bleak.backends.device import BLEDevice
+    from bleak.backends.scanner import AdvertisementData
 
     TempUnitType = Literal["°C", "°F"] | TemperatureUnit | StrEnum
 
@@ -345,11 +349,11 @@ class EmberMug:
 
     async def get_meta(self) -> MugMeta:
         """Fetch Meta info from the mug (Serial number and ID)."""
-        return MugMeta.from_bytes(await self._read(MugCharacteristic.MUG_ID))
+        return MugMeta.from_bytes(bytes(await self._read(MugCharacteristic.MUG_ID)))
 
     async def get_battery(self) -> BatteryInfo:
         """Get Battery percent from mug gatt."""
-        return BatteryInfo.from_bytes(await self._read(MugCharacteristic.BATTERY))
+        return BatteryInfo.from_bytes(bytes(await self._read(MugCharacteristic.BATTERY)))
 
     async def make_writable(self) -> bool:
         """Try to make device writable if need be."""
@@ -496,12 +500,20 @@ class EmberMug:
     async def get_date_time_zone(self) -> datetime | None:
         """Get date and time zone."""
         date_time_zone_bytes = await self._read(MugCharacteristic.DATE_TIME_AND_ZONE)
-        time_value = bytes_to_big_int(date_time_zone_bytes[:4])
-        return datetime.fromtimestamp(time_value, UTC) if time_value > 0 else None
+        return decode_date_time(date_time_zone_bytes)
+
+    async def set_date_time_zone(self, date_time: datetime | None = None) -> None:
+        """Get date and time zone."""
+        if not date_time:
+            date_time = datetime.now()
+        if date_time.tzinfo is None:
+            date_time = date_time.replace(tzinfo=UTC)
+        encoded_date = encode_date_time(date_time)
+        await self._write(MugCharacteristic.DATE_TIME_AND_ZONE, bytearray(encoded_date))
 
     async def get_firmware(self) -> MugFirmwareInfo:
         """Get firmware info."""
-        return MugFirmwareInfo.from_bytes(await self._read(MugCharacteristic.FIRMWARE))
+        return MugFirmwareInfo.from_bytes(bytes(await self._read(MugCharacteristic.FIRMWARE)))
 
     async def update_initial(self) -> list[Change]:
         """Update attributes that don't normally change and don't need to be regularly updated."""
@@ -517,9 +529,19 @@ class EmberMug:
         """Update a list of attributes from the mug."""
         logger.debug("Updating the following attributes: %s", attrs)
         await self._ensure_connection()
-        changes = self.data.update_info(**{attr: await getattr(self, f"get_{attr}")() for attr in attrs})
+        updates = {}
+        failed_attrs = set()
+        for attr in attrs:
+            try:
+                updates[attr] = await getattr(self, f"get_{attr}")()
+            except BleakError as e:
+                failed_attrs |= {attr}
+                logger.debug("Failed to fetch %s: %s", attr, e)
+        changes = self.data.update_info(**updates)
         if changes:
             self._fire_callbacks()
+        if failed_attrs:
+            logger.warning("Failed to fetch some attributes: %s", failed_attrs)
         logger.debug("Attributes updated: %s", changes)
         return changes
 
@@ -539,14 +561,15 @@ class EmberMug:
     def _notify_callback(self, characteristic: BleakGATTCharacteristic, data: bytearray) -> None:
         """Push events from the mug to indicate changes."""
         event_id = data[0]
-        now = time()
-        if (last_time := self._latest_events.get(event_id)) and now - last_time < 5:
-            return
-        self._latest_events[event_id] = now
 
         if characteristic.uuid == MugCharacteristic.STATISTICS.uuid:
             logger.info("Statistics received from %s (%s) - Data: %s.", self.model_name, event_id, data)
             return
+
+        now = time()
+        if (last_time := self._latest_events.get(event_id)) and now - last_time < 5:
+            return
+        self._latest_events[event_id] = now
 
         logger.debug("Push event received from %s (%s) - Data: %s.", self.model_name, event_id, data)
 
@@ -560,6 +583,7 @@ class EmberMug:
                 self.data.battery = BatteryInfo(
                     percent=self.data.battery.percent if self.data.battery else 0,
                     on_charging_base=event_id == PushEvent.CHARGER_CONNECTED,
+                    temperature=self.data.battery.temperature if self.data.battery else None,
                 )
                 self._fire_callbacks()
             # All indicate changes in battery

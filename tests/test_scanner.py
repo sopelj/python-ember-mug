@@ -14,19 +14,36 @@ from ember_mug.scanner import build_scanner_kwargs, discover_devices, find_devic
 from .conftest import TEST_MUG_ADVERTISEMENT
 
 if TYPE_CHECKING:
-    from ember_mug.scanner import ScannerKwargs
+    from typing import NotRequired, TypedDict
+
+    from ember_mug.scanner import BleakScannerKwargs
+
+    class ScannerKwargs(TypedDict):
+        """Method params for build_scanner_kwargs."""
+
+        adapter: NotRequired[str]
+        service_uuids: NotRequired[list[str]]
+
 
 MUG_1 = BLEDevice(address="32:36:a5:be:88:cb", name="Ember Ceramic Mug", details={})
 MUG_2 = BLEDevice(address="9c:da:8c:19:27:da", name="Ember Ceramic Mug", details={})
 EXAMPLE_MUGS = [MUG_1, MUG_2]
-SERVICE_UUID_KWARG = {"service_uuids": DEVICE_SERVICE_UUIDS}
-ADAPTER_KWARG = {"adapter": "hci0"}
+SERVICE_UUID_KWARG: ScannerKwargs = {"service_uuids": DEVICE_SERVICE_UUIDS}
+ADAPTER_KWARG: ScannerKwargs = {"adapter": "hci0"}
 
 
 @patch("ember_mug.scanner.IS_LINUX", True)
-@pytest.mark.parametrize("kwargs", [{}, ADAPTER_KWARG, SERVICE_UUID_KWARG, ADAPTER_KWARG | SERVICE_UUID_KWARG])
-def test_build_scanner_kwargs_linux(kwargs: ScannerKwargs) -> None:
-    assert build_scanner_kwargs(**kwargs) == kwargs
+@pytest.mark.parametrize(
+    ("kwargs", "expected"),
+    [
+        ({}, {}),
+        (ADAPTER_KWARG, {"bluez": ADAPTER_KWARG}),
+        (SERVICE_UUID_KWARG, SERVICE_UUID_KWARG),
+        (ADAPTER_KWARG | SERVICE_UUID_KWARG, {"bluez": ADAPTER_KWARG} | SERVICE_UUID_KWARG),
+    ],
+)
+def test_build_scanner_kwargs_linux(kwargs: ScannerKwargs, expected: BleakScannerKwargs) -> None:
+    assert build_scanner_kwargs(**kwargs) == expected
 
 
 @patch("ember_mug.scanner.IS_LINUX", False)
