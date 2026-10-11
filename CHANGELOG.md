@@ -6,9 +6,14 @@
 
 * Add method for setting date/time on the mug
 * Add battery temperature (Thanks [gwhillhouse](https://github.com/gwhillhouse)!)
+* Add official MAC-derived UDSK generation and verification helpers.
 
 ## Fixed
 * Skip event debounce for statistics endpoint
+
+### Changed
+
+* Prepare the writable session using the app DSK/UDSK flow instead of writing a random UDSK value.
 
 ## [1.4.0] - 2026-08-03
 
