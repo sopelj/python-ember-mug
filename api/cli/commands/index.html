@@ -869,6 +869,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#cli.commands.SetValues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;SetValues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#cli.commands.all_attrs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1001,6 +1012,17 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;discover_cmd
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cli.commands.dt_zone_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;dt_zone_type
       
     </span>
   </a>
@@ -1414,6 +1436,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#cli.commands.SetValues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;SetValues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#cli.commands.all_attrs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1553,6 +1586,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#cli.commands.dt_zone_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;dt_zone_type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#cli.commands.fetch_info_cmd" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1685,6 +1729,28 @@
 
 
 
+<h4 id="cli.commands.SetValues" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">SetValues</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+<a href="#cli.commands.SetValues" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">SetValues</span> <span class="o">=</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="n"><span title="float">float</span></span> <span class="o">|</span> <span class="n"><span title="ember_mug.data.Colour">Colour</span></span> <span class="o">|</span> <span class="n"><span title="datetime.datetime">datetime</span></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
 <h4 id="cli.commands.all_attrs" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">all_attrs</span>
 
@@ -1717,7 +1783,7 @@
 
 <a href="#cli.commands.get_attribute_names" class="headerlink" title="Permanent link">&para;</a></h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">get_attribute_names</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">(</span><span class="n"><span title="n">n</span></span><span class="o">.</span><span class="n"><span title="n.replace">replace</span></span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">))</span> <span class="k">for</span> <span class="n"><span title="n">n</span></span> <span class="ow">in</span> <span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-attribute&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-attribute-name&quot;&gt;all_attrs&lt;/span&gt;
+    <span class="n"><span title="n">n</span></span><span class="o">.</span><span class="n"><span title="n.replace">replace</span></span><span class="p">(</span><span class="s2">"_"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">)</span> <span class="k">for</span> <span class="n"><span title="n">n</span></span> <span class="ow">in</span> <span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-attribute&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-attribute-name&quot;&gt;all_attrs&lt;/span&gt;
 
 
   &lt;span class=&quot;doc doc-labels&quot;&gt;
@@ -1760,19 +1826,7 @@
 
               <details class="mkdocstrings-source">
                 <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">201</span>
 <span class="normal">202</span>
 <span class="normal">203</span>
 <span class="normal">204</span>
@@ -1849,75 +1903,89 @@
 <span class="normal">275</span>
 <span class="normal">276</span>
 <span class="normal">277</span>
-<span class="normal">278</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">EmberMugCli</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Very simple CLI Interface to interact with a mug.&quot;&quot;&quot;</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">EmberMugCli</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Very simple CLI Interface to interact with a mug."""</span>
 
     <span class="n">_commands</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Namespace</span><span class="p">],</span> <span class="n">Awaitable</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;find&quot;</span><span class="p">:</span> <span class="n">find_device_cmd</span><span class="p">,</span>
-        <span class="s2">&quot;discover&quot;</span><span class="p">:</span> <span class="n">discover_cmd</span><span class="p">,</span>
-        <span class="s2">&quot;info&quot;</span><span class="p">:</span> <span class="n">fetch_info_cmd</span><span class="p">,</span>
-        <span class="s2">&quot;poll&quot;</span><span class="p">:</span> <span class="n">poll_device_cmd</span><span class="p">,</span>
-        <span class="s2">&quot;get&quot;</span><span class="p">:</span> <span class="n">get_device_value_cmd</span><span class="p">,</span>
-        <span class="s2">&quot;set&quot;</span><span class="p">:</span> <span class="n">set_device_value_cmd</span><span class="p">,</span>
+        <span class="s2">"find"</span><span class="p">:</span> <span class="n">find_device_cmd</span><span class="p">,</span>
+        <span class="s2">"discover"</span><span class="p">:</span> <span class="n">discover_cmd</span><span class="p">,</span>
+        <span class="s2">"info"</span><span class="p">:</span> <span class="n">fetch_info_cmd</span><span class="p">,</span>
+        <span class="s2">"poll"</span><span class="p">:</span> <span class="n">poll_device_cmd</span><span class="p">,</span>
+        <span class="s2">"get"</span><span class="p">:</span> <span class="n">get_device_value_cmd</span><span class="p">,</span>
+        <span class="s2">"set"</span><span class="p">:</span> <span class="n">set_device_value_cmd</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create parsers.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s2">&quot;ember-mug&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;CLI to interact with an Ember Mug&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">"""Create parsers."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s2">"ember-mug"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"CLI to interact with an Ember Mug"</span><span class="p">)</span>
         <span class="n">shared_parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">shared_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">&quot;-m&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;--mac&quot;</span><span class="p">,</span>
-            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
+            <span class="s2">"-m"</span><span class="p">,</span>
+            <span class="s2">"--mac"</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">"store"</span><span class="p">,</span>
             <span class="nb">type</span><span class="o">=</span><span class="n">validate_mac</span><span class="p">,</span>
-            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Only look for this specific address&quot;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Only look for this specific address"</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">&quot;-d&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;--debug&quot;</span><span class="p">,</span>
-            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
-            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Print extra information for development or debugging issues&quot;</span><span class="p">,</span>
+            <span class="s2">"-d"</span><span class="p">,</span>
+            <span class="s2">"--debug"</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Print extra information for development or debugging issues"</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">&quot;--log-file&quot;</span><span class="p">,</span>
+            <span class="s2">"--log-file"</span><span class="p">,</span>
             <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
-            <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
-            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;File to write logs too (Will be overwritten)&quot;</span><span class="p">,</span>
+            <span class="n">nargs</span><span class="o">=</span><span class="s2">"?"</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"File to write logs too (Will be overwritten)"</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--version&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">__version__</span><span class="p">)</span>
-        <span class="n">shared_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-r&quot;</span><span class="p">,</span> <span class="s2">&quot;--raw&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;No formatting. One value per line.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--version"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"version"</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">__version__</span><span class="p">)</span>
+        <span class="n">shared_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-r"</span><span class="p">,</span> <span class="s2">"--raw"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"No formatting. One value per line."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">IS_LINUX</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="c1"># Only works on Linux with BlueZ so don&#39;t add for others.</span>
+            <span class="c1"># Only works on Linux with BlueZ so don't add for others.</span>
             <span class="n">shared_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-                <span class="s2">&quot;-a&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;--adapter&quot;</span><span class="p">,</span>
-                <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
-                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use this Bluetooth adapter instead of the default one (for Bluez)&quot;</span><span class="p">,</span>
+                <span class="s2">"-a"</span><span class="p">,</span>
+                <span class="s2">"--adapter"</span><span class="p">,</span>
+                <span class="n">action</span><span class="o">=</span><span class="s2">"store"</span><span class="p">,</span>
+                <span class="n">help</span><span class="o">=</span><span class="s2">"Use this Bluetooth adapter instead of the default one (for Bluez)"</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="n">subparsers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="s2">&quot;command&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;find&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Find the first paired device&quot;</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">shared_parser</span><span class="p">])</span>
-        <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;discover&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Discover devices in pairing mode&quot;</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">shared_parser</span><span class="p">])</span>
+        <span class="n">subparsers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="s2">"command"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"find"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Find the first paired device"</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">shared_parser</span><span class="p">])</span>
+        <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"discover"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Discover devices in pairing mode"</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">shared_parser</span><span class="p">])</span>
         <span class="n">info_parsers</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">info_parsers</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-e&quot;</span><span class="p">,</span> <span class="s2">&quot;--extra&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Show extra info&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
-        <span class="n">info_parsers</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--imperial&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use Imperial units&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
-        <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;info&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Fetch all info from device&quot;</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">shared_parser</span><span class="p">,</span> <span class="n">info_parsers</span><span class="p">])</span>
-        <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;poll&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Poll device for information&quot;</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">shared_parser</span><span class="p">,</span> <span class="n">info_parsers</span><span class="p">])</span>
-        <span class="n">get_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Get mug value&quot;</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">shared_parser</span><span class="p">,</span> <span class="n">info_parsers</span><span class="p">])</span>
-        <span class="n">get_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="s2">&quot;attributes&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;ATTRIBUTE&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">get_attribute_names</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
-        <span class="n">set_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;set&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Set mug value&quot;</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">shared_parser</span><span class="p">,</span> <span class="n">info_parsers</span><span class="p">])</span>
-        <span class="n">set_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--name&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">set_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--target-temp&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Target Temperature&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">set_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--temperature-unit&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Temperature Unit&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">],</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">set_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--led-colour&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;LED Colour&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">colour_type</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">info_parsers</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-e"</span><span class="p">,</span> <span class="s2">"--extra"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Show extra info"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
+        <span class="n">info_parsers</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--imperial"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Use Imperial units"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
+        <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"info"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Fetch all info from device"</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">shared_parser</span><span class="p">,</span> <span class="n">info_parsers</span><span class="p">])</span>
+        <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"poll"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Poll device for information"</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">shared_parser</span><span class="p">,</span> <span class="n">info_parsers</span><span class="p">])</span>
+        <span class="n">get_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"get"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Get mug value"</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">shared_parser</span><span class="p">,</span> <span class="n">info_parsers</span><span class="p">])</span>
+        <span class="n">get_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="s2">"attributes"</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">"ATTRIBUTE"</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">get_attribute_names</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">"+"</span><span class="p">)</span>
+        <span class="n">set_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"set"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Set mug value"</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">shared_parser</span><span class="p">,</span> <span class="n">info_parsers</span><span class="p">])</span>
+        <span class="n">set_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--name"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Name"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">set_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--target-temp"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Target Temperature"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">set_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--temperature-unit"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Temperature Unit"</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">"C"</span><span class="p">,</span> <span class="s2">"F"</span><span class="p">],</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">set_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--led-colour"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"LED Colour"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">colour_type</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">set_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--date-time-zone"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Internal Date/Time+Zone"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">dt_zone_type</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">set_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">&quot;--volume-level&quot;</span><span class="p">,</span>
-            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Volume Level&quot;</span><span class="p">,</span>
+            <span class="s2">"--volume-level"</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Volume Level"</span><span class="p">,</span>
             <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">VolumeLevel</span><span class="p">],</span>
             <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the specified command based on subparser.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Run the specified command based on subparser."""</span>
         <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
         <span class="n">out_file</span><span class="p">:</span> <span class="n">IO</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">IS_LINUX</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
@@ -1925,14 +1993,14 @@
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">out_file</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+                    <span class="n">out_file</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"w"</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to open &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to open '</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="si">}</span><span class="s2">': </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
             <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
                 <span class="n">stream</span><span class="o">=</span><span class="n">out_file</span> <span class="ow">or</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
                 <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
-                <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;[</span><span class="si">%(asctime)s</span><span class="s2">] </span><span class="si">%(levelname)s</span><span class="s2"> [</span><span class="si">%(filename)s</span><span class="s2">.</span><span class="si">%(funcName)s</span><span class="s2">:</span><span class="si">%(lineno)d</span><span class="s2">] </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="nb">format</span><span class="o">=</span><span class="s2">"[</span><span class="si">%(asctime)s</span><span class="s2">] </span><span class="si">%(levelname)s</span><span class="s2"> [</span><span class="si">%(filename)s</span><span class="s2">.</span><span class="si">%(funcName)s</span><span class="s2">:</span><span class="si">%(lineno)d</span><span class="s2">] </span><span class="si">%(message)s</span><span class="s2">"</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">command</span><span class="p">](</span><span class="n">args</span><span class="p">)</span>
@@ -1966,8 +2034,8 @@
 
 <a href="#cli.commands.EmberMugCli.parser" class="headerlink" title="Permanent link">&para;</a></h6>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">parser</span> <span class="o">=</span> <span class="n"><span title="argparse.ArgumentParser">ArgumentParser</span></span><span class="p">(</span>
-    <span class="n"><span title="argparse.ArgumentParser(prog)">prog</span></span><span class="o">=</span><span class="s2">&quot;ember-mug&quot;</span><span class="p">,</span>
-    <span class="n"><span title="argparse.ArgumentParser(description)">description</span></span><span class="o">=</span><span class="s2">&quot;CLI to interact with an Ember Mug&quot;</span><span class="p">,</span>
+    <span class="n"><span title="argparse.ArgumentParser(prog)">prog</span></span><span class="o">=</span><span class="s2">"ember-mug"</span><span class="p">,</span>
+    <span class="n"><span title="argparse.ArgumentParser(description)">description</span></span><span class="o">=</span><span class="s2">"CLI to interact with an Ember Mug"</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -2002,20 +2070,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">256</span>
-<span class="normal">257</span>
-<span class="normal">258</span>
-<span class="normal">259</span>
-<span class="normal">260</span>
-<span class="normal">261</span>
-<span class="normal">262</span>
-<span class="normal">263</span>
-<span class="normal">264</span>
-<span class="normal">265</span>
-<span class="normal">266</span>
-<span class="normal">267</span>
-<span class="normal">268</span>
-<span class="normal">269</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">269</span>
 <span class="normal">270</span>
 <span class="normal">271</span>
 <span class="normal">272</span>
@@ -2024,8 +2079,21 @@
 <span class="normal">275</span>
 <span class="normal">276</span>
 <span class="normal">277</span>
-<span class="normal">278</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the specified command based on subparser.&quot;&quot;&quot;</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Run the specified command based on subparser."""</span>
     <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
     <span class="n">out_file</span><span class="p">:</span> <span class="n">IO</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">IS_LINUX</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
@@ -2033,14 +2101,14 @@
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">out_file</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+                <span class="n">out_file</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"w"</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to open &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to open '</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">log_file</span><span class="si">}</span><span class="s2">': </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
             <span class="n">stream</span><span class="o">=</span><span class="n">out_file</span> <span class="ow">or</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
             <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
-            <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;[</span><span class="si">%(asctime)s</span><span class="s2">] </span><span class="si">%(levelname)s</span><span class="s2"> [</span><span class="si">%(filename)s</span><span class="s2">.</span><span class="si">%(funcName)s</span><span class="s2">:</span><span class="si">%(lineno)d</span><span class="s2">] </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="nb">format</span><span class="o">=</span><span class="s2">"[</span><span class="si">%(asctime)s</span><span class="s2">] </span><span class="si">%(levelname)s</span><span class="s2"> [</span><span class="si">%(filename)s</span><span class="s2">.</span><span class="si">%(funcName)s</span><span class="s2">:</span><span class="si">%(lineno)d</span><span class="s2">] </span><span class="si">%(message)s</span><span class="s2">"</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_commands</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">command</span><span class="p">](</span><span class="n">args</span><span class="p">)</span>
@@ -2080,11 +2148,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">170</span>
 <span class="normal">171</span>
 <span class="normal">172</span>
 <span class="normal">173</span>
@@ -2100,10 +2164,14 @@
 <span class="normal">183</span>
 <span class="normal">184</span>
 <span class="normal">185</span>
-<span class="normal">186</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">colour_type</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Colour</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a hex or rgb colour to a Colour object.&quot;&quot;&quot;</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">colour_type</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Colour</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Convert a hex or rgb colour to a Colour object."""</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">match</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;#?([0-9a-f]</span><span class="si">{6}</span><span class="s2">([0-9a-f]</span><span class="si">{2}</span><span class="s2">)?)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">match</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"#?([0-9a-f]</span><span class="si">{6}</span><span class="s2">([0-9a-f]</span><span class="si">{2}</span><span class="s2">)?)"</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">):</span>
         <span class="n">raw_colours</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">colours</span> <span class="o">=</span> <span class="p">[</span>
             <span class="mi">255</span> <span class="k">if</span> <span class="p">(</span><span class="n">colour</span> <span class="o">:=</span> <span class="n">raw_colours</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">])</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">colour</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
@@ -2112,14 +2180,14 @@
         <span class="k">return</span> <span class="n">Colour</span><span class="p">(</span><span class="o">*</span><span class="n">colours</span><span class="p">)</span>
 
     <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">suppress</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AssertionError</span><span class="p">):</span>
-        <span class="n">colours</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
+        <span class="n">colours</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">colours</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">ArgumentTypeError</span><span class="p">(</span><span class="s2">&quot;Three or four values should be specified for colour&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ArgumentTypeError</span><span class="p">(</span><span class="s2">"Three or four values should be specified for colour"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="mi">255</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">colours</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">ArgumentTypeError</span><span class="p">(</span><span class="s2">&quot;Colour values must be between 0 and 255&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ArgumentTypeError</span><span class="p">(</span><span class="s2">"Colour values must be between 0 and 255"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Colour</span><span class="p">(</span><span class="o">*</span><span class="n">colours</span><span class="p">)</span>
 
-    <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&quot; is not a valid rgba or hex colour&#39;</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'"</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">" is not a valid rgba or hex colour'</span>
     <span class="k">raise</span> <span class="n">ArgumentTypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2144,7 +2212,7 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span><span class="p">[</span>
     <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span>
         <span class="n"><span title="bleak">bleak</span></span><span class="o">.</span><span class="n"><span title="bleak.backends">backends</span></span><span class="o">.</span><span class="n"><span title="bleak.backends.device">device</span></span><span class="o">.</span><span class="n"><span title="bleak.backends.device.BLEDevice">BLEDevice</span></span><span class="p">,</span>
-        <span class="n"><span title="bleak">bleak</span></span><span class="o">.</span><span class="n"><span title="bleak.AdvertisementData">AdvertisementData</span></span><span class="p">,</span>
+        <span class="n"><span title="bleak">bleak</span></span><span class="o">.</span><span class="n"><span title="bleak.backends">backends</span></span><span class="o">.</span><span class="n"><span title="bleak.backends.scanner">scanner</span></span><span class="o">.</span><span class="n"><span title="bleak.backends.scanner.AdvertisementData">AdvertisementData</span></span><span class="p">,</span>
     <span class="p">]</span>
 <span class="p">]</span>
 </code></pre></div>
@@ -2156,9 +2224,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">73</span>
 <span class="normal">74</span>
 <span class="normal">75</span>
 <span class="normal">76</span>
@@ -2178,15 +2244,17 @@
 <span class="normal">90</span>
 <span class="normal">91</span>
 <span class="normal">92</span>
-<span class="normal">93</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">discover_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">BLEDevice</span><span class="p">,</span> <span class="n">AdvertisementData</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Discover new devices in pairing mode.&quot;&quot;&quot;</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">discover_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">BLEDevice</span><span class="p">,</span> <span class="n">AdvertisementData</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""Discover new devices in pairing mode."""</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">mugs</span> <span class="o">=</span> <span class="k">await</span> <span class="n">discover_devices</span><span class="p">(</span><span class="n">mac</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">mac</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">BleakError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occurred trying to discover devices: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"An error occurred trying to discover devices: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">mugs</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No devices were found. Be sure it is in pairing mode. Or use &quot;find&quot; if already paired.&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'No devices were found. Be sure it is in pairing mode. Or use "find" if already paired.'</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">mug</span><span class="p">,</span> <span class="n">advertisement</span> <span class="ow">in</span> <span class="n">mugs</span><span class="p">:</span>
@@ -2194,13 +2262,48 @@
             <span class="nb">print</span><span class="p">(</span><span class="n">mug</span><span class="o">.</span><span class="n">address</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">model_info</span> <span class="o">=</span> <span class="n">get_model_info_from_advertiser_data</span><span class="p">(</span><span class="n">advertisement</span><span class="p">)</span>
-            <span class="n">model_number</span> <span class="o">=</span> <span class="n">model_info</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="n">model_info</span><span class="o">.</span><span class="n">model</span> <span class="k">else</span> <span class="s2">&quot;Unknown Model&quot;</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="n">model_info</span><span class="o">.</span><span class="n">device_type</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">,</span> <span class="n">mug</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Name:&quot;</span><span class="p">,</span> <span class="n">advertisement</span><span class="o">.</span><span class="n">local_name</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model:&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">model_info</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> [</span><span class="si">{</span><span class="n">model_number</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Colour:&quot;</span><span class="p">,</span> <span class="n">model_info</span><span class="o">.</span><span class="n">colour</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="n">model_info</span><span class="o">.</span><span class="n">colour</span> <span class="k">else</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Capacity:&quot;</span><span class="p">,</span> <span class="n">format_capacity</span><span class="p">(</span><span class="n">model_info</span><span class="o">.</span><span class="n">capacity</span><span class="p">))</span>
+            <span class="n">model_number</span> <span class="o">=</span> <span class="n">model_info</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="n">model_info</span><span class="o">.</span><span class="n">model</span> <span class="k">else</span> <span class="s2">"Unknown Model"</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found </span><span class="si">{</span><span class="n">model_info</span><span class="o">.</span><span class="n">device_type</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">:"</span><span class="p">,</span> <span class="n">mug</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Name:"</span><span class="p">,</span> <span class="n">advertisement</span><span class="o">.</span><span class="n">local_name</span> <span class="ow">or</span> <span class="s2">"Ember Mug"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Model:"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">model_info</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> [</span><span class="si">{</span><span class="n">model_number</span><span class="si">}</span><span class="s2">]"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Colour:"</span><span class="p">,</span> <span class="n">model_info</span><span class="o">.</span><span class="n">colour</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="n">model_info</span><span class="o">.</span><span class="n">colour</span> <span class="k">else</span> <span class="s2">"Unknown"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Capacity:"</span><span class="p">,</span> <span class="n">format_capacity</span><span class="p">(</span><span class="n">model_info</span><span class="o">.</span><span class="n">capacity</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">mugs</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="cli.commands.dt_zone_type" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">dt_zone_type</span>
+
+
+<a href="#cli.commands.dt_zone_type" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">dt_zone_type</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="datetime">datetime</span></span><span class="o">.</span><span class="n"><span title="datetime.datetime">datetime</span></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Convert date/time string into datetime object.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dt_zone_type</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Convert date/time string into datetime object."""</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ArgumentTypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'"</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">" is not a valid ISO datetime string'</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2229,19 +2332,19 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 98</span>
 <span class="normal"> 99</span>
 <span class="normal">100</span>
 <span class="normal">101</span>
 <span class="normal">102</span>
-<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_info_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch all information from a mug and end.&quot;&quot;&quot;</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_info_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Fetch all information from a mug and end."""</span>
     <span class="n">mug</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_device</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="k">async</span> <span class="k">with</span> <span class="n">mug</span><span class="o">.</span><span class="n">connection</span><span class="p">(</span><span class="n">adapter</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">adapter</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">raw</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Connected.</span><span class="se">\n</span><span class="s2">Fetching Info&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Connected.</span><span class="se">\n</span><span class="s2">Fetching Info"</span><span class="p">)</span>
         <span class="k">await</span> <span class="n">mug</span><span class="o">.</span><span class="n">update_all</span><span class="p">()</span>
     <span class="n">print_info</span><span class="p">(</span><span class="n">mug</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -2265,7 +2368,8 @@
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">find_device_cmd</span><span class="p">(</span>
     <span class="n">args</span><span class="p">:</span> <span class="n"><span title="argparse">argparse</span></span><span class="o">.</span><span class="n"><span title="argparse.Namespace">Namespace</span></span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span>
-    <span class="n"><span title="bleak">bleak</span></span><span class="o">.</span><span class="n"><span title="bleak.backends">backends</span></span><span class="o">.</span><span class="n"><span title="bleak.backends.device">device</span></span><span class="o">.</span><span class="n"><span title="bleak.backends.device.BLEDevice">BLEDevice</span></span><span class="p">,</span> <span class="n"><span title="bleak">bleak</span></span><span class="o">.</span><span class="n"><span title="bleak.AdvertisementData">AdvertisementData</span></span>
+    <span class="n"><span title="bleak">bleak</span></span><span class="o">.</span><span class="n"><span title="bleak.backends">backends</span></span><span class="o">.</span><span class="n"><span title="bleak.backends.device">device</span></span><span class="o">.</span><span class="n"><span title="bleak.backends.device.BLEDevice">BLEDevice</span></span><span class="p">,</span>
+    <span class="n"><span title="bleak">bleak</span></span><span class="o">.</span><span class="n"><span title="bleak.backends">backends</span></span><span class="o">.</span><span class="n"><span title="bleak.backends.scanner">scanner</span></span><span class="o">.</span><span class="n"><span title="bleak.backends.scanner.AdvertisementData">AdvertisementData</span></span><span class="p">,</span>
 <span class="p">]</span>
 </code></pre></div>
 
@@ -2276,9 +2380,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">58</span>
 <span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
@@ -2288,18 +2390,20 @@
 <span class="normal">65</span>
 <span class="normal">66</span>
 <span class="normal">67</span>
-<span class="normal">68</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_device_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">BLEDevice</span><span class="p">,</span> <span class="n">AdvertisementData</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find a single device that has already been paired.&quot;&quot;&quot;</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_device_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">BLEDevice</span><span class="p">,</span> <span class="n">AdvertisementData</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Find a single device that has already been paired."""</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">device</span><span class="p">,</span> <span class="n">advertisement</span> <span class="o">=</span> <span class="k">await</span> <span class="n">find_device</span><span class="p">(</span><span class="n">mac</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">mac</span><span class="p">,</span> <span class="n">adapter</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">adapter</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">BleakError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occurred trying to find a device: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"An error occurred trying to find a device: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">device</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">advertisement</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No device was found.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"No device was found."</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">raw</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Found device:&quot;</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Found device:"</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">device</span><span class="p">,</span> <span class="n">advertisement</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2331,9 +2435,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
 <span class="normal">41</span>
@@ -2348,14 +2450,16 @@
 <span class="normal">50</span>
 <span class="normal">51</span>
 <span class="normal">52</span>
-<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_device</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmberMug</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Help to get the devices based on command args.&quot;&quot;&quot;</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_device</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmberMug</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Help to get the devices based on command args."""</span>
     <span class="n">device</span><span class="p">,</span> <span class="n">advertisement</span> <span class="o">=</span> <span class="k">await</span> <span class="n">find_device_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="n">manufacturer_data</span> <span class="o">=</span> <span class="n">advertisement</span><span class="o">.</span><span class="n">manufacturer_data</span>
     <span class="n">model_info</span> <span class="o">=</span> <span class="n">get_model_info_from_advertiser_data</span><span class="p">(</span><span class="n">advertisement</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">model_info</span><span class="o">.</span><span class="n">model</span> <span class="o">==</span> <span class="n">DeviceModel</span><span class="o">.</span><span class="n">UNKNOWN_DEVICE</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">raw</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">manufacturer_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">EMBER_BLE_SIG</span><span class="p">,</span> <span class="n">manufacturer_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">TESTING_BLE_SIG</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: No model found matching advertisement data: </span><span class="si">{</span><span class="n">data</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Warning: No model found matching advertisement data: </span><span class="si">{</span><span class="n">data</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">mug</span> <span class="o">=</span> <span class="n">EmberMug</span><span class="p">(</span>
         <span class="n">device</span><span class="p">,</span>
@@ -2364,7 +2468,7 @@
         <span class="n">debug</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">debug</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">raw</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Connecting...&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Connecting..."</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">mug</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2394,9 +2498,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">126</span>
 <span class="normal">127</span>
 <span class="normal">128</span>
 <span class="normal">129</span>
@@ -2411,22 +2513,24 @@
 <span class="normal">138</span>
 <span class="normal">139</span>
 <span class="normal">140</span>
-<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_device_value_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get values from the mug and print them.&quot;&quot;&quot;</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_device_value_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Get values from the mug and print them."""</span>
     <span class="n">mug</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_device</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">attributes</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">attributes</span><span class="p">]</span>
+    <span class="n">attributes</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"-"</span><span class="p">,</span> <span class="s2">"_"</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">attributes</span><span class="p">]</span>
     <span class="k">async</span> <span class="k">with</span> <span class="n">mug</span><span class="o">.</span><span class="n">connection</span><span class="p">(</span><span class="n">adapter</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">adapter</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attributes</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="k">await</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mug</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;get_</span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)()</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="k">await</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mug</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"get_</span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2">"</span><span class="p">)()</span>
             <span class="k">except</span> <span class="ne">NotImplementedError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="n">mug</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
             <span class="n">data</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">raw</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">print_table</span><span class="p">([(</span><span class="n">ATTR_LABELS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">attr</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">mug</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get_formatted_attr</span><span class="p">(</span><span class="n">attr</span><span class="p">)))</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">data</span><span class="p">])</span>
 </code></pre></div></td></tr></table></div>
@@ -2457,9 +2561,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">108</span>
 <span class="normal">109</span>
 <span class="normal">110</span>
 <span class="normal">111</span>
@@ -2472,16 +2574,18 @@
 <span class="normal">118</span>
 <span class="normal">119</span>
 <span class="normal">120</span>
-<span class="normal">121</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">poll_device_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch all information and keep polling for changes.&quot;&quot;&quot;</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">poll_device_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Fetch all information and keep polling for changes."""</span>
     <span class="n">mug</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_device</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="k">async</span> <span class="k">with</span> <span class="n">mug</span><span class="o">.</span><span class="n">connection</span><span class="p">(</span><span class="n">adapter</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">adapter</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">raw</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Connected.</span><span class="se">\n</span><span class="s2">Fetching Info&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Connected.</span><span class="se">\n</span><span class="s2">Fetching Info"</span><span class="p">)</span>
         <span class="k">await</span> <span class="n">mug</span><span class="o">.</span><span class="n">update_all</span><span class="p">()</span>
         <span class="n">print_info</span><span class="p">(</span><span class="n">mug</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">raw</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Watching for changes&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Watching for changes"</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">CommandLoop</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">60</span><span class="p">):</span>
                 <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -2516,9 +2620,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>ember_mug/cli/commands.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">146</span>
 <span class="normal">147</span>
 <span class="normal">148</span>
 <span class="normal">149</span>
@@ -2535,21 +2637,27 @@
 <span class="normal">160</span>
 <span class="normal">161</span>
 <span class="normal">162</span>
-<span class="normal">163</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">set_device_value_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set one or more values on the device.&quot;&quot;&quot;</span>
-    <span class="n">attrs</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;target_temp&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature_unit&quot;</span><span class="p">,</span> <span class="s2">&quot;led_colour&quot;</span><span class="p">,</span> <span class="s2">&quot;volume_level&quot;</span><span class="p">)</span>
-    <span class="n">values</span> <span class="o">=</span> <span class="p">[(</span><span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span> <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">))]</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">set_device_value_cmd</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Set one or more values on the device."""</span>
+    <span class="n">attrs</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"target_temp"</span><span class="p">,</span> <span class="s2">"temperature_unit"</span><span class="p">,</span> <span class="s2">"led_colour"</span><span class="p">,</span> <span class="s2">"volume_level"</span><span class="p">,</span> <span class="s2">"date_time_zone"</span><span class="p">)</span>
+    <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SetValues</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span> <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+    <span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please specify at least one attribute and value to set.&quot;</span><span class="p">)</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;--</span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Options: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">options</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Please specify at least one attribute and value to set."</span><span class="p">)</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"--</span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'_'</span><span class="p">,</span><span class="w"> </span><span class="s1">'-'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Options: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">options</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="n">mug</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_device</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="k">async</span> <span class="k">with</span> <span class="n">mug</span><span class="o">.</span><span class="n">connection</span><span class="p">(</span><span class="n">adapter</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">adapter</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
-            <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mug</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;set_</span><span class="si">{</span><span class="n">attr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Setting </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mug</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"set_</span><span class="si">{</span><span class="n">attr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'-'</span><span class="p">,</span><span class="w"> </span><span class="s1">'_'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Setting </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">await</span> <span class="n">method</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">NotImplementedError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>

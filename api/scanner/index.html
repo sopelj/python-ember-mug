@@ -1696,7 +1696,7 @@
 <span class="normal">23</span>
 <span class="normal">24</span>
 <span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BleakScannerKwargs</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Optional kwargs for scanner.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Optional kwargs for scanner."""</span>
 
     <span class="n">bluez</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="n">BlueZScannerArgs</span><span class="p">]</span>
     <span class="n">service_uuids</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
@@ -1726,7 +1726,7 @@
   </span>
 
 <a href="#scanner.BleakScannerKwargs.bluez" class="headerlink" title="Permanent link">&para;</a></h6>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">bluez</span><span class="p">:</span> <span class="n"><span title="typing">typing</span></span><span class="o">.</span><span class="n"><span title="typing.NotRequired">NotRequired</span></span><span class="p">[</span><span class="n"><span title="bleak">bleak</span></span><span class="o">.</span><span class="n"><span title="bleak.BlueZScannerArgs">BlueZScannerArgs</span></span><span class="p">]</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">bluez</span><span class="p">:</span> <span class="n"><span title="typing">typing</span></span><span class="o">.</span><span class="n"><span title="typing.NotRequired">NotRequired</span></span><span class="p">[</span><span class="n"><span title="bleak">bleak</span></span><span class="o">.</span><span class="n"><span title="bleak.args">args</span></span><span class="o">.</span><span class="n"><span title="bleak.args.bluez">bluez</span></span><span class="o">.</span><span class="n"><span title="bleak.args.bluez.BlueZScannerArgs">BlueZScannerArgs</span></span><span class="p">]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -1802,15 +1802,15 @@
 <span class="normal">41</span>
 <span class="normal">42</span>
 <span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_scanner_kwargs</span><span class="p">(</span><span class="n">adapter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">service_uuids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BleakScannerKwargs</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add Adapter to kwargs for scanner if specified and using BlueZ.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Add Adapter to kwargs for scanner if specified and using BlueZ."""</span>
     <span class="k">if</span> <span class="n">adapter</span> <span class="ow">and</span> <span class="n">IS_LINUX</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;The adapter option is only valid for the Linux BlueZ Backend.&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">"The adapter option is only valid for the Linux BlueZ Backend."</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
     <span class="n">kwargs</span><span class="p">:</span> <span class="n">BleakScannerKwargs</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="n">service_uuids</span><span class="p">:</span>
-        <span class="n">kwargs</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">&quot;service_uuids&quot;</span><span class="p">:</span> <span class="n">service_uuids</span><span class="p">}</span>
+        <span class="n">kwargs</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">"service_uuids"</span><span class="p">:</span> <span class="n">service_uuids</span><span class="p">}</span>
     <span class="k">if</span> <span class="n">adapter</span><span class="p">:</span>
-        <span class="n">kwargs</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">&quot;bluez&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;adapter&quot;</span><span class="p">:</span> <span class="n">adapter</span><span class="p">}}</span>
+        <span class="n">kwargs</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">"bluez"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"adapter"</span><span class="p">:</span> <span class="n">adapter</span><span class="p">}}</span>
     <span class="k">return</span> <span class="n">kwargs</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1884,7 +1884,7 @@ for device, advertisement in devices:
     <span class="n">adapter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">wait</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">BLEDevice</span><span class="p">,</span> <span class="n">AdvertisementData</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Discover new devices in pairing mode.</span>
 
 <span class="sd">    Example:</span>
@@ -1895,7 +1895,7 @@ for device, advertisement in devices:
 <span class="sd">            print(device.address, advertisement)</span>
 <span class="sd">        ```</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">async</span> <span class="k">with</span> <span class="n">BleakScanner</span><span class="p">(</span><span class="o">**</span><span class="n">build_scanner_kwargs</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span> <span class="n">service_uuids</span><span class="o">=</span><span class="n">DEVICE_SERVICE_UUIDS</span><span class="p">))</span> <span class="k">as</span> <span class="n">scanner</span><span class="p">:</span>
         <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">wait</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span>
@@ -1944,7 +1944,7 @@ for device, advertisement in devices:
         <p>Find a device that has previously been discovered.</p>
 <h6 id="scanner.find_device--example">Example:<a class="headerlink" href="#scanner.find_device--example" title="Permanent link">&para;</a></h6>
 <div class="highlight"><pre><span></span><code>```python
-device = await find_device(&quot;my:mac:addr&quot;)
+device = await find_device("my:mac:addr")
 ```
 </code></pre></div>
 
@@ -1981,23 +1981,23 @@ device = await find_device(&quot;my:mac:addr&quot;)
     <span class="n">adapter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_TIMEOUT</span><span class="p">,</span>  <span class="c1"># noqa: ASYNC109</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">BLEDevice</span><span class="p">,</span> <span class="n">AdvertisementData</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Find a device that has previously been discovered.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">    -------</span>
 <span class="sd">        ```python</span>
-<span class="sd">        device = await find_device(&quot;my:mac:addr&quot;)</span>
+<span class="sd">        device = await find_device("my:mac:addr")</span>
 <span class="sd">        ```</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">mac</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">mac</span> <span class="o">=</span> <span class="n">mac</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="k">async</span> <span class="k">with</span> <span class="n">BleakScanner</span><span class="p">(</span><span class="o">**</span><span class="n">build_scanner_kwargs</span><span class="p">(</span><span class="n">adapter</span><span class="p">))</span> <span class="k">as</span> <span class="n">scanner</span><span class="p">:</span>
         <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">suppress</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">TimeoutError</span><span class="p">):</span>
             <span class="k">async</span> <span class="k">with</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">timeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">):</span>
                 <span class="k">async</span> <span class="k">for</span> <span class="n">device</span><span class="p">,</span> <span class="n">advertisement</span> <span class="ow">in</span> <span class="n">scanner</span><span class="o">.</span><span class="n">advertisement_data</span><span class="p">():</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">mac</span> <span class="ow">and</span> <span class="n">device</span><span class="o">.</span><span class="n">name</span> <span class="ow">and</span> <span class="n">device</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Ember&quot;</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">mac</span> <span class="ow">and</span> <span class="n">device</span><span class="o">.</span><span class="n">name</span> <span class="ow">and</span> <span class="n">device</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"Ember"</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span>
                         <span class="n">mac</span> <span class="ow">and</span> <span class="n">device</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">mac</span>
                     <span class="p">):</span>
                         <span class="k">return</span> <span class="n">device</span><span class="p">,</span> <span class="n">advertisement</span>

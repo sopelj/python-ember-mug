@@ -1492,7 +1492,7 @@ articles, and such.</p>
 <li>
 <p>Commit your changes and push your branch to GitHub:</p>
 <div class="highlight"><pre><span></span><code>git add .
-git commit -m &quot;Your detailed description of your changes.&quot;
+git commit -m "Your detailed description of your changes."
 git push origin name-of-your-bugfix-or-feature
 </code></pre></div>
 </li>
@@ -1521,8 +1521,8 @@ Make sure all your changes are committed (including an entry in CHANGELOG.md).
 Then run:</p>
 <div class="highlight"><pre><span></span><code>hatch version patch # possible: major / minor / patch
 git add .
-git commit -m &quot;Bump version: v$(hatch version)&quot;
-git tag &quot;v$(hatch version)&quot;
+git commit -m "Bump version: v$(hatch version)"
+git tag "v$(hatch version)"
 git push
 git push --tags
 </code></pre></div>
