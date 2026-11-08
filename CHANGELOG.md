@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.5.1] - 2026-11-07
+
+## Fixed
+* Raise error in update multiple if all attributes fail
+
 ## [1.5.0] - 2026-09-18
 
 ### Added

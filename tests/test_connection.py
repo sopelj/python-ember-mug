@@ -566,15 +566,18 @@ async def test_mug_update_multiple(ember_mug: MockMug) -> None:
 
 
 async def test_mug_update_multiple_no_name(ember_mug: MockMug) -> None:
+    led_colour = Colour(20, 55, 80)
     mock_get_name = AsyncMock(side_effect=BleakError)
+    mock_get_led_colour = AsyncMock(return_value=led_colour)
 
     with (
         patch.multiple(ember_mug, get_name=mock_get_name),
+        patch.multiple(ember_mug, get_led_colour=mock_get_led_colour),
         patch.object(ember_mug.data, "update_info") as mock_update_info,
     ):
-        await ember_mug._update_multiple({"name"})
+        await ember_mug._update_multiple({"name", "led_colour"})
         mock_get_name.assert_called_once()
-        mock_update_info.assert_called_once_with()
+        mock_update_info.assert_called_once_with(led_colour=led_colour)
 
 
 async def test_mug_update_queued_attributes(ember_mug: MockMug) -> None:

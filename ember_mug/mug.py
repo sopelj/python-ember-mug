@@ -449,17 +449,25 @@ class EmberMug:
         await self._ensure_connection()
         updates = {}
         failed_attrs = set()
+        last_error = None
         for attr in attrs:
             try:
                 updates[attr] = await getattr(self, f"get_{attr}")()
             except BleakError as e:
                 failed_attrs |= {attr}
+                last_error = e
                 logger.debug("Failed to fetch %s: %s", attr, e)
+
+        if len(failed_attrs) == len(attrs) and last_error:
+            raise last_error
+
         changes = self.data.update_info(**updates)
         if changes:
             self._fire_callbacks()
+
         if failed_attrs:
             logger.warning("Failed to fetch some attributes: %s", failed_attrs)
+
         logger.debug("Attributes updated: %s", changes)
         return changes
 
