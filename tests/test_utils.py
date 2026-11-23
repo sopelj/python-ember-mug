@@ -1,6 +1,6 @@
 """Tests for `ember_mug.utils`."""
 
-from datetime import datetime
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock, MagicMock, Mock, call, patch
 from zoneinfo import ZoneInfo
 
@@ -80,7 +80,7 @@ def test_decode_date_time() -> None:
 
 def test_decode_date_time_no_tz() -> None:
     result = decode_date_time(b"\xfaC\xadj\x80")
-    date = datetime(2026, 9, 18, 10, 0, 26, 889633)
+    date = datetime(2026, 9, 18, 14, 0, 26, 889633, tzinfo=UTC)
     assert result.timestamp() == int(date.timestamp())
 
 
