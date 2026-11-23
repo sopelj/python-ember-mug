@@ -78,6 +78,12 @@ def test_decode_date_time() -> None:
     assert result.timestamp() == int(date.timestamp())
 
 
+def test_decode_date_time_no_tz() -> None:
+    result = decode_date_time(b"\xfaC\xadj\x80")
+    date = datetime(2026, 9, 18, 10, 0, 26, 889633)
+    assert result.timestamp() == int(date.timestamp())
+
+
 @pytest.mark.parametrize(
     ("colour_id", "expected_colour"),
     [

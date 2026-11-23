@@ -205,7 +205,7 @@ class MugMeta(AsDict):
 
     @classmethod
     def from_bytes(cls, data: bytes) -> MugMeta:
-        """Initialize from raw bytes."""
+        """Initialise from raw bytes."""
         return cls(
             mug_id=decode_byte_string(data[:6]),
             serial_number=data[7:].decode(),

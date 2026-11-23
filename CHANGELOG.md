@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.5.2] - 2026-11-22
+
+## Fixed
+* Handle unset timezone in decode_date_time
+
 ## [1.5.1] - 2026-11-07
 
 ## Fixed

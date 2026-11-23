@@ -79,11 +79,14 @@ def encode_date_time(date_time: datetime) -> bytes:
 def decode_date_time(data: bytes | bytearray) -> datetime:
     """Extract date time with timezone from bytes."""
     timestamp = int.from_bytes(data[:4], "little", signed=False)
-    offset_hours = int.from_bytes(data[4:5], "little", signed=True)
-
     utc_datetime = datetime.fromtimestamp(timestamp, UTC)
-    local_timezone = timezone(timedelta(hours=offset_hours))
 
+    # Unset value in the mug seems to be 0x80
+    if (offset_bytes := data[4:5]) and offset_bytes == b"\x80":
+        return utc_datetime
+
+    offset_hours = int.from_bytes(offset_bytes, "little", signed=True)
+    local_timezone = timezone(timedelta(hours=offset_hours))
     return utc_datetime.astimezone(local_timezone)
 
 
