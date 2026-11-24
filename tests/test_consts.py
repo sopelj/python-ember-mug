@@ -27,7 +27,7 @@ def test_liquid_state() -> None:
     assert LiquidState(3).label == "Cold (No control)"
     assert LiquidState(4).label == "Cooling"
     assert LiquidState(5).label == "Heating"
-    assert LiquidState(6).label == "Perfect"
+    assert LiquidState(6).label == "Ready"
     assert LiquidState(7).label == "Warm (No control)"
 
 
